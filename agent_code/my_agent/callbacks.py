@@ -7,6 +7,9 @@ import numpy as np
 
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
+# Hyperparameters.
+EXPLORATION_RATE = 0.5
+
 
 def setup(self):
     """
@@ -41,15 +44,28 @@ def act(self, game_state: dict) -> str:
     :param game_state: The dictionary that describes everything on the board.
     :return: The action to take as a string.
     """
-    # todo Exploration vs exploitation
-    random_prob = .1
-    if self.train and random.random() < random_prob:
+    # TODO Exploration vs exploitation
+    if self.train and random.random() < EXPLORATION_RATE:
         self.logger.debug("Choosing action purely at random.")
         # 80%: walk in any direction. 10% wait. 10% bomb.
         return np.random.choice(ACTIONS, p=[.2, .2, .2, .2, .1, .1])
 
     self.logger.debug("Querying model for action.")
-    return np.random.choice(ACTIONS, p=self.model)
+    # Load Q table.
+    with open("q-table.pt", "rb") as file:
+        self.q_table = pickle.load(file)
+    
+    # Find action maximizing Q value.
+    q_value = int('-inf')
+    best_action = 'WAIT'
+
+    for action in ACTIONS:
+        if self.q_table[(state_to_features(game_state), action)] > q_value:
+            q_value = self.q_table[(state_to_features(game_state), action)]
+            best_action = action
+
+    return best_action
+    # TODO remove return np.random.choice(ACTIONS, p=self.model)
 
 
 def state_to_features(game_state: dict) -> np.array:

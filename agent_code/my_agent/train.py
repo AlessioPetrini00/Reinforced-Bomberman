@@ -1,4 +1,4 @@
-from collections import namedtuple, deque
+from collections import namedtuple, deque, defaultdict
 
 import pickle
 from typing import List
@@ -6,13 +6,19 @@ from typing import List
 import events as e
 from .callbacks import state_to_features
 
+import os
+
 # This is only an example!
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
 
+ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
+
 # Hyper parameters -- DO modify
 TRANSITION_HISTORY_SIZE = 3  # keep only ... last transitions
 RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ...
+LEARNING_RATE = 0.8
+DISCOUNT_RATE = 0.5
 
 # Events
 PLACEHOLDER_EVENT = "PLACEHOLDER"
@@ -29,6 +35,13 @@ def setup_training(self):
     # Example: Setup an array that will note transition tuples
     # (s, a, r, s')
     self.transitions = deque(maxlen=TRANSITION_HISTORY_SIZE)
+
+    # Load or create Q table.
+    if not os.path.isfile("q-table.pt"):
+        self.q_table = defaultdict(int)
+    else:
+        with open("q-table.pt", "rb") as file:
+            pickle.load(self.q_table, file)
 
 
 def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_state: dict, events: List[str]):
@@ -57,6 +70,13 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     # state_to_features is defined in callbacks.py
     self.transitions.append(Transition(state_to_features(old_game_state), self_action, state_to_features(new_game_state), reward_from_events(self, events)))
 
+    # Perform update of the Q table.
+    self.q_table[(state_to_features(old_game_state), self_action)] = (1 - LEARNING_RATE) * self.q_table[(state_to_features(old_game_state), self_action)] + LEARNING_RATE * (reward_from_events(self, events) + DISCOUNT_RATE * value_function(self, new_game_state))
+
+    # Store the new Q table so that it can be used in the next act().
+    with open("q-table.pt", "wb") as file:
+        pickle.dump(self.q_table, file)
+
 
 def end_of_round(self, last_game_state: dict, last_action: str, events: List[str]):
     """
@@ -78,6 +98,13 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
     with open("my-saved-model.pt", "wb") as file:
         pickle.dump(self.model, file)
 
+    # FIXME Perform update of the Q table - last_game_state is y not x!!!
+    self.q_table[(state_to_features(last_game_state), last_action)] = (1 - LEARNING_RATE) * self.q_table[(state_to_features(last_game_state), last_action)] + LEARNING_RATE * (reward_from_events(self, events))
+
+    # Store the new Q table so that it can be used in the next game.
+    with open("q-table.pt", "wb") as file:
+        pickle.dump(self.q_table, file)
+
 
 def reward_from_events(self, events: List[str]) -> int:
     """
@@ -97,3 +124,14 @@ def reward_from_events(self, events: List[str]) -> int:
             reward_sum += game_rewards[event]
     self.logger.info(f"Awarded {reward_sum} for events {', '.join(events)}")
     return reward_sum
+
+
+def value_function(self, game_state:dict)->int:
+    # The value function returns the maximum value of the Q table for a given state, iterating through all the possible actions.
+    value = int('-inf')
+
+    for action in ACTIONS:
+        if self.q_table[(state_to_features(game_state), action)] > value:
+            value = self.q_table[(state_to_features(game_state), action)]
+    
+    return value
