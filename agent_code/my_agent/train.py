@@ -17,8 +17,8 @@ ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 # Hyper parameters -- DO modify
 TRANSITION_HISTORY_SIZE = 3  # keep only ... last transitions
 RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ...
-LEARNING_RATE = 0.8
-DISCOUNT_RATE = 0.5
+LEARNING_RATE = 0.8 # TODO fine tune this
+DISCOUNT_RATE = 0.5 # TODO fine tune this
 
 # Events
 PLACEHOLDER_EVENT = "PLACEHOLDER"
@@ -39,9 +39,11 @@ def setup_training(self):
     # Load or create Q table.
     if not os.path.isfile("q-table.pt"):
         self.q_table = defaultdict(int)
+        with open("q-table.pt", "wb") as file:
+            pickle.dump(self.q_table, file)
     else:
         with open("q-table.pt", "rb") as file:
-            pickle.load(self.q_table, file)
+            self.q_table = pickle.load(file)
 
 
 def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_state: dict, events: List[str]):
@@ -71,7 +73,7 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     self.transitions.append(Transition(state_to_features(old_game_state), self_action, state_to_features(new_game_state), reward_from_events(self, events)))
 
     # Perform update of the Q table.
-    self.q_table[(state_to_features(old_game_state), self_action)] = (1 - LEARNING_RATE) * self.q_table[(state_to_features(old_game_state), self_action)] + LEARNING_RATE * (reward_from_events(self, events) + DISCOUNT_RATE * value_function(self, new_game_state))
+    self.q_table[(tuple(state_to_features(old_game_state)), self_action)] = (1 - LEARNING_RATE) * self.q_table[(tuple(state_to_features(old_game_state)), self_action)] + LEARNING_RATE * (reward_from_events(self, events) + DISCOUNT_RATE * value_function(self, new_game_state))
 
     # Store the new Q table so that it can be used in the next act().
     with open("q-table.pt", "wb") as file:
@@ -99,7 +101,7 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
         pickle.dump(self.model, file)
 
     # FIXME Perform update of the Q table - last_game_state is y not x!!!
-    self.q_table[(state_to_features(last_game_state), last_action)] = (1 - LEARNING_RATE) * self.q_table[(state_to_features(last_game_state), last_action)] + LEARNING_RATE * (reward_from_events(self, events))
+    self.q_table[(tuple(state_to_features(last_game_state)), last_action)] = (1 - LEARNING_RATE) * self.q_table[(tuple(state_to_features(last_game_state)), last_action)] + LEARNING_RATE * (reward_from_events(self, events))
 
     # Store the new Q table so that it can be used in the next game.
     with open("q-table.pt", "wb") as file:
@@ -116,6 +118,10 @@ def reward_from_events(self, events: List[str]) -> int:
     game_rewards = {
         e.COIN_COLLECTED: 1,
         e.KILLED_OPPONENT: 5,
+        e.INVALID_ACTION: -100,
+        e.KILLED_SELF: -90, 
+        e.BOMB_DROPPED: -1000, 
+        e.WAITED: -100,
         PLACEHOLDER_EVENT: -.1  # idea: the custom event is bad
     }
     reward_sum = 0
@@ -126,12 +132,12 @@ def reward_from_events(self, events: List[str]) -> int:
     return reward_sum
 
 
-def value_function(self, game_state:dict)->int:
+def value_function(self, game_state:dict)->float:
     # The value function returns the maximum value of the Q table for a given state, iterating through all the possible actions.
-    value = int('-inf')
+    value = float('-inf')
 
     for action in ACTIONS:
-        if self.q_table[(state_to_features(game_state), action)] > value:
-            value = self.q_table[(state_to_features(game_state), action)]
+        if self.q_table[(tuple(state_to_features(game_state)), action)] > value:
+            value = self.q_table[(tuple(state_to_features(game_state)), action)]
     
     return value

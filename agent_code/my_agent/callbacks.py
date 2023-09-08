@@ -8,7 +8,7 @@ import numpy as np
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyperparameters.
-EXPLORATION_RATE = 0.5
+EXPLORATION_RATE = 0 # TODO fine tune this
 
 
 def setup(self):
@@ -56,12 +56,12 @@ def act(self, game_state: dict) -> str:
         self.q_table = pickle.load(file)
     
     # Find action maximizing Q value.
-    q_value = int('-inf')
+    q_value = float('-inf')
     best_action = 'WAIT'
 
     for action in ACTIONS:
-        if self.q_table[(state_to_features(game_state), action)] > q_value:
-            q_value = self.q_table[(state_to_features(game_state), action)]
+        if self.q_table[(tuple(state_to_features(game_state)), action)] > q_value:
+            q_value = self.q_table[(tuple(state_to_features(game_state)), action)]
             best_action = action
 
     return best_action
@@ -88,8 +88,12 @@ def state_to_features(game_state: dict) -> np.array:
 
     # For example, you could construct several channels of equal shape, ...
     channels = []
-    channels.append(...)
+    
+    channels.append(game_state.get("self")[3][0])
+    channels.append(game_state.get("self")[3][1])
+    #channels.append(...)
     # concatenate them as a feature tensor (they must have the same shape), ...
     stacked_channels = np.stack(channels)
     # and return them as a vector
-    return stacked_channels.reshape(-1)
+    return stacked_channels
+    #return stacked_channels.reshape(-1)
