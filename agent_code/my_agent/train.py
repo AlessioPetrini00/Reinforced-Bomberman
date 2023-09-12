@@ -8,6 +8,10 @@ from .callbacks import state_to_features
 
 import os
 
+import numpy as np
+
+import matplotlib.pyplot as plt
+
 # This is only an example!
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
@@ -17,11 +21,17 @@ ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 # Hyper parameters -- DO modify
 TRANSITION_HISTORY_SIZE = 3  # keep only ... last transitions
 RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ...
-LEARNING_RATE = 0.8 # TODO fine tune this
-DISCOUNT_RATE = 0.5 # TODO fine tune this
+LEARNING_RATE = 0.2 # TODO fine tune this
+DISCOUNT_RATE = 0.8 # TODO fine tune this
 
-# Events
-PLACEHOLDER_EVENT = "PLACEHOLDER"
+# Custom events
+COIN_NOT_COLLECTED = "COIN_NOT_COLLECTED"
+BOMB_MISSED = "BOMB_MISSED"
+GOING_TO_COIN = "GOING_TO_COIN"
+GOING_AWAY_FROM_BOMB = "GOING_AWAY_FROM_BOMB"
+GOING_INTO_WALL = "GOING_INTO_WALL"
+UNDECIDED = "UNDECIDED"
+
 
 
 def setup_training(self):
@@ -65,15 +75,66 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     """
     self.logger.debug(f'Encountered game event(s) {", ".join(map(repr, events))} in step {new_game_state["step"]}')
 
-    # Idea: Add your own events to hand out rewards
-    if ...:
-        events.append(PLACEHOLDER_EVENT)
-
-    # state_to_features is defined in callbacks.py
+        # state_to_features is defined in callbacks.py
     self.transitions.append(Transition(state_to_features(old_game_state), self_action, state_to_features(new_game_state), reward_from_events(self, events)))
 
+    # Custom event: coin not collected
+    if not (new_game_state.get("self")[3] in old_game_state.get("coins")):
+        events.append(COIN_NOT_COLLECTED)
+
+    """
+    if old_game_state.get("bombs"):
+        for bomb in old_game_state.get("bombs"):
+            pos = new_game_state.get("self")[3]
+            pos = np.array(pos)
+            if np.linalg.norm(np.array(bomb[0]) - pos) < 3:
+                if pos[0] != bomb[0][0] and pos[1] != bomb[0][1]:
+                    events.append(BOMB_MISSED)
+    """
+
+    pos = np.array(new_game_state.get("self")[3])
+    
+    # Custom event: you moved towards the closest coin
+    if old_game_state.get("coins"):
+        nearest_coin = old_game_state.get("coins")[0]
+        for coin in old_game_state.get("coins"):
+            if np.linalg.norm(np.array(coin) - pos) < np.linalg.norm(np.array(nearest_coin) - pos):
+                nearest_coin = coin
+        old_pos = np.array(old_game_state.get("self")[3])
+        if np.linalg.norm(nearest_coin - pos) < np.linalg.norm(nearest_coin - old_pos):
+            events.append(GOING_TO_COIN)
+
+    # TODO do not limit this at closest bomb that is just about to explode
+    if old_game_state.get("bombs"):
+        closest_bomb = old_game_state.get("bombs")[0]
+        for bomb in old_game_state.get("bombs"):
+            if np.linalg.norm(np.array(bomb[0]) - pos) < np.linalg.norm(np.array(closest_bomb[0]) - pos):
+                closest_bomb = bomb
+        if closest_bomb[1] == 1:
+            if (pos[0] != closest_bomb[0][0] and pos[1] != closest_bomb[0][1]) or np.abs(pos[0] - closest_bomb[0][0]) > 4 or np.abs(pos[1] - closest_bomb[0][1]) > 4:
+                events.append(GOING_AWAY_FROM_BOMB)
+
+    # Custom event: when he wants to hug walls (punish behaviour)
+    features = state_to_features(old_game_state)
+    if features[2] == -1 and self_action == "DOWN":
+        events.append(GOING_INTO_WALL)
+    if features[3] == -1 and self_action == "UP":
+        events.append(GOING_INTO_WALL)
+    if features[4] == -1 and self_action == "LEFT":
+        events.append(GOING_INTO_WALL)
+    if features[5] == -1 and self_action == "RIGHT":
+        events.append(GOING_INTO_WALL)
+
+    # Custom event: punish when he goes crazy
+    if len(self.transitions) > 3:
+        #print(self.transitions[-1].action, self.transitions[-2].action, self.transitions[-3].action, self.transitions[-4].action)
+        if self.transitions[-1].action == self.transitions[-3].action and self.transitions[-2].action == self.transitions[-4].action:
+            events.append(UNDECIDED)
+
+
     # Perform update of the Q table.
-    self.q_table[(tuple(state_to_features(old_game_state)), self_action)] = (1 - LEARNING_RATE) * self.q_table[(tuple(state_to_features(old_game_state)), self_action)] + LEARNING_RATE * (reward_from_events(self, events) + DISCOUNT_RATE * value_function(self, new_game_state))
+
+    self.q_table[tuple(state_to_features(old_game_state)),self_action] = (1 - LEARNING_RATE) * self.q_table[tuple(state_to_features(old_game_state)),self_action] + LEARNING_RATE * ((reward_from_events(self, events)) + DISCOUNT_RATE * value_function(self, new_game_state))
 
     # Store the new Q table so that it can be used in the next act().
     with open("q-table.pt", "wb") as file:
@@ -101,11 +162,15 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
         pickle.dump(self.model, file)
 
     # FIXME Perform update of the Q table - last_game_state is y not x!!!
-    self.q_table[(tuple(state_to_features(last_game_state)), last_action)] = (1 - LEARNING_RATE) * self.q_table[(tuple(state_to_features(last_game_state)), last_action)] + LEARNING_RATE * (reward_from_events(self, events))
+    self.q_table[tuple(state_to_features(last_game_state)),last_action] = (1 - LEARNING_RATE) * self.q_table[tuple(state_to_features(last_game_state)),last_action] + LEARNING_RATE * (reward_from_events(self, events))
 
     # Store the new Q table so that it can be used in the next game.
     with open("q-table.pt", "wb") as file:
         pickle.dump(self.q_table, file)
+
+    if (last_game_state.get("self")[0] == 1):
+        print(self.q_table)
+
 
 
 def reward_from_events(self, events: List[str]) -> int:
@@ -116,13 +181,18 @@ def reward_from_events(self, events: List[str]) -> int:
     certain behavior.
     """
     game_rewards = {
-        e.COIN_COLLECTED: 1,
+        e.COIN_COLLECTED: 500,
         e.KILLED_OPPONENT: 5,
-        e.INVALID_ACTION: -100,
-        e.KILLED_SELF: -90, 
-        e.BOMB_DROPPED: -1000, 
-        e.WAITED: -100,
-        PLACEHOLDER_EVENT: -.1  # idea: the custom event is bad
+        e.BOMB_DROPPED: 0.5,
+        e.INVALID_ACTION: -2,
+        e.WAITED: -1,
+        e.GOT_KILLED: -2,
+
+        GOING_AWAY_FROM_BOMB: 1, 
+        GOING_INTO_WALL: - 200,
+        GOING_TO_COIN: 300,
+        BOMB_MISSED: 2,
+        COIN_NOT_COLLECTED: -100
     }
     reward_sum = 0
     for event in events:
@@ -137,7 +207,7 @@ def value_function(self, game_state:dict)->float:
     value = float('-inf')
 
     for action in ACTIONS:
-        if self.q_table[(tuple(state_to_features(game_state)), action)] > value:
-            value = self.q_table[(tuple(state_to_features(game_state)), action)]
-    
+        if self.q_table[tuple(state_to_features(game_state)), action] > value:
+            value = self.q_table[tuple(state_to_features(game_state)), action]
+
     return value
