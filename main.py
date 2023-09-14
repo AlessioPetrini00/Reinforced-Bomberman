@@ -8,6 +8,9 @@ import settings as s
 from environment import BombeRLeWorld, GUI
 from fallbacks import pygame, LOADED_PYGAME
 from replay import ReplayWorld
+import cProfile
+import pstats
+import io
 
 ESCAPE_KEYS = (pygame.K_q, pygame.K_ESCAPE)
 
@@ -181,4 +184,16 @@ def main(argv = None):
 
 
 if __name__ == '__main__':
+
+    pr = cProfile.Profile()
+    pr.enable()
+
     main()
+
+    pr.disable()
+    s = io.StringIO()
+    ps = pstats.Stats(pr, stream=s).sort_stats('tottime')
+    ps.print_stats()
+
+    with open('profiler.txt', 'w+') as f:
+        f.write(s.getvalue())
