@@ -155,11 +155,11 @@ def state_to_features(game_state: dict) -> np.array:
                 break
             blast_coords.append((x, y - i))
 
-    # Feature 8 & 9 & 10 & 11 - Danger detection: returns 1 when in that direction there will be an explosion
-    danger_down = [1 if ((current_position[0], current_position[1] + 1) in blast_coords if blast_coords else False) else 0]
-    danger_up = [1 if ((current_position[0], current_position[1] - 1) in blast_coords if blast_coords else False) else 0]
-    danger_left = [1 if ((current_position[0] - 1, current_position[1]) in blast_coords if blast_coords else False) else 0]
-    danger_right = [1 if ((current_position[0] + 1, current_position[1]) in blast_coords if blast_coords else False) else 0]
+    # Feature 8 & 9 & 10 & 11 - Danger detection: returns 1 when in that direction there will be an explosion, -1 when in that direction there currently is an explosion and 0 otherwise
+    danger_down = [1 if ((current_position[0], current_position[1] + 1) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0], current_position[1] + 1] > 0 else 0]
+    danger_up = [1 if ((current_position[0], current_position[1] - 1) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0], current_position[1] - 1] > 0 else 0]
+    danger_left = [1 if ((current_position[0] - 1, current_position[1]) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0] - 1, current_position[1]] > 0 else 0]
+    danger_right = [1 if ((current_position[0] + 1, current_position[1]) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0] + 1, current_position[1]] > 0 else 0]
 
     # Appending every feature
     channels.append([danger])
