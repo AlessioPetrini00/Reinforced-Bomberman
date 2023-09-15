@@ -10,17 +10,18 @@ import os
 
 import numpy as np
 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt #TODO add this as dependency
 
-# This is only an example!
+# Loading experience buffer
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
 
+# Possible actions
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyper parameters -- DO modify
-TRANSITION_HISTORY_SIZE = 3  # keep only ... last transitions
-RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ...
+TRANSITION_HISTORY_SIZE = 4  # keep only ... last transitions TODO remove once sure not needed
+RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ... TODO remove once sure not needed
 LEARNING_RATE = 0.2 # TODO fine tune this
 DISCOUNT_RATE = 0.8 # TODO fine tune this
 
@@ -31,6 +32,7 @@ GOING_TO_COIN = "GOING_TO_COIN"
 GOING_AWAY_FROM_BOMB = "GOING_AWAY_FROM_BOMB"
 GOING_INTO_WALL = "GOING_INTO_WALL"
 UNDECIDED = "UNDECIDED"
+GOING_TO_BOMB = "GOING_TO_BOMB"
 
 
 
@@ -43,7 +45,6 @@ def setup_training(self):
     :param self: This object is passed to all callbacks and you can set arbitrary values.
     """
     # Example: Setup an array that will note transition tuples
-    # (s, a, r, s')
     self.transitions = deque(maxlen=TRANSITION_HISTORY_SIZE)
 
     # Load or create Q table.
@@ -75,22 +76,12 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     """
     self.logger.debug(f'Encountered game event(s) {", ".join(map(repr, events))} in step {new_game_state["step"]}')
 
-        # state_to_features is defined in callbacks.py
+    # state_to_features is defined in callbacks.py
     self.transitions.append(Transition(state_to_features(old_game_state), self_action, state_to_features(new_game_state), reward_from_events(self, events)))
 
     # Custom event: coin not collected
     if not (new_game_state.get("self")[3] in old_game_state.get("coins")):
         events.append(COIN_NOT_COLLECTED)
-
-    """
-    if old_game_state.get("bombs"):
-        for bomb in old_game_state.get("bombs"):
-            pos = new_game_state.get("self")[3]
-            pos = np.array(pos)
-            if np.linalg.norm(np.array(bomb[0]) - pos) < 3:
-                if pos[0] != bomb[0][0] and pos[1] != bomb[0][1]:
-                    events.append(BOMB_MISSED)
-    """
 
     pos = np.array(new_game_state.get("self")[3])
     
@@ -113,6 +104,14 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
         if closest_bomb[1] == 1:
             if (pos[0] != closest_bomb[0][0] and pos[1] != closest_bomb[0][1]) or np.abs(pos[0] - closest_bomb[0][0]) > 4 or np.abs(pos[1] - closest_bomb[0][1]) > 4:
                 events.append(GOING_AWAY_FROM_BOMB)
+    
+    
+    if self.transitions[-1].state[0] and not self.transitions[-1].next_state[0]:
+        events.append(GOING_AWAY_FROM_BOMB)
+
+    if not self.transitions[-1].state[0] and self.transitions[-1].next_state[0]:
+        events.append(GOING_TO_BOMB)
+
 
     # Custom event: when he wants to hug walls (punish behaviour)
     features = state_to_features(old_game_state)
@@ -133,12 +132,9 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
 
 
     # Perform update of the Q table.
+    # We don't store in q_table.pt because we found out it takes a lot of computational time
 
     self.q_table[tuple(state_to_features(old_game_state)),self_action] = (1 - LEARNING_RATE) * self.q_table[tuple(state_to_features(old_game_state)),self_action] + LEARNING_RATE * ((reward_from_events(self, events)) + DISCOUNT_RATE * value_function(self, new_game_state))
-
-    # Store the new Q table so that it can be used in the next act().
-    with open("q-table.pt", "wb") as file:
-        pickle.dump(self.q_table, file)
 
 
 def end_of_round(self, last_game_state: dict, last_action: str, events: List[str]):
@@ -181,18 +177,20 @@ def reward_from_events(self, events: List[str]) -> int:
     certain behavior.
     """
     game_rewards = {
-        e.COIN_COLLECTED: 500,
-        e.KILLED_OPPONENT: 5,
-        e.BOMB_DROPPED: 0.5,
-        e.INVALID_ACTION: -2,
-        e.WAITED: -1,
-        e.GOT_KILLED: -2,
+        e.COIN_COLLECTED: 80,
+        # e.KILLED_OPPONENT: 5,
+        e.BOMB_DROPPED: -100,
+        # e.INVALID_ACTION: -2,
+        # e.WAITED: -50,
+        e.GOT_KILLED: -300,
+        e.KILLED_SELF: -250,
 
-        GOING_AWAY_FROM_BOMB: 1, 
-        GOING_INTO_WALL: - 200,
-        GOING_TO_COIN: 300,
-        BOMB_MISSED: 2,
-        COIN_NOT_COLLECTED: -100
+        GOING_AWAY_FROM_BOMB: 150, 
+        GOING_INTO_WALL: -300,
+        GOING_TO_COIN: 50,
+        # COIN_NOT_COLLECTED: -30,
+        GOING_TO_BOMB: -150,
+        UNDECIDED: -500
     }
     reward_sum = 0
     for event in events:
@@ -211,3 +209,36 @@ def value_function(self, game_state:dict)->float:
             value = self.q_table[tuple(state_to_features(game_state)), action]
 
     return value
+
+"""
+
+def optimize(self, n :int) -> list:
+    # inizializza i valori a zero
+    game_rewards = np.zeros((n,1))
+
+    # fai un round ed estrai il punteggio
+    
+    punteggio0 = 0
+
+    # inizializza i valori random
+    rewards = np.random(n)
+
+    # train
+
+    # estrai il punteggio
+    punteggio1 = 0
+
+    # calcola il delta punteggio
+    delta_punteggio = 0
+
+    # modifica parametro i di delta_punteggio * 0.1
+
+    # train
+    # round
+    # delta punteggio
+    # parametro 2 ...
+
+    # restituisci i valori finali
+"""
+
+
