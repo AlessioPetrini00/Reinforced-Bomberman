@@ -78,7 +78,7 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     :param events: The events that occurred when going from  `old_game_state` to `new_game_state`
     """
     self.logger.debug(f'Encountered game event(s) {", ".join(map(repr, events))} in step {new_game_state["step"]}')
-    self.logger.debug("Closest coin or crate are in " + state_to_features(old_game_state)[1] + " " + state_to_features(old_game_state)[2])
+    self.logger.debug("Closest coin or crate are in " + state_to_features(new_game_state)[1] + " " + state_to_features(new_game_state)[2])
 
     # state_to_features is defined in callbacks.py
     self.transitions.append(Transition(state_to_features(old_game_state), self_action, state_to_features(new_game_state), reward_from_events(self, events)))

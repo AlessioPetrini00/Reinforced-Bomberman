@@ -121,7 +121,7 @@ def state_to_features(game_state: dict) -> np.array:
                     if i > 0 and i < map_size:
                         for j in range(current_position[1] - raggio, current_position[1] + raggio + 1):
                             if j > 0 and j < map_size:
-                                if (i, j) != (current_position[0], current_position[1]) and abs(current_position[0] - i) == raggio or abs(current_position[1] - j) == raggio:
+                                if (i, j) != (current_position[0], current_position[1]) and (abs(current_position[0] - i) == raggio or abs(current_position[1] - j) == raggio):
                                     if game_state.get("field")[i,j] == 1:
                                         flag = 1
                                         if i - current_position[0] > 0:
@@ -149,12 +149,13 @@ def state_to_features(game_state: dict) -> np.array:
     else:
         coin_first_dir = ["ALIGNED"]
 
-    if nearest_coin[1] - current_position[1] < 0:
-        coin_second_dir = ["UP"]
-    elif nearest_coin[1] - current_position[1] > 0:
-        coin_second_dir = ["DOWN"]  
-    else:
-        coin_second_dir = ["ALIGNED"]
+    if not nearest_coin[1] == float('inf'):
+        if nearest_coin[1] - current_position[1] < 0:
+            coin_second_dir = ["UP"]
+        elif nearest_coin[1] - current_position[1] > 0:
+            coin_second_dir = ["DOWN"]  
+        else:
+            coin_second_dir = ["ALIGNED"]
 
     #Feature 4 & 5 & 6 & 7 - Wall detection: returns 1 when non-walkable tile and 0 when free tile
     vision_down = [1 if game_state.get("field")[current_position[0], current_position[1] + 1]  or (any(x == [current_position[0], current_position[1] + 1] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0], current_position[1] + 1] == 1 else 0]
