@@ -1,7 +1,6 @@
 import os
 import pickle
 import random
-
 import numpy as np
 
 
@@ -93,14 +92,14 @@ def state_to_features(game_state: dict) -> np.array:
     current_position = np.array(game_state.get("self")[3])    
     
     # Feature 1 - Dangerous zone: return a boolean that indicates wether the agent is in the path of an explosion
-    danger = False
-    timer = float('inf')
+    # danger = False
+    # timer = float('inf')
 
-    for bomb in game_state.get("bombs"):
-         if (bomb[0][0] == current_position[0] or bomb[0][1] == current_position[1]) and np.linalg.norm(np.array(bomb[0]) - current_position) < 4:
-            danger = True
-            timer = bomb[1] #TODO remove maybe
-            break
+    # for bomb in game_state.get("bombs"):
+    #      if (bomb[0][0] == current_position[0] or bomb[0][1] == current_position[1]) and np.linalg.norm(np.array(bomb[0]) - current_position) < 4:
+    #         danger = True
+    #         timer = bomb[1] #TODO remove maybe
+    #         break
 
     # Feature 2 & 3 - Nearest coin: return direction for nearest coin
     nearest_coin = [float('inf'), float('inf')]
@@ -109,16 +108,19 @@ def state_to_features(game_state: dict) -> np.array:
     map_size = game_state.get("field").shape[0]
     flag = 0
 
+    # Find coordinates for nearest coin
     for coin in game_state.get("coins"):
         pos_coin = np.array(coin)
         if np.linalg.norm(pos_coin - current_position) < np.linalg.norm(nearest_coin - current_position):
             nearest_coin = pos_coin
+    
+    # When no coins look for nearest crate
     if nearest_coin[0] == float('inf'):
         for raggio in range(1, map_size + 1):
                 for i in range(current_position[0] - raggio, current_position[0] + raggio + 1):
-                    if i > 0 or i < map_size:
+                    if i > 0 and i < map_size:
                         for j in range(current_position[1] - raggio, current_position[1] + raggio + 1):
-                            if j > 0 or j < map_size:
+                            if j > 0 and j < map_size:
                                 if (i, j) != (current_position[0], current_position[1]) and abs(current_position[0] - i) == raggio or abs(current_position[1] - j) == raggio:
                                     if game_state.get("field")[i,j] == 1:
                                         flag = 1
@@ -138,7 +140,8 @@ def state_to_features(game_state: dict) -> np.array:
                         if flag:
                             break
                 if flag:
-                    break   
+                    break
+    # Compute direction from coin position
     elif nearest_coin[0] - current_position[0] > 0:
         coin_first_dir = ["RIGHT"]
     elif nearest_coin[0] - current_position[0] < 0:
@@ -153,11 +156,11 @@ def state_to_features(game_state: dict) -> np.array:
     else:
         coin_second_dir = ["ALIGNED"]
 
-    #Feature 4 & 5 & 6 & 7 - Wall detection: returns -1 when non-walkable tile and 0 when free tile
-    vision_down = [1 if game_state.get("field")[current_position[0], current_position[1] + 1]  or (any(x == [current_position[0], current_position[1] + 1] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) else 0]
-    vision_up = [1 if game_state.get("field")[current_position[0], current_position[1] - 1] or (any(x == [current_position[0], current_position[1] - 1] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) else 0]
-    vision_left = [1 if game_state.get("field")[current_position[0] - 1, current_position[1]] or (any(x == [current_position[0] - 1, current_position[1]] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) else 0]
-    vision_right = [1 if game_state.get("field")[current_position[0] + 1, current_position[1]] or (any(x == [current_position[0] + 1, current_position[1]] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) else 0]
+    #Feature 4 & 5 & 6 & 7 - Wall detection: returns 1 when non-walkable tile and 0 when free tile
+    vision_down = [1 if game_state.get("field")[current_position[0], current_position[1] + 1]  or (any(x == [current_position[0], current_position[1] + 1] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0], current_position[1] + 1] == 1 else 0]
+    vision_up = [1 if game_state.get("field")[current_position[0], current_position[1] - 1] or (any(x == [current_position[0], current_position[1] - 1] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0], current_position[1] - 1] == 1 else 0]
+    vision_left = [1 if game_state.get("field")[current_position[0] - 1, current_position[1]] or (any(x == [current_position[0] - 1, current_position[1]] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0] - 1, current_position[1]] == 1 else 0]
+    vision_right = [1 if game_state.get("field")[current_position[0] + 1, current_position[1]] or (any(x == [current_position[0] + 1, current_position[1]] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0] + 1, current_position[1]] == 1 else 0]
 
     vision_crate = 0
     for i in range(2):
@@ -167,9 +170,6 @@ def state_to_features(game_state: dict) -> np.array:
                 break
         if game_state.get("field")[current_position[0] + i % 2, current_position[1] + j % 2] == 1:
             break
-
-
-
 
     # Computing coordinates where there will be an explosion
     blast_coords = []
@@ -194,6 +194,7 @@ def state_to_features(game_state: dict) -> np.array:
             blast_coords.append((x, y - i))
 
     # Feature 8 & 9 & 10 & 11 - Danger detection: returns 1 when in that direction there will be an explosion, -1 when in that direction there currently is an explosion and 0 otherwise
+    danger = 1 if ((current_position[0], current_position[1]) in blast_coords if blast_coords else False) else 0
     danger_down = [1 if ((current_position[0], current_position[1] + 1) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0], current_position[1] + 1] > 0 else 0]
     danger_up = [1 if ((current_position[0], current_position[1] - 1) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0], current_position[1] - 1] > 0 else 0]
     danger_left = [1 if ((current_position[0] - 1, current_position[1]) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0] - 1, current_position[1]] > 0 else 0]
@@ -218,4 +219,4 @@ def state_to_features(game_state: dict) -> np.array:
     # ... and return them as a vector
     return stacked_channels.reshape(-1)
 
-#TODO Mettere vision crate in features; Dirgli se va a sbattere contro cesta (punirlo); 
+#TODO  Aggiustare parametri

@@ -28,12 +28,12 @@ DISCOUNT_RATE = 0.8 # TODO fine tune this
 # Custom events
 COIN_NOT_COLLECTED = "COIN_NOT_COLLECTED"
 BOMB_MISSED = "BOMB_MISSED"
-GOING_TO_COIN = "GOING_TO_COIN"
+GOING_TO_COIN_OR_CRATE = "GOING_TO_COIN_OR_CRATE"
 GOING_AWAY_FROM_BOMB = "GOING_AWAY_FROM_BOMB"
 GOING_INTO_WALL = "GOING_INTO_WALL"
 UNDECIDED = "UNDECIDED"
 GOING_TO_BOMB = "GOING_TO_BOMB"
-GOING_TO_CRATE = "GOING_TO_CRATE"
+
 
 
 
@@ -95,7 +95,7 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
                 nearest_coin = coin
         old_pos = np.array(old_game_state.get("self")[3])
         if np.linalg.norm(nearest_coin - pos) < np.linalg.norm(nearest_coin - old_pos):
-            events.append(GOING_TO_COIN)
+            events.append(GOING_TO_COIN_OR_CRATE)
     
     
     if self.transitions[-1].state[0] and not self.transitions[-1].next_state[0]:
@@ -169,20 +169,20 @@ def reward_from_events(self, events: List[str]) -> int:
     certain behavior.
     """
     game_rewards = {
-        e.COIN_COLLECTED: 90,
+        e.COIN_COLLECTED: 150,
         # e.KILLED_OPPONENT: 5,
         # e.BOMB_DROPPED: -100,
         # e.INVALID_ACTION: -2,
         # e.WAITED: -50,
-        e.GOT_KILLED: -300,
-        e.KILLED_SELF: -250,
+        e.GOT_KILLED: -100,
+        e.KILLED_SELF: -350,
         e.CRATE_DESTROYED: 100,
 
-        GOING_AWAY_FROM_BOMB: 80, 
-        GOING_INTO_WALL: -100,
-        GOING_TO_COIN: 60,
-        COIN_NOT_COLLECTED: -30,
-        GOING_TO_BOMB: -100,
+        GOING_AWAY_FROM_BOMB: 120, 
+        GOING_INTO_WALL: -120,
+        GOING_TO_COIN_OR_CRATE: 100,
+        #COIN_NOT_COLLECTED: -30,
+        GOING_TO_BOMB: -200,
         UNDECIDED: -500
     }
     reward_sum = 0
@@ -233,5 +233,3 @@ def optimize(self, n :int) -> list:
 
     # restituisci i valori finali
 """
-
-
