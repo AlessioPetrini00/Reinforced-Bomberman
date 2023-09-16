@@ -105,7 +105,7 @@ def state_to_features(game_state: dict) -> np.array:
     # Feature 2 & 3 - Nearest coin: return direction for nearest coin
     nearest_coin = [float('inf'), float('inf')]
 
-    map_size = game_state.get("field").shape()[0]
+    map_size = game_state.get("field").shape[0]
 
     for coin in game_state.get("coins"):
         pos_coin = np.array(coin)
