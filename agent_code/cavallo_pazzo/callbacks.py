@@ -7,7 +7,7 @@ import numpy as np
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyperparameters.
-EXPLORATION_RATE = 0.9 # TODO fine tune this
+EXPLORATION_RATE = 0 # TODO fine tune this
 
 
 def setup(self):
@@ -131,9 +131,9 @@ def state_to_features(game_state: dict) -> np.array:
                                         else:
                                             coin_first_dir = ["ALIGNED"]
                                         if j - current_position[1] < 0:
-                                            coin_second_dir = ["DOWN"]
+                                            coin_second_dir = ["UP"]
                                         elif j - current_position[1] > 0:
-                                            coin_second_dir = ["UP"]  
+                                            coin_second_dir = ["DOWN"]  
                                         else:
                                             coin_second_dir = ["ALIGNED"]
                                         break
@@ -150,9 +150,9 @@ def state_to_features(game_state: dict) -> np.array:
         coin_first_dir = ["ALIGNED"]
 
     if nearest_coin[1] - current_position[1] < 0:
-        coin_second_dir = ["DOWN"]
+        coin_second_dir = ["UP"]
     elif nearest_coin[1] - current_position[1] > 0:
-        coin_second_dir = ["UP"]  
+        coin_second_dir = ["DOWN"]  
     else:
         coin_second_dir = ["ALIGNED"]
 
