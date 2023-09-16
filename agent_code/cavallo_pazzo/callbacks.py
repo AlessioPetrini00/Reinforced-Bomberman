@@ -104,15 +104,16 @@ def state_to_features(game_state: dict) -> np.array:
 
     # Feature 2 & 3 - Nearest coin: return direction for nearest coin
     nearest_coin = [float('inf'), float('inf')]
-
+    coin_first_dir = ["FREE"]
+    coin_second_dir = ["FREE"]
     map_size = game_state.get("field").shape[0]
+    flag = 0
 
     for coin in game_state.get("coins"):
         pos_coin = np.array(coin)
         if np.linalg.norm(pos_coin - current_position) < np.linalg.norm(nearest_coin - current_position):
             nearest_coin = pos_coin
     if nearest_coin[0] == float('inf'):
-        #TODO add FREE if crate not found
         for raggio in range(1, map_size + 1):
                 for i in range(current_position[0] - raggio, current_position[0] + raggio + 1):
                     if i < 0 or i >= map_size:
@@ -120,6 +121,7 @@ def state_to_features(game_state: dict) -> np.array:
                             if j < 0 or j >= map_size:
                                 if (i, j) != (current_position[0], current_position[1]) and abs(current_position[0] - i) == raggio or abs(current_position[1] - j) == raggio:
                                     if game_state.get("field")[i,j] == 1:
+                                        flag = 1
                                         if i - current_position[0] > 0:
                                             coin_first_dir = ["RIGHT"]
                                         elif i - current_position[0] < 0:
@@ -133,8 +135,10 @@ def state_to_features(game_state: dict) -> np.array:
                                         else:
                                             coin_second_dir = ["ALIGNED"]
                                         break
-                        break
-                break
+                        if flag:
+                            break
+                if flag:
+                    break   
     elif nearest_coin[0] - current_position[0] > 0:
         coin_first_dir = ["RIGHT"]
     elif nearest_coin[0] - current_position[0] < 0:
@@ -161,6 +165,10 @@ def state_to_features(game_state: dict) -> np.array:
             if game_state.get("field")[current_position[0] + i % 2, current_position[1] + j % 2] == 1:
                 vision_crate = 1
                 break
+        if game_state.get("field")[current_position[0] + i % 2, current_position[1] + j % 2] == 1:
+            break
+
+
 
 
     # Computing coordinates where there will be an explosion
