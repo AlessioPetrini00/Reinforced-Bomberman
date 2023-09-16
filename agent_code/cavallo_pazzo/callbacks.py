@@ -116,9 +116,9 @@ def state_to_features(game_state: dict) -> np.array:
     if nearest_coin[0] == float('inf'):
         for raggio in range(1, map_size + 1):
                 for i in range(current_position[0] - raggio, current_position[0] + raggio + 1):
-                    if i < 0 or i >= map_size:
+                    if i > 0 or i < map_size:
                         for j in range(current_position[1] - raggio, current_position[1] + raggio + 1):
-                            if j < 0 or j >= map_size:
+                            if j > 0 or j < map_size:
                                 if (i, j) != (current_position[0], current_position[1]) and abs(current_position[0] - i) == raggio or abs(current_position[1] - j) == raggio:
                                     if game_state.get("field")[i,j] == 1:
                                         flag = 1
@@ -211,6 +211,7 @@ def state_to_features(game_state: dict) -> np.array:
     channels.append(danger_up)
     channels.append(danger_left)
     channels.append(danger_right)
+    channels.append([vision_crate])
 
     # Concatenate them as a feature tensor (they must have the same shape), ...
     stacked_channels = np.stack(channels)
