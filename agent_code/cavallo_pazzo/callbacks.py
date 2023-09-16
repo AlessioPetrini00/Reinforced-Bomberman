@@ -8,7 +8,7 @@ import numpy as np
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyperparameters.
-EXPLORATION_RATE = 0 # TODO fine tune this
+EXPLORATION_RATE = 0.9 # TODO fine tune this
 
 
 def setup(self):
@@ -105,12 +105,36 @@ def state_to_features(game_state: dict) -> np.array:
     # Feature 2 & 3 - Nearest coin: return direction for nearest coin
     nearest_coin = [float('inf'), float('inf')]
 
+    map_size = game_state.get("field").shape()[0]
+
     for coin in game_state.get("coins"):
         pos_coin = np.array(coin)
         if np.linalg.norm(pos_coin - current_position) < np.linalg.norm(nearest_coin - current_position):
             nearest_coin = pos_coin
     if nearest_coin[0] == float('inf'):
-        coin_first_dir = ["FREE"]
+        #TODO add FREE if crate not found
+        for raggio in range(1, map_size + 1):
+                for i in range(current_position[0] - raggio, current_position[0] + raggio + 1):
+                    if i < 0 or i >= map_size:
+                        for j in range(current_position[1] - raggio, current_position[1] + raggio + 1):
+                            if j < 0 or j >= map_size:
+                                if (i, j) != (current_position[0], current_position[1]) and abs(current_position[0] - i) == raggio or abs(current_position[1] - j) == raggio:
+                                    if game_state.get("field")[i,j] == 1:
+                                        if i - current_position[0] > 0:
+                                            coin_first_dir = ["RIGHT"]
+                                        elif i - current_position[0] < 0:
+                                            coin_first_dir = ["LEFT"]  
+                                        else:
+                                            coin_first_dir = ["ALIGNED"]
+                                        if j - current_position[1] < 0:
+                                            coin_second_dir = ["DOWN"]
+                                        elif j - current_position[1] > 0:
+                                            coin_second_dir = ["UP"]  
+                                        else:
+                                            coin_second_dir = ["ALIGNED"]
+                                        break
+                        break
+                break
     elif nearest_coin[0] - current_position[0] > 0:
         coin_first_dir = ["RIGHT"]
     elif nearest_coin[0] - current_position[0] < 0:
@@ -118,9 +142,7 @@ def state_to_features(game_state: dict) -> np.array:
     else:
         coin_first_dir = ["ALIGNED"]
 
-    if nearest_coin[1] == float('inf'):
-        coin_second_dir = ["FREE"]
-    elif nearest_coin[1] - current_position[1] < 0:
+    if nearest_coin[1] - current_position[1] < 0:
         coin_second_dir = ["DOWN"]
     elif nearest_coin[1] - current_position[1] > 0:
         coin_second_dir = ["UP"]  
@@ -132,6 +154,14 @@ def state_to_features(game_state: dict) -> np.array:
     vision_up = [1 if game_state.get("field")[current_position[0], current_position[1] - 1] or (any(x == [current_position[0], current_position[1] - 1] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) else 0]
     vision_left = [1 if game_state.get("field")[current_position[0] - 1, current_position[1]] or (any(x == [current_position[0] - 1, current_position[1]] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) else 0]
     vision_right = [1 if game_state.get("field")[current_position[0] + 1, current_position[1]] or (any(x == [current_position[0] + 1, current_position[1]] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) else 0]
+
+    vision_crate = 0
+    for i in range(2):
+        for j in range(2):
+            if game_state.get("field")[current_position[0] + i % 2, current_position[1] + j % 2] == 1:
+                vision_crate = 1
+                break
+
 
     # Computing coordinates where there will be an explosion
     blast_coords = []
@@ -178,3 +208,5 @@ def state_to_features(game_state: dict) -> np.array:
     stacked_channels = np.stack(channels)
     # ... and return them as a vector
     return stacked_channels.reshape(-1)
+
+#TODO Mettere vision crate in features; Dirgli se va a sbattere contro cesta (punirlo); 
