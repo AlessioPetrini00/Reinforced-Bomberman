@@ -33,6 +33,7 @@ GOING_AWAY_FROM_BOMB = "GOING_AWAY_FROM_BOMB"
 GOING_INTO_WALL = "GOING_INTO_WALL"
 UNDECIDED = "UNDECIDED"
 GOING_TO_BOMB = "GOING_TO_BOMB"
+BOMB_AND_CRATE = "BOMB_AND_CRATE"
 
 
 
@@ -122,6 +123,9 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
         if self.transitions[-1].action == self.transitions[-3].action and self.transitions[-2].action == self.transitions[-4].action:
             events.append(UNDECIDED)
 
+    if features[11] == 1 and self_action == "BOMB":
+        events.append(BOMB_AND_CRATE)
+
 
     # Perform update of the Q table.
     # We don't store in q_table.pt because we found out it takes a lot of computational time
@@ -176,14 +180,15 @@ def reward_from_events(self, events: List[str]) -> int:
         # e.WAITED: -50,
         e.GOT_KILLED: -100,
         e.KILLED_SELF: -350,
-        e.CRATE_DESTROYED: 100,
+        e.CRATE_DESTROYED: 400,
 
-        GOING_AWAY_FROM_BOMB: 120, 
+        BOMB_AND_CRATE: 1000,
+        GOING_AWAY_FROM_BOMB: 220, 
         GOING_INTO_WALL: -120,
-        GOING_TO_COIN_OR_CRATE: 100,
+        GOING_TO_COIN_OR_CRATE: 50,
         #COIN_NOT_COLLECTED: -30,
         GOING_TO_BOMB: -200,
-        UNDECIDED: -500
+        UNDECIDED: -1000
     }
     reward_sum = 0
     for event in events:
