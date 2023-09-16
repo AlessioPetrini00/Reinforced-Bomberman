@@ -8,7 +8,7 @@ ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyperparameters.
 EXPLORATION_RATE = 0 # TODO fine tune this
-
+#TODO feature can get to safe zone
 
 def setup(self):
     """
@@ -22,11 +22,9 @@ def setup(self):
     """
     # TODO remove this model stuff when sure it's not needed
     if self.train or not os.path.isfile("my-saved-model.pt"):
-        self.logger.info("Setting up model from scratch.")
         weights = np.random.rand(len(ACTIONS))
         self.model = weights / weights.sum()
     else:
-        self.logger.info("Loading model from saved state.")
         with open("my-saved-model.pt", "rb") as file:
             self.model = pickle.load(file)
 
@@ -42,11 +40,8 @@ def act(self, game_state: dict) -> str:
     """
     
     if self.train and random.random() < EXPLORATION_RATE:
-        self.logger.debug("Choosing action purely at random.")
         # 80%: walk in any direction. 10% wait. 10% bomb.
         return np.random.choice(ACTIONS, p=[.2, .2, .2, .2, .1, .1])
-
-    self.logger.debug("Querying model for action.")
 
     # Load or create Q table.
     if not os.path.isfile("q-table.pt"):
@@ -66,7 +61,7 @@ def act(self, game_state: dict) -> str:
             q_value = self.q_table[(tuple(state_to_features(game_state)), action)]
             best_action = action
 
-    self.logger.debug(best_action)
+    self.logger.debug("La migliore azione è " + best_action)
 
     return best_action
 
@@ -157,20 +152,17 @@ def state_to_features(game_state: dict) -> np.array:
         else:
             coin_second_dir = ["ALIGNED"]
 
-    #Feature 4 & 5 & 6 & 7 - Wall detection: returns 1 when non-walkable tile and 0 when free tile
-    vision_down = [1 if game_state.get("field")[current_position[0], current_position[1] + 1]  or (any(x == [current_position[0], current_position[1] + 1] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0], current_position[1] + 1] == 1 else 0]
-    vision_up = [1 if game_state.get("field")[current_position[0], current_position[1] - 1] or (any(x == [current_position[0], current_position[1] - 1] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0], current_position[1] - 1] == 1 else 0]
-    vision_left = [1 if game_state.get("field")[current_position[0] - 1, current_position[1]] or (any(x == [current_position[0] - 1, current_position[1]] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0] - 1, current_position[1]] == 1 else 0]
-    vision_right = [1 if game_state.get("field")[current_position[0] + 1, current_position[1]] or (any(x == [current_position[0] + 1, current_position[1]] for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0] + 1, current_position[1]] == 1 else 0]
+    #Feature 4 & 5 & 6 & 7 - Obstacle detection: returns 1 when non-walkable tile and 0 when free tile TODO detect other players
+    vision_down = [1 if game_state.get("field")[current_position[0], current_position[1] + 1]  or (any(x == (current_position[0], current_position[1] + 1) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0], current_position[1] + 1] == 1 else 0]
+    vision_up = [1 if game_state.get("field")[current_position[0], current_position[1] - 1] or (any(x == (current_position[0], current_position[1] - 1) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0], current_position[1] - 1] == 1 else 0]
+    vision_left = [1 if game_state.get("field")[current_position[0] - 1, current_position[1]] or (any(x == (current_position[0] - 1, current_position[1]) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0] - 1, current_position[1]] == 1 else 0]
+    vision_right = [1 if game_state.get("field")[current_position[0] + 1, current_position[1]] or (any(x == (current_position[0] + 1, current_position[1]) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0] + 1, current_position[1]] == 1 else 0]
 
     vision_crate = 0
-    for i in range(2):
-        for j in range(2):
-            if game_state.get("field")[current_position[0] + i % 2, current_position[1] + j % 2] == 1:
+    for i,j in [(-1,0), (1, 0), (0,1), (0, -1)]:
+            if game_state.get("field")[current_position[0] + i, current_position[1] + j] == 1:
                 vision_crate = 1
                 break
-        if game_state.get("field")[current_position[0] + i % 2, current_position[1] + j % 2] == 1:
-            break
 
     # Computing coordinates where there will be an explosion
     blast_coords = []
@@ -219,5 +211,3 @@ def state_to_features(game_state: dict) -> np.array:
     stacked_channels = np.stack(channels)
     # ... and return them as a vector
     return stacked_channels.reshape(-1)
-
-#TODO  Aggiustare parametri

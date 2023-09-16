@@ -76,9 +76,20 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     :param self_action: The action that you took.
     :param new_game_state: The state the agent is in now.
     :param events: The events that occurred when going from  `old_game_state` to `new_game_state`
-    """
-    self.logger.debug(f'Encountered game event(s) {", ".join(map(repr, events))} in step {new_game_state["step"]}')
+    """    
     self.logger.debug("Closest coin or crate are in " + state_to_features(new_game_state)[1] + " " + state_to_features(new_game_state)[2])
+    self.logger.debug("1 for danger, -1 explosion, 0 nothing. You're now in: "+state_to_features(new_game_state)[0])
+    self.logger.debug("down "+state_to_features(new_game_state)[7])
+    self.logger.debug("up "+state_to_features(new_game_state)[8])
+    self.logger.debug("left "+state_to_features(new_game_state)[9])
+    self.logger.debug("right "+state_to_features(new_game_state)[10])
+    self.logger.debug("vision is 1 for non walkable and 0 otherwise - down "+state_to_features(new_game_state)[3])
+    self.logger.debug("vision is 1 for non walkable and 0 otherwise - up "+state_to_features(new_game_state)[4])
+    self.logger.debug("vision is 1 for non walkable and 0 otherwise - left "+state_to_features(new_game_state)[5])
+    self.logger.debug("vision is 1 for non walkable and 0 otherwise - right "+state_to_features(new_game_state)[6])
+    self.logger.debug("sees crate? "+state_to_features(new_game_state)[11])
+
+
 
     # state_to_features is defined in callbacks.py
     self.transitions.append(Transition(state_to_features(old_game_state), self_action, state_to_features(new_game_state), reward_from_events(self, events)))
@@ -127,6 +138,8 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     if features[11] == 1 and self_action == "BOMB":
         events.append(BOMB_AND_CRATE)
 
+    self.logger.debug(f'Encountered game event(s) {", ".join(map(repr, events))} in step {new_game_state["step"]}')
+
 
     # Perform update of the Q table.
     # We don't store in q_table.pt because we found out it takes a lot of computational time
@@ -174,21 +187,22 @@ def reward_from_events(self, events: List[str]) -> int:
     certain behavior.
     """
     game_rewards = {
-        e.COIN_COLLECTED: 150,
+        e.COIN_COLLECTED: 10,
+        COIN_NOT_COLLECTED: -1,
         # e.KILLED_OPPONENT: 5,
-        # e.BOMB_DROPPED: -100,
-        # e.INVALID_ACTION: -2,
-        # e.WAITED: -50,
-        e.GOT_KILLED: -100,
-        e.KILLED_SELF: -350,
-        e.CRATE_DESTROYED: 400,
+        e.BOMB_DROPPED: 4,
+        e.INVALID_ACTION: -200,
+        e.WAITED: -40,
+        # e.GOT_KILLED: -100,
+        e.KILLED_SELF: -50,
+        e.CRATE_DESTROYED: 5,
 
-        BOMB_AND_CRATE: 1000,
-        GOING_AWAY_FROM_BOMB: 220, 
-        GOING_INTO_WALL: -120,
-        GOING_TO_COIN_OR_CRATE: 50,
+        # BOMB_AND_CRATE: 5,
+        GOING_AWAY_FROM_BOMB: 45, 
+        GOING_INTO_WALL: -200,
+        GOING_TO_COIN_OR_CRATE: 4,
         #COIN_NOT_COLLECTED: -30,
-        GOING_TO_BOMB: -200,
+        # GOING_TO_BOMB: -200,
         UNDECIDED: -1000
     }
     reward_sum = 0
