@@ -7,7 +7,7 @@ import numpy as np
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyperparameters.
-EXPLORATION_RATE = 0 # TODO fine tune this
+EXPLORATION_RATE = 0.3 # TODO fine tune this
 #TODO feature can get to safe zone
 
 def setup(self):
@@ -86,16 +86,32 @@ def state_to_features(game_state: dict) -> np.array:
 
     current_position = np.array(game_state.get("self")[3])    
     
-    # Feature 1 - Dangerous zone: return a boolean that indicates wether the agent is in the path of an explosion
-    # danger = False
-    # timer = float('inf')
+    # Computing coordinates where there will be an explosion
+    blast_coords = []
+    for bomb in game_state.get("bombs"):
+        x, y = bomb[0][0], bomb[0][1]
+        blast_coords = [(x, y)]
+        for i in range(1, 4):
+            if game_state.get("field")[x + i, y] == -1:
+                break
+            blast_coords.append((x + i, y))
+        for i in range(1, 4):
+            if game_state.get("field")[x - i, y] == -1:
+                break
+            blast_coords.append((x - i, y))
+        for i in range(1, 4):
+            if game_state.get("field")[x, y + i] == -1:
+                break
+            blast_coords.append((x, y + i))
+        for i in range(1, 4):
+            if game_state.get("field")[x, y - i] == -1:
+                break
+            blast_coords.append((x, y - i))
 
-    # for bomb in game_state.get("bombs"):
-    #      if (bomb[0][0] == current_position[0] or bomb[0][1] == current_position[1]) and np.linalg.norm(np.array(bomb[0]) - current_position) < 4:
-    #         danger = True
-    #         timer = bomb[1] #TODO remove maybe
-    #         break
 
+    # Feature 1
+    danger = [1 if ((current_position[0], current_position[1]) in blast_coords if blast_coords else False) else 0]
+    
     # Feature 2 & 3 - Nearest coin: return direction for nearest coin
     nearest_coin = [float('inf'), float('inf')]
     coin_first_dir = ["FREE"]
@@ -158,11 +174,6 @@ def state_to_features(game_state: dict) -> np.array:
     vision_left = [1 if game_state.get("field")[current_position[0] - 1, current_position[1]] or (any(x == (current_position[0] - 1, current_position[1]) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0] - 1, current_position[1]] == 1 else 0]
     vision_right = [1 if game_state.get("field")[current_position[0] + 1, current_position[1]] or (any(x == (current_position[0] + 1, current_position[1]) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0] + 1, current_position[1]] == 1 else 0]
 
-    vision_crate = 0
-    for i,j in [(-1,0), (1, 0), (0,1), (0, -1)]:
-            if game_state.get("field")[current_position[0] + i, current_position[1] + j] == 1:
-                vision_crate = 1
-                break
 
     # Computing coordinates where there will be an explosion
     blast_coords = []
@@ -186,15 +197,65 @@ def state_to_features(game_state: dict) -> np.array:
                 break
             blast_coords.append((x, y - i))
 
+
     # Feature 8 & 9 & 10 & 11 - Danger detection: returns 1 when in that direction there will be an explosion, -1 when in that direction there currently is an explosion and 0 otherwise
-    danger = 1 if ((current_position[0], current_position[1]) in blast_coords if blast_coords else False) else 0
     danger_down = [1 if ((current_position[0], current_position[1] + 1) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0], current_position[1] + 1] > 0 else 0]
     danger_up = [1 if ((current_position[0], current_position[1] - 1) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0], current_position[1] - 1] > 0 else 0]
     danger_left = [1 if ((current_position[0] - 1, current_position[1]) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0] - 1, current_position[1]] > 0 else 0]
     danger_right = [1 if ((current_position[0] + 1, current_position[1]) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0] + 1, current_position[1]] > 0 else 0]
 
+
+    # Feature 12
+    vision_crate = 0
+    for i,j in [(-1,0), (1, 0), (0,1), (0, -1)]:
+            if game_state.get("field")[current_position[0] + i, current_position[1] + j] == 1:
+                vision_crate = 1
+                break
+
+    # Feature 13 & 14 & 15 & 16
+    escape_up = 0
+    for i in np.arange(1,4):
+        if game_state.get("field")[current_position[0], current_position[1] - i] == 1 or game_state.get("field")[current_position[0], current_position[1] - i] == -1:
+            break
+        elif game_state.get("field")[current_position[0] + 1, current_position[1] - i] == 0 or game_state.get("field")[current_position[0] - 1, current_position[1] - i] == 0:
+            escape_up = 1
+            break
+        elif i == 3 and game_state.get("field")[current_position[0], current_position[1] - i - 1] == 0:
+            escape_up = 1
+            break
+    escape_down = 0
+    for i in np.arange(1,4):
+        if game_state.get("field")[current_position[0], current_position[1] + i] == 1 or game_state.get("field")[current_position[0], current_position[1] + i] == -1:
+            break
+        elif game_state.get("field")[current_position[0] + 1, current_position[1] + i] == 0 or game_state.get("field")[current_position[0] - 1, current_position[1] + i] == 0:
+            escape_down = 1
+            break
+        elif i == 3 and game_state.get("field")[current_position[0], current_position[1] + i + 1] == 0:
+            escape_down = 1
+            break
+    escape_left = 0
+    for i in np.arange(1,4):
+        if game_state.get("field")[current_position[0] - i, current_position[1]] == 1 or game_state.get("field")[current_position[0] - i, current_position[1]] == -1:
+            break
+        elif game_state.get("field")[current_position[0] - i, current_position[1] - 1] == 0 or game_state.get("field")[current_position[0] - i, current_position[1] + 1] == 0:
+            escape_left = 1
+            break
+        elif i == 3 and game_state.get("field")[current_position[0] - i - 1, current_position[1]] == 0:
+            escape_left = 1
+            break
+    escape_right = 0
+    for i in np.arange(1,4):
+        if game_state.get("field")[current_position[0] + i, current_position[1]] == 1 or game_state.get("field")[current_position[0] + i, current_position[1]] == -1:
+            break
+        elif game_state.get("field")[current_position[0] + i, current_position[1] - 1] == 0 or game_state.get("field")[current_position[0] + i, current_position[1] + 1] == 0:
+            escape_right = 1
+            break
+        elif i == 3 and game_state.get("field")[current_position[0] + i + 1, current_position[1]] == 0:
+            escape_right = 1
+            break
     # Appending every feature
-    channels.append([danger])
+    
+    channels.append(danger)
     channels.append(coin_first_dir)
     channels.append(coin_second_dir)
     channels.append(vision_down)
@@ -206,8 +267,16 @@ def state_to_features(game_state: dict) -> np.array:
     channels.append(danger_left)
     channels.append(danger_right)
     channels.append([vision_crate])
+    channels.append([escape_up])
+    channels.append([escape_down])
+    channels.append([escape_left])
+    channels.append([escape_right])
+
 
     # Concatenate them as a feature tensor (they must have the same shape), ...
     stacked_channels = np.stack(channels)
     # ... and return them as a vector
     return stacked_channels.reshape(-1)
+
+
+#TODO blast coords in escape

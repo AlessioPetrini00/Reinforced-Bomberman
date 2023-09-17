@@ -20,21 +20,23 @@ Transition = namedtuple('Transition',
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyper parameters -- DO modify
-TRANSITION_HISTORY_SIZE = 4  # keep only ... last transitions TODO remove once sure not needed
+TRANSITION_HISTORY_SIZE = 8  # keep only ... last transitions TODO remove once sure not needed
 RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ... TODO remove once sure not needed
-LEARNING_RATE = 0.2 # TODO fine tune this
-DISCOUNT_RATE = 0.8 # TODO fine tune this
+LEARNING_RATE = 0.1 # TODO fine tune this
+DISCOUNT_RATE = 0.2 # TODO fine tune this
 
 # Custom events
 COIN_NOT_COLLECTED = "COIN_NOT_COLLECTED"
-BOMB_MISSED = "BOMB_MISSED"
 GOING_TO_COIN_OR_CRATE = "GOING_TO_COIN_OR_CRATE"
 GOING_AWAY_FROM_BOMB = "GOING_AWAY_FROM_BOMB"
 GOING_INTO_WALL = "GOING_INTO_WALL"
 UNDECIDED = "UNDECIDED"
 GOING_TO_BOMB = "GOING_TO_BOMB"
 BOMB_AND_CRATE = "BOMB_AND_CRATE"
-
+TOO_WAITS = "TOO_WAITS"
+NO_ESCAPE = "N0_ESCAPE"
+GOING_AWAY_FROM_COIN_OR_CRATE = "GOING_AWAY_FROM_COIN_OR_CRATE"
+GOING_AWAY_FROM_COIN_OR_CRATE = "GOING_AWAY_FROM_COIN_OR_CRATE"
 
 
 
@@ -88,6 +90,10 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     self.logger.debug("vision is 1 for non walkable and 0 otherwise - left "+state_to_features(new_game_state)[5])
     self.logger.debug("vision is 1 for non walkable and 0 otherwise - right "+state_to_features(new_game_state)[6])
     self.logger.debug("sees crate? "+state_to_features(new_game_state)[11])
+    self.logger.debug("escape up? " + state_to_features(new_game_state)[12])
+    self.logger.debug("escape down? " + state_to_features(new_game_state)[13])
+    self.logger.debug("escape left? " + state_to_features(new_game_state)[14])
+    self.logger.debug("escape right? " + state_to_features(new_game_state)[15])
 
 
 
@@ -99,44 +105,63 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
         events.append(COIN_NOT_COLLECTED)
 
     pos = np.array(new_game_state.get("self")[3])
-    
-    # Custom event: you moved towards the closest coin
-    if old_game_state.get("coins"):
-        nearest_coin = old_game_state.get("coins")[0]
-        for coin in old_game_state.get("coins"):
-            if np.linalg.norm(np.array(coin) - pos) < np.linalg.norm(np.array(nearest_coin) - pos):
-                nearest_coin = coin
-        old_pos = np.array(old_game_state.get("self")[3])
-        if np.linalg.norm(nearest_coin - pos) < np.linalg.norm(nearest_coin - old_pos):
-            events.append(GOING_TO_COIN_OR_CRATE)
-    
-    
-    if self.transitions[-1].state[0] and not self.transitions[-1].next_state[0]:
+
+    if self.transitions[-1].state[1] == self.transitions[-1].action or self.transitions[-1].state[2] == self.transitions[-1].action:
+        events.append(GOING_TO_COIN_OR_CRATE)
+    elif not (self.transitions[-1].state[1] == "FREE" and self.transitions[-1].state[2] == "FREE"):
+        events.append(GOING_AWAY_FROM_COIN_OR_CRATE)    
+
+    if int(self.transitions[-1].state[0]) == 1 and int(self.transitions[-1].next_state[0]) == 0:
         events.append(GOING_AWAY_FROM_BOMB)
 
-    if not self.transitions[-1].state[0] and self.transitions[-1].next_state[0]:
-        events.append(GOING_TO_BOMB)
+    if int(self.transitions[-1].state[0]) == 0 and int(self.transitions[-1].next_state[0]) == 1:
+        if not self_action == "BOMB":
+            events.append(GOING_TO_BOMB)
+
+    if len(self.transitions) > 1:
+        self.logger.debug("2 last action " + self.transitions[-2].action)
+        if self.transitions[-2].action == "BOMB":
+            self.logger.debug("last action " + self_action + " " + self.transitions[-1].state[12])
+            if self_action == "UP" and int(self.transitions[-1].state[12]) == 0:
+                events.append(NO_ESCAPE)
+            elif self_action == "DOWN" and int(self.transitions[-1].state[13]) == 0:
+                events.append(NO_ESCAPE)
+            elif self_action == "LEFT" and int(self.transitions[-1].state[14]) == 0:
+                events.append(NO_ESCAPE)
+            elif self_action == "RIGHT" and int(self.transitions[-1].state[15]) == 0:
+                events.append(NO_ESCAPE)
 
 
     # Custom event: when he wants to hug walls (punish behaviour)
     features = state_to_features(old_game_state)
-    if features[2] == -1 and self_action == "DOWN":
+    if int(features[3]) == 1 and self_action == "DOWN":
         events.append(GOING_INTO_WALL)
-    if features[3] == -1 and self_action == "UP":
+    if int(features[4]) == 1 and self_action == "UP":
         events.append(GOING_INTO_WALL)
-    if features[4] == -1 and self_action == "LEFT":
+    if int(features[5]) == 1 and self_action == "LEFT":
         events.append(GOING_INTO_WALL)
-    if features[5] == -1 and self_action == "RIGHT":
+    if int(features[6]) == 1 and self_action == "RIGHT":
         events.append(GOING_INTO_WALL)
 
     # Custom event: punish when he goes crazy
     if len(self.transitions) > 3:
-        #print(self.transitions[-1].action, self.transitions[-2].action, self.transitions[-3].action, self.transitions[-4].action)
         if self.transitions[-1].action == self.transitions[-3].action and self.transitions[-2].action == self.transitions[-4].action:
             events.append(UNDECIDED)
 
-    if features[11] == 1 and self_action == "BOMB":
+    if len(self.transitions) > 5:
+        if self.transitions[-1].action == self.transitions[-4].action and self.transitions[-2].action == self.transitions[-5].action and self.transitions[-3].action == self.transitions[-6].action:
+            events.append(UNDECIDED)
+
+    if len(self.transitions) > 7:
+        if self.transitions[-1].action == self.transitions[-5].action and self.transitions[-2].action == self.transitions[-6].action and self.transitions[-3].action == self.transitions[-7].action and self.transitions[-4].action == self.transitions[-8].action:
+            events.append(UNDECIDED)
+
+    if int(features[11]) == 1 and self_action == "BOMB":
         events.append(BOMB_AND_CRATE)
+
+    if len(self.transitions) > 2:
+        if self.transitions[-1].action == self.transitions[-2].action == self.transitions[-3].action == "WAIT":
+            events.append(TOO_WAITS)
 
     self.logger.debug(f'Encountered game event(s) {", ".join(map(repr, events))} in step {new_game_state["step"]}')
 
@@ -187,23 +212,25 @@ def reward_from_events(self, events: List[str]) -> int:
     certain behavior.
     """
     game_rewards = {
-        e.COIN_COLLECTED: 10,
-        COIN_NOT_COLLECTED: -1,
+        e.COIN_COLLECTED: 3,
         # e.KILLED_OPPONENT: 5,
-        e.BOMB_DROPPED: 4,
-        e.INVALID_ACTION: -200,
-        e.WAITED: -40,
+        e.BOMB_DROPPED: 1,
+        e.INVALID_ACTION: -40,
+        # e.WAITED: ,
         # e.GOT_KILLED: -100,
-        e.KILLED_SELF: -50,
-        e.CRATE_DESTROYED: 5,
+        e.KILLED_SELF: -30,
+        e.CRATE_DESTROYED: 10,
 
-        # BOMB_AND_CRATE: 5,
-        GOING_AWAY_FROM_BOMB: 45, 
-        GOING_INTO_WALL: -200,
+        COIN_NOT_COLLECTED: -2,
+        GOING_AWAY_FROM_BOMB: 50,
+        NO_ESCAPE: -30,
+        TOO_WAITS: -60,
+        BOMB_AND_CRATE: 10,
+        GOING_INTO_WALL: -100,
         GOING_TO_COIN_OR_CRATE: 4,
-        #COIN_NOT_COLLECTED: -30,
-        # GOING_TO_BOMB: -200,
-        UNDECIDED: -1000
+        GOING_AWAY_FROM_COIN_OR_CRATE: -4,
+        GOING_TO_BOMB: -35,
+        UNDECIDED: -50
     }
     reward_sum = 0
     for event in events:
