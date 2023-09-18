@@ -2,13 +2,14 @@ import os
 import pickle
 import random
 import numpy as np
+from collections import defaultdict
 
 
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyperparameters.
-EXPLORATION_RATE = 0.3 # TODO fine tune this
-#TODO feature can get to safe zone
+EXPLORATION_RATE = 0.9 # TODO fine tune this
+TEMPERATURE = 1
 
 def setup(self):
     """
@@ -20,13 +21,24 @@ def setup(self):
 
     :param self: This object is passed to all callbacks and you can set arbitrary values.
     """
-    # TODO remove this model stuff when sure it's not needed
-    if self.train or not os.path.isfile("my-saved-model.pt"):
-        weights = np.random.rand(len(ACTIONS))
-        self.model = weights / weights.sum()
+    # Loads temperature from previous training cycles
+    global TEMPERATURE
+    if not os.path.isfile("temperature.pt"):
+        with open("temperature.pt", "wb") as file:
+            pickle.dump(TEMPERATURE, file)
     else:
-        with open("my-saved-model.pt", "rb") as file:
-            self.model = pickle.load(file)
+        with open("temperature.pt", "rb") as file:
+            TEMPERATURE = pickle.load(file)
+
+    # Load or create Q table.
+    if not os.path.isfile("q-table.pt"):
+        self.q_table = defaultdict(int)
+        with open("q-table.pt", "wb") as file:
+            pickle.dump(self.q_table, file)
+    # The re
+    else:
+        with open("q-table.pt", "rb") as file:
+            self.q_table = pickle.load(file)
 
 
 def act(self, game_state: dict) -> str:
@@ -38,27 +50,21 @@ def act(self, game_state: dict) -> str:
     :param game_state: The dictionary that describes everything on the board.
     :return: The action to take as a string.
     """
-    
-    if self.train and random.random() < EXPLORATION_RATE:
+    # Exploration path.
+    if self.train and random.random() < (EXPLORATION_RATE/TEMPERATURE):
         # 80%: walk in any direction. 10% wait. 10% bomb.
         return np.random.choice(ACTIONS, p=[.2, .2, .2, .2, .1, .1])
 
-    # Load or create Q table.
-    if not os.path.isfile("q-table.pt"):
-        self.q_table = defaultdict(int)
-        with open("q-table.pt", "wb") as file:
-            pickle.dump(self.q_table, file)
-    elif not self.train:
-        with open("q-table.pt", "rb") as file:
-            self.q_table = pickle.load(file)
-    
+    # Exploitation path
     # Find action maximizing Q value.
     q_value = float('-inf')
     best_action = 'WAIT'
 
     for action in ACTIONS:
-        if self.q_table[tuple(state_to_features(game_state)), action] > q_value:
-            q_value = self.q_table[(tuple(state_to_features(game_state)), action)]
+        self.logger.debug("The value for action " + action + " is " + str(self.q_table[(tuple(state_to_features(game_state)), action)]))
+        features = tuple(state_to_features(game_state))
+        if self.q_table[features, action] > q_value:
+            q_value = self.q_table[(features, action)]
             best_action = action
 
     self.logger.debug("La migliore azione è " + best_action)
@@ -81,6 +87,7 @@ def state_to_features(game_state: dict) -> np.array:
     if game_state is None:
         return None
 
+    # VARIABLES:
     # TODO I think we can just use a list and append without the need to stack
     channels = []
 
@@ -107,16 +114,17 @@ def state_to_features(game_state: dict) -> np.array:
             if game_state.get("field")[x, y - i] == -1:
                 break
             blast_coords.append((x, y - i))
+    
+    map_size = game_state.get("field").shape[0]
 
-
+    # FEATURES:
     # Feature 1
     danger = [1 if ((current_position[0], current_position[1]) in blast_coords if blast_coords else False) else 0]
     
     # Feature 2 & 3 - Nearest coin: return direction for nearest coin
     nearest_coin = [float('inf'), float('inf')]
-    coin_first_dir = ["FREE"]
-    coin_second_dir = ["FREE"]
-    map_size = game_state.get("field").shape[0]
+    first_dir = ["FREE"]
+    second_dir = ["FREE"]
     flag = 0
 
     # Find coordinates for nearest coin
@@ -136,17 +144,17 @@ def state_to_features(game_state: dict) -> np.array:
                                     if game_state.get("field")[i,j] == 1:
                                         flag = 1
                                         if i - current_position[0] > 0:
-                                            coin_first_dir = ["RIGHT"]
+                                            first_dir = ["RIGHT"]
                                         elif i - current_position[0] < 0:
-                                            coin_first_dir = ["LEFT"]  
+                                            first_dir = ["LEFT"]  
                                         else:
-                                            coin_first_dir = ["ALIGNED"]
+                                            first_dir = ["ALIGNED"]
                                         if j - current_position[1] < 0:
-                                            coin_second_dir = ["UP"]
+                                            second_dir = ["UP"]
                                         elif j - current_position[1] > 0:
-                                            coin_second_dir = ["DOWN"]  
+                                            second_dir = ["DOWN"]  
                                         else:
-                                            coin_second_dir = ["ALIGNED"]
+                                            second_dir = ["ALIGNED"]
                                         break
                         if flag:
                             break
@@ -154,48 +162,25 @@ def state_to_features(game_state: dict) -> np.array:
                     break
     # Compute direction from coin position
     elif nearest_coin[0] - current_position[0] > 0:
-        coin_first_dir = ["RIGHT"]
+        first_dir = ["RIGHT"]
     elif nearest_coin[0] - current_position[0] < 0:
-        coin_first_dir = ["LEFT"]  
+        first_dir = ["LEFT"]  
     else:
-        coin_first_dir = ["ALIGNED"]
+        first_dir = ["ALIGNED"]
 
     if not nearest_coin[1] == float('inf'):
         if nearest_coin[1] - current_position[1] < 0:
-            coin_second_dir = ["UP"]
+            second_dir = ["UP"]
         elif nearest_coin[1] - current_position[1] > 0:
-            coin_second_dir = ["DOWN"]  
+            second_dir = ["DOWN"]  
         else:
-            coin_second_dir = ["ALIGNED"]
+            second_dir = ["ALIGNED"]
 
     #Feature 4 & 5 & 6 & 7 - Obstacle detection: returns 1 when non-walkable tile and 0 when free tile TODO detect other players
     vision_down = [1 if game_state.get("field")[current_position[0], current_position[1] + 1]  or (any(x == (current_position[0], current_position[1] + 1) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0], current_position[1] + 1] == 1 else 0]
     vision_up = [1 if game_state.get("field")[current_position[0], current_position[1] - 1] or (any(x == (current_position[0], current_position[1] - 1) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0], current_position[1] - 1] == 1 else 0]
     vision_left = [1 if game_state.get("field")[current_position[0] - 1, current_position[1]] or (any(x == (current_position[0] - 1, current_position[1]) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0] - 1, current_position[1]] == 1 else 0]
     vision_right = [1 if game_state.get("field")[current_position[0] + 1, current_position[1]] or (any(x == (current_position[0] + 1, current_position[1]) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) or game_state.get("field")[current_position[0] + 1, current_position[1]] == 1 else 0]
-
-
-    # Computing coordinates where there will be an explosion
-    blast_coords = []
-    for bomb in game_state.get("bombs"):
-        x, y = bomb[0][0], bomb[0][1]
-        blast_coords = [(x, y)]
-        for i in range(1, 4):
-            if game_state.get("field")[x + i, y] == -1:
-                break
-            blast_coords.append((x + i, y))
-        for i in range(1, 4):
-            if game_state.get("field")[x - i, y] == -1:
-                break
-            blast_coords.append((x - i, y))
-        for i in range(1, 4):
-            if game_state.get("field")[x, y + i] == -1:
-                break
-            blast_coords.append((x, y + i))
-        for i in range(1, 4):
-            if game_state.get("field")[x, y - i] == -1:
-                break
-            blast_coords.append((x, y - i))
 
 
     # Feature 8 & 9 & 10 & 11 - Danger detection: returns 1 when in that direction there will be an explosion, -1 when in that direction there currently is an explosion and 0 otherwise
@@ -205,14 +190,14 @@ def state_to_features(game_state: dict) -> np.array:
     danger_right = [1 if ((current_position[0] + 1, current_position[1]) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0] + 1, current_position[1]] > 0 else 0]
 
 
-    # Feature 12
+    # Feature 12 - Crate vision: returns 1 if he's close to crate 0 otherwise
     vision_crate = 0
     for i,j in [(-1,0), (1, 0), (0,1), (0, -1)]:
             if game_state.get("field")[current_position[0] + i, current_position[1] + j] == 1:
                 vision_crate = 1
                 break
 
-    # Feature 13 & 14 & 15 & 16
+    # Feature 13 & 14 & 15 & 16 - Escape possibility: returns 1 if in that direction there's a possible escape in the hypothesis that he drops a bomb now
     escape_up = 0
     for i in np.arange(1,4):
         if game_state.get("field")[current_position[0], current_position[1] - i] == 1 or game_state.get("field")[current_position[0], current_position[1] - i] == -1:
@@ -253,11 +238,13 @@ def state_to_features(game_state: dict) -> np.array:
         elif i == 3 and game_state.get("field")[current_position[0] + i + 1, current_position[1]] == 0:
             escape_right = 1
             break
+
+
+
     # Appending every feature
-    
     channels.append(danger)
-    channels.append(coin_first_dir)
-    channels.append(coin_second_dir)
+    channels.append(first_dir)
+    channels.append(second_dir)
     channels.append(vision_down)
     channels.append(vision_up)
     channels.append(vision_left)

@@ -24,6 +24,7 @@ TRANSITION_HISTORY_SIZE = 8  # keep only ... last transitions TODO remove once s
 RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ... TODO remove once sure not needed
 LEARNING_RATE = 0.1 # TODO fine tune this
 DISCOUNT_RATE = 0.2 # TODO fine tune this
+TEMPERATURE = 1
 
 # Custom events
 COIN_NOT_COLLECTED = "COIN_NOT_COLLECTED"
@@ -35,7 +36,7 @@ GOING_TO_BOMB = "GOING_TO_BOMB"
 BOMB_AND_CRATE = "BOMB_AND_CRATE"
 TOO_WAITS = "TOO_WAITS"
 NO_ESCAPE = "N0_ESCAPE"
-GOING_AWAY_FROM_COIN_OR_CRATE = "GOING_AWAY_FROM_COIN_OR_CRATE"
+ESCAPING = "ESCAPING"
 GOING_AWAY_FROM_COIN_OR_CRATE = "GOING_AWAY_FROM_COIN_OR_CRATE"
 
 
@@ -61,6 +62,14 @@ def setup_training(self):
         with open("q-table.pt", "rb") as file:
             self.q_table = pickle.load(file)
 
+    if not os.path.isfile("temperature.pt"):
+        TEMPERATURE = 1
+        with open("temperature.pt", "wb") as file:
+            pickle.dump(TEMPERATURE, file)
+    else:
+        with open("temperature.pt", "rb") as file:
+            TEMPERATURE = pickle.load(file)
+
 
 def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_state: dict, events: List[str]):
     """
@@ -78,7 +87,9 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     :param self_action: The action that you took.
     :param new_game_state: The state the agent is in now.
     :param events: The events that occurred when going from  `old_game_state` to `new_game_state`
-    """    
+    """
+    global TEMPERATURE
+
     self.logger.debug("Closest coin or crate are in " + state_to_features(new_game_state)[1] + " " + state_to_features(new_game_state)[2])
     self.logger.debug("1 for danger, -1 explosion, 0 nothing. You're now in: "+state_to_features(new_game_state)[0])
     self.logger.debug("down "+state_to_features(new_game_state)[7])
@@ -130,6 +141,8 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
                 events.append(NO_ESCAPE)
             elif self_action == "RIGHT" and int(self.transitions[-1].state[15]) == 0:
                 events.append(NO_ESCAPE)
+            elif not (self_action == "WAIT" or self_action == "BOMB"):
+                events.append(ESCAPING)
 
 
     # Custom event: when he wants to hug walls (punish behaviour)
@@ -169,7 +182,8 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     # Perform update of the Q table.
     # We don't store in q_table.pt because we found out it takes a lot of computational time
 
-    self.q_table[tuple(state_to_features(old_game_state)),self_action] = (1 - LEARNING_RATE) * self.q_table[tuple(state_to_features(old_game_state)),self_action] + LEARNING_RATE * ((reward_from_events(self, events)) + DISCOUNT_RATE * value_function(self, new_game_state))
+    self.q_table[tuple(state_to_features(old_game_state)),self_action] = (1 - (LEARNING_RATE/TEMPERATURE)) * self.q_table[tuple(self.transitions[-1][0]),self_action] + (LEARNING_RATE/TEMPERATURE) * ((reward_from_events(self, events)) + (DISCOUNT_RATE/TEMPERATURE) * value_function(self, tuple(self.transitions[-1][2])))
+    TEMPERATURE += 1
 
 
 def end_of_round(self, last_game_state: dict, last_action: str, events: List[str]):
@@ -185,6 +199,7 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
 
     :param self: The same object that is passed to all of your callbacks.
     """
+    global TEMPERATURE
     self.logger.debug(f'Encountered event(s) {", ".join(map(repr, events))} in final step')
     self.transitions.append(Transition(state_to_features(last_game_state), last_action, None, reward_from_events(self, events)))
 
@@ -192,16 +207,15 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
     with open("my-saved-model.pt", "wb") as file:
         pickle.dump(self.model, file)
 
-    # FIXME Perform update of the Q table - last_game_state is y not x!!!
-    self.q_table[tuple(state_to_features(last_game_state)),last_action] = (1 - LEARNING_RATE) * self.q_table[tuple(state_to_features(last_game_state)),last_action] + LEARNING_RATE * (reward_from_events(self, events))
+    # Update the Q table.
+    self.q_table[tuple(self.transitions[-2][2]),last_action] = (1 - (LEARNING_RATE/TEMPERATURE)) * self.q_table[tuple(self.transitions[-2][2]),last_action] + (LEARNING_RATE/TEMPERATURE) * (reward_from_events(self, events))
 
     # Store the new Q table so that it can be used in the next game.
     with open("q-table.pt", "wb") as file:
         pickle.dump(self.q_table, file)
 
-    if (last_game_state.get("self")[0] == 1):
-        print(self.q_table)
-
+    with open("temperature.pt", "wb") as file:
+        pickle.dump(TEMPERATURE, file)
 
 
 def reward_from_events(self, events: List[str]) -> int:
@@ -230,7 +244,8 @@ def reward_from_events(self, events: List[str]) -> int:
         GOING_TO_COIN_OR_CRATE: 4,
         GOING_AWAY_FROM_COIN_OR_CRATE: -4,
         GOING_TO_BOMB: -35,
-        UNDECIDED: -50
+        UNDECIDED: -50,
+        ESCAPING: 30
     }
     reward_sum = 0
     for event in events:
@@ -240,13 +255,13 @@ def reward_from_events(self, events: List[str]) -> int:
     return reward_sum
 
 
-def value_function(self, game_state:dict)->float:
+def value_function(self, features)->float:
     # The value function returns the maximum value of the Q table for a given state, iterating through all the possible actions.
     value = float('-inf')
 
     for action in ACTIONS:
-        if self.q_table[tuple(state_to_features(game_state)), action] > value:
-            value = self.q_table[tuple(state_to_features(game_state)), action]
+        if self.q_table[features, action] > value:
+            value = self.q_table[features, action]
 
     return value
 
