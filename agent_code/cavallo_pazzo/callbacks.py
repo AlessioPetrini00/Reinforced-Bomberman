@@ -8,8 +8,7 @@ from collections import defaultdict
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyperparameters.
-EXPLORATION_RATE = 0.9 # TODO fine tune this
-TEMPERATURE = 1
+EXPLORATION_RATE = 0.95 # TODO fine tune this
 
 def setup(self):
     """
@@ -22,13 +21,13 @@ def setup(self):
     :param self: This object is passed to all callbacks and you can set arbitrary values.
     """
     # Loads temperature from previous training cycles
-    global TEMPERATURE
     if not os.path.isfile("temperature.pt"):
         with open("temperature.pt", "wb") as file:
-            pickle.dump(TEMPERATURE, file)
+            self.temperature = 1
+            pickle.dump(self.temperature, file)
     else:
         with open("temperature.pt", "rb") as file:
-            TEMPERATURE = pickle.load(file)
+            self.temperature = pickle.load(file)
 
     # Load or create Q table.
     if not os.path.isfile("q-table.pt"):
@@ -51,7 +50,7 @@ def act(self, game_state: dict) -> str:
     :return: The action to take as a string.
     """
     # Exploration path.
-    if self.train and random.random() < (EXPLORATION_RATE/TEMPERATURE):
+    if self.train and random.random() < (EXPLORATION_RATE/self.temperature):
         # 80%: walk in any direction. 10% wait. 10% bomb.
         return np.random.choice(ACTIONS, p=[.2, .2, .2, .2, .1, .1])
 
@@ -118,7 +117,7 @@ def state_to_features(game_state: dict) -> np.array:
     map_size = game_state.get("field").shape[0]
 
     # FEATURES:
-    # Feature 1
+    # Feature 1 - Is the agent in danger
     danger = [1 if ((current_position[0], current_position[1]) in blast_coords if blast_coords else False) else 0]
     
     # Feature 2 & 3 - Nearest coin: return direction for nearest coin

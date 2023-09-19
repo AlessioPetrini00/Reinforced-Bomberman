@@ -24,7 +24,6 @@ TRANSITION_HISTORY_SIZE = 8  # keep only ... last transitions TODO remove once s
 RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ... TODO remove once sure not needed
 LEARNING_RATE = 0.1 # TODO fine tune this
 DISCOUNT_RATE = 0.2 # TODO fine tune this
-TEMPERATURE = 1
 
 # Custom events
 COIN_NOT_COLLECTED = "COIN_NOT_COLLECTED"
@@ -63,12 +62,12 @@ def setup_training(self):
             self.q_table = pickle.load(file)
 
     if not os.path.isfile("temperature.pt"):
-        TEMPERATURE = 1
+        self.temperature = 1
         with open("temperature.pt", "wb") as file:
-            pickle.dump(TEMPERATURE, file)
+            pickle.dump(self.temperature, file)
     else:
         with open("temperature.pt", "rb") as file:
-            TEMPERATURE = pickle.load(file)
+            self.temperature = pickle.load(file)
 
 
 def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_state: dict, events: List[str]):
@@ -182,8 +181,7 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     # Perform update of the Q table.
     # We don't store in q_table.pt because we found out it takes a lot of computational time
 
-    self.q_table[tuple(state_to_features(old_game_state)),self_action] = (1 - (LEARNING_RATE/TEMPERATURE)) * self.q_table[tuple(self.transitions[-1][0]),self_action] + (LEARNING_RATE/TEMPERATURE) * ((reward_from_events(self, events)) + (DISCOUNT_RATE/TEMPERATURE) * value_function(self, tuple(self.transitions[-1][2])))
-    TEMPERATURE += 1
+    self.q_table[tuple(state_to_features(old_game_state)),self_action] = (1 - (LEARNING_RATE/self.temperature)) * self.q_table[tuple(self.transitions[-1][0]),self_action] + (LEARNING_RATE/self.temperature) * ((reward_from_events(self, events)) + (DISCOUNT_RATE/self.temperature) * value_function(self, tuple(self.transitions[-1][2])))
 
 
 def end_of_round(self, last_game_state: dict, last_action: str, events: List[str]):
@@ -199,7 +197,6 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
 
     :param self: The same object that is passed to all of your callbacks.
     """
-    global TEMPERATURE
     self.logger.debug(f'Encountered event(s) {", ".join(map(repr, events))} in final step')
     self.transitions.append(Transition(state_to_features(last_game_state), last_action, None, reward_from_events(self, events)))
 
@@ -215,7 +212,7 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
         pickle.dump(self.q_table, file)
 
     with open("temperature.pt", "wb") as file:
-        pickle.dump(TEMPERATURE, file)
+        pickle.dump(self.temperature + 1, file)
 
 
 def reward_from_events(self, events: List[str]) -> int:
