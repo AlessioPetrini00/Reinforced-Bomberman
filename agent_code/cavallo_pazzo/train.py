@@ -101,6 +101,7 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     self.logger.debug("escape right? " + self.transitions[-1].next_state[14])
     self.logger.debug("Closest crate is in " + self.transitions[-1].next_state[15] + " " + self.transitions[-1].next_state[16])
     self.logger.debug("Can he drop a bomb? " + self.transitions[-1].next_state[17])
+    self.logger.debug("Can he destroy a crate from here? " + self.transitions[-1].next_state[18])
 
     # VARIABLES:
     pos = np.array(new_game_state.get("self")[3])
@@ -151,29 +152,29 @@ def reward_from_events(self, events: List[str]) -> int:
     certain behavior.
     """
     game_rewards = {
-        e.COIN_COLLECTED: 10,
-        COIN_NOT_COLLECTED: -10,
-        GOING_AWAY_FROM_COIN: -2,
-        GOING_TO_COIN: 10,
+        e.COIN_COLLECTED: 1,
+        COIN_NOT_COLLECTED: -1,
+        GOING_AWAY_FROM_COIN: -0.2,
+        GOING_TO_COIN: 1,
 
-        e.CRATE_DESTROYED: 2,
-        BOMB_AND_CRATE: 3,
-        GOING_TO_CRATE : 5,
-        GOING_AWAY_FROM_CRATE: -5,
+        e.CRATE_DESTROYED: 0.1,
+        BOMB_AND_CRATE: 0.7,
+        GOING_TO_CRATE : 0.5,
+        GOING_AWAY_FROM_CRATE: -0.5,
 
-        GOING_AWAY_FROM_BOMB: 20,
-        NO_ESCAPE: -100,
-        GOING_TO_BOMB: -20,
-        e.GOT_KILLED: -5,
-        e.KILLED_SELF: -400,
+        GOING_AWAY_FROM_BOMB: 2,
+        NO_ESCAPE: -10,
+        GOING_TO_BOMB: -2,
+        e.GOT_KILLED: -0.5,
+        e.KILLED_SELF: -20,
 
         # e.KILLED_OPPONENT: 5,
-        e.BOMB_DROPPED: 0.5,
-        e.INVALID_ACTION: -100,
+        e.BOMB_DROPPED: -0.1,
+        e.INVALID_ACTION: -10,
         # e.WAITED:,
-        TOO_WAITS: -30,
-        GOING_INTO_WALL: -100,
-        UNDECIDED: -60,
+        TOO_WAITS: -3,
+        GOING_INTO_WALL: -10,
+        UNDECIDED: -6,
     }
     reward_sum = 0
     for event in events:
@@ -220,7 +221,7 @@ def custom_events (self, self_action, events: List[str]) -> List[str]:
     #         events.append(GOING_TO_BOMB)
     
     # Remaining or going to dangerous-zone
-    if int(self.transitions[-1].state[7]) == 1 and self_action == "DOWN" or int(self.transitions[-1].state[8]) == 1 and self_action == "UP" or int(self.transitions[-1].state[9]) == 1 and self_action == "LEFT" or int(self.transitions[-1].state[10]) == 1 and self_action == "RIGHT":
+    if (int(self.transitions[-1].state[7]) == 1 and self_action == "DOWN") or (int(self.transitions[-1].state[8]) == 1 and self_action == "UP") or (int(self.transitions[-1].state[9]) == 1 and self_action == "LEFT") or (int(self.transitions[-1].state[10]) == 1 and self_action == "RIGHT") or (int(self.transitions[-1].state[0]) == 1 and self_action == "WAIT"):
         events.append(GOING_TO_BOMB)
 
     # NO_ESCAPE when the agent traps himself and ESCAPING if he picks a correct escape direction

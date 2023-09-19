@@ -235,6 +235,35 @@ def state_to_features(game_state: dict) -> np.array:
             if flag:
                 break
 
+    #Feature 19 - Destroyable crate: returns 1 if by dropping a bomb in agent position he would destroy a crate
+    destroyable_crates = 0
+    x, y = current_position[0], current_position[1]
+    blast_coords = [(x, y)]
+    for i in range(1, 4):
+        if game_state.get("field")[x + i, y] == -1:
+            break
+        if game_state.get("field")[x + i, y] == 1:
+            destroyable_crates = 1
+    if not destroyable_crates:
+        for i in range(1, 4):
+            if game_state.get("field")[x - i, y] == -1:
+                break
+            if game_state.get("field")[x - i, y] == 1:
+                destroyable_crates = 1
+    if not destroyable_crates:
+        for i in range(1, 4):
+            if game_state.get("field")[x, y + i] == -1:
+                break
+            if game_state.get("field")[x, y + i] == 1:
+                destroyable_crates = 1
+    if not destroyable_crates:
+        for i in range(1, 4):
+            if game_state.get("field")[x, y - i] == -1:
+                break
+            if game_state.get("field")[x, y - i] == 1:
+                destroyable_crates = 1
+
+
     # Appending every feature
     channels.append(danger) #0
     channels.append(coin_first_dir) #1
@@ -254,6 +283,7 @@ def state_to_features(game_state: dict) -> np.array:
     channels.append(crate_first_dir) #15
     channels.append(crate_second_dir) #16
     channels.append([game_state.get("self")[2]]) #17 - Can he drop bomb?
+    channels.append([destroyable_crates]) #18
 
 
     # Concatenate them as a feature tensor (they must have the same shape), ...
