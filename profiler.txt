@@ -1,754 +1,739 @@
-         403611 function calls (401720 primitive calls) in 35.614 seconds
+         155974 function calls (155477 primitive calls) in 14.613 seconds
 
    Ordered by: internal time
 
    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
-      351   25.081    0.071   25.081    0.071 {built-in method time.sleep}
-      122    4.435    0.036    4.435    0.036 {built-in method _pickle.load}
-    85844    3.036    0.000    3.036    0.000 {method 'blit' of 'pygame.surface.Surface' objects}
-      354    0.502    0.001    3.643    0.010 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:553(render)
-     1790    0.365    0.000    0.984    0.001 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:75(state_to_features)
-      354    0.324    0.001    0.324    0.001 {built-in method pygame.display.flip}
-      122    0.287    0.002    5.982    0.049 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:35(act)
-        1    0.171    0.171    0.174    0.174 {built-in method pygame.display.set_mode}
-    80231    0.156    0.000    0.156    0.000 {method 'get' of 'dict' objects}
-3979/2169    0.097    0.000    0.312    0.000 {built-in method numpy.core._multiarray_umath.implement_array_function}
-    28680    0.072    0.000    0.072    0.000 {built-in method numpy.asanyarray}
-    36680    0.064    0.000    0.064    0.000 {method 'append' of 'list' objects}
-     1800    0.058    0.000    0.130    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/shape_base.py:458(<listcomp>)
-     1273    0.048    0.000    0.143    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:288(__init__)
-      355    0.042    0.000    0.042    0.000 {built-in method pygame.display.set_caption}
-     1287    0.032    0.000    0.032    0.000 {method 'flush' of '_io.TextIOWrapper' objects}
-     1800    0.032    0.000    0.286    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/shape_base.py:383(stack)
-     1539    0.030    0.000    0.030    0.000 {method 'render' of 'pygame.font.Font' objects}
-     7180    0.026    0.000    0.026    0.000 {built-in method numpy.arange}
-      354    0.022    0.000    0.022    0.000 {built-in method pygame.event.get}
-    11303    0.020    0.000    0.020    0.000 {built-in method builtins.abs}
-     1539    0.017    0.000    0.062    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:542(render_text)
-     1273    0.015    0.000    0.079    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:655(format)
-     3184    0.015    0.000    0.015    0.000 {built-in method time.time}
-     1273    0.015    0.000    0.033    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1514(findCaller)
-     2060    0.013    0.000    0.013    0.000 {built-in method numpy.array}
-     1273    0.013    0.000    0.414    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1565(_log)
-     1273    0.013    0.000    0.062    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1062(flush)
-     1273    0.013    0.000    0.198    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:941(handle)
-     1273    0.013    0.000    0.030    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:588(formatTime)
-      354    0.012    0.000   29.082    0.082 main.py:42(render)
-     1800    0.012    0.000    0.012    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/shape_base.py:470(<listcomp>)
-     1274    0.012    0.000    0.026    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:140(basename)
-     1811    0.012    0.000    0.097    0.000 <__array_function__ internals>:177(concatenate)
-     1273    0.012    0.000    0.161    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1073(emit)
-     1273    0.011    0.000    0.030    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:117(splitext)
-        1    0.011    0.011   35.403   35.403 main.py:35(world_controller)
-     5743    0.011    0.000    0.011    0.000 {built-in method builtins.hasattr}
-     2546    0.011    0.000    0.016    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:898(acquire)
-     1800    0.011    0.000    0.328    0.000 <__array_function__ internals>:177(stack)
-     3078    0.010    0.000    0.015    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:374(<genexpr>)
-     2546    0.009    0.000    0.014    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:905(release)
-     1273    0.009    0.000    0.009    0.000 {built-in method time.localtime}
-     3977    0.009    0.000    0.009    0.000 {method 'rfind' of 'str' objects}
-     1223    0.009    0.000    0.272    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1424(debug)
-     1800    0.009    0.000    0.009    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/shape_base.py:462(<setcomp>)
-     1273    0.009    0.000    0.014    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/genericpath.py:121(_splitext)
-     1273    0.008    0.000    0.207    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1645(callHandlers)
-     1273    0.008    0.000    0.218    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1591(handle)
-     1273    0.008    0.000    0.008    0.000 {built-in method time.strftime}
-      122    0.008    0.000    6.125    0.050 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:420(poll_and_run_agents)
-     4050    0.008    0.000    0.008    0.000 {built-in method posix.fspath}
-     1800    0.007    0.000    0.017    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/shape_base.py:373(_stack_dispatcher)
-     3332    0.007    0.000    0.007    0.000 {built-in method builtins.isinstance}
-     1273    0.007    0.000    0.150    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1550(makeRecord)
-     1800    0.006    0.000    0.010    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/shape_base.py:207(_arrays_for_stack_dispatcher)
-     1273    0.006    0.000    0.006    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:435(_format)
-     1470    0.006    0.000    0.009    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:41(_get_sep)
-      122    0.006    0.000    6.228    0.051 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:158(do_step)
-     1273    0.006    0.000    0.167    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1178(emit)
-     1024    0.006    0.000    0.010    0.000 {built-in method builtins.any}
-      354    0.006    0.000   25.093    0.071 main.py:29(wait)
-     1273    0.006    0.000    0.008    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:427(usesTime)
-      708    0.006    0.000    0.010    0.000 main.py:23(is_due)
-     1273    0.006    0.000    0.008    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:160(<lambda>)
-     2580    0.006    0.000    0.006    0.000 {method 'acquire' of '_thread.RLock' objects}
-     1273    0.006    0.000    0.008    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:119(getLevelName)
-     1273    0.006    0.000    0.014    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:633(usesTime)
-     1273    0.005    0.000    0.085    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:918(format)
-       66    0.005    0.000    0.021    0.000 {built-in method builtins.sum}
-      123    0.005    0.000    5.999    0.049 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:235(process_event)
-     1273    0.005    0.000    0.008    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:52(normcase)
-     1274    0.005    0.000    0.008    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:1306(current_thread)
-     2546    0.005    0.000    0.005    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:796(filter)
-      122    0.005    0.000    0.012    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:396(get_state_for_agent)
-     3042    0.005    0.000    0.005    0.000 {built-in method unicodedata.east_asian_width}
-2770/2751    0.005    0.000    0.005    0.000 {built-in method builtins.len}
-     1273    0.005    0.000    0.017    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:639(formatMessage)
-     1273    0.005    0.000    0.012    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:438(format)
-     1810    0.005    0.000    0.005    0.000 {method 'reshape' of 'numpy.ndarray' objects}
-     2580    0.005    0.000    0.005    0.000 {method 'release' of '_thread.RLock' objects}
-     2563    0.005    0.000    0.005    0.000 {built-in method _thread.get_ident}
-      419    0.004    0.000    0.160    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1436(info)
-     1642    0.004    0.000    0.004    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1689(isEnabledFor)
-      126    0.004    0.000    0.004    0.000 {built-in method io.open}
-      152    0.004    0.000    0.007    0.000 {method 'permutation' of 'numpy.random._generator.Generator' objects}
-      483    0.004    0.000    0.005    0.000 {built-in method builtins.max}
-      123    0.004    0.000    6.010    0.049 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:303(send_event)
-      122    0.004    0.000    0.011    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:283(time_to_stop)
-     1811    0.004    0.000    0.004    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/multiarray.py:152(concatenate)
-     1287    0.004    0.000    0.004    0.000 {method 'write' of '_io.TextIOWrapper' objects}
-     1800    0.003    0.000    0.003    0.000 {built-in method numpy.core._multiarray_umath.normalize_axis_index}
-      196    0.003    0.000    0.007    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/linalg/linalg.py:2342(norm)
-     1273    0.003    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:364(getMessage)
-      205    0.003    0.000    0.003    0.000 {built-in method posix.stat}
-      682    0.003    0.000    0.024    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:187(render)
-      354    0.003    0.000    0.005    0.000 main.py:26(note)
-     1273    0.003    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:1031(name)
-     1587    0.003    0.000    0.003    0.000 {method 'get_rect' of 'pygame.surface.Surface' objects}
-       10    0.003    0.000    0.009    0.001 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:348(build_arena)
-     1274    0.003    0.000    0.003    0.000 {built-in method posix.getpid}
-     1327    0.003    0.000    0.003    0.000 {method 'find' of 'str' objects}
-     1273    0.003    0.000    0.003    0.000 {built-in method sys._getframe}
-     1273    0.003    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/process.py:189(name)
-        1    0.003    0.003    0.003    0.003 {built-in method builtins.compile}
-     1274    0.003    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/process.py:37(current_process)
-      127    0.003    0.000    0.005    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:150(dirname)
-      246    0.002    0.000    0.002    0.000 {built-in method posix.chdir}
-      123    0.002    0.000    0.007    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:121(put)
-      116    0.002    0.000    0.002    0.000 {method 'reduce' of 'numpy.ufunc' objects}
-       48    0.002    0.000    0.020    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:99(render)
-      123    0.002    0.000    0.007    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:153(get)
-      246    0.002    0.000    0.004    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:341(notify)
-      122    0.002    0.000    0.011    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:176(wait_for_act)
-        1    0.002    0.002    0.002    0.002 {method 'convert' of 'pygame.surface.Surface' objects}
-        1    0.002    0.002    0.179    0.179 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:514(__init__)
-      354    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:594(<lambda>)
-      123    0.001    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/genericpath.py:27(isfile)
-      247    0.001    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:246(__enter__)
-      380    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:142(note_stat)
-        3    0.001    0.000    0.001    0.000 {built-in method _imp.create_dynamic}
-      122    0.001    0.000    0.006    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:128(perform_agent_action)
-      122    0.001    0.000    0.005    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:203(update_bombs)
-       12    0.001    0.000    0.017    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:467(format_meter)
-      126    0.001    0.000    0.001    0.000 {built-in method posix.getcwd}
-      152    0.001    0.000    0.003    0.000 <__array_function__ internals>:177(ndim)
-      132    0.001    0.000    0.001    0.000 {built-in method numpy.zeros}
-      494    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:178(<genexpr>)
-      247    0.001    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:249(__exit__)
-      196    0.001    0.000    0.010    0.000 <__array_function__ internals>:177(norm)
-      180    0.001    0.000    0.002    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:137(add_event)
-      247    0.001    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:261(_is_owned)
-      516    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:181(<genexpr>)
-      123    0.001    0.000    0.009    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:279(get_with_time)
-       48    0.001    0.000    0.001    0.000 {built-in method pygame.transform.rotate}
-      196    0.001    0.000    0.001    0.000 {method 'dot' of 'numpy.ndarray' objects}
-       20    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:100(split)
-      122    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:167(store_game_state)
-        5    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:222(__init__)
-      122    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:407(<listcomp>)
-      122    0.001    0.000    6.011    0.049 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:173(act)
-      406    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:179(<genexpr>)
-      340    0.001    0.000    0.001    0.000 {built-in method builtins.getattr}
-      360    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:180(<genexpr>)
-      122    0.001    0.000    0.003    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:239(evaluate_explosions)
-       26    0.001    0.000    0.007    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1337(add_argument)
-      123    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:212(_put)
-      250    0.001    0.000    0.001    0.000 {method 'acquire' of '_thread.lock' objects}
-       87    0.001    0.000    0.001    0.000 {method 'format' of 'str' objects}
-       17    0.001    0.000    0.004    0.000 <frozen importlib._bootstrap_external>:1498(find_spec)
-      325    0.001    0.000    0.001    0.000 {method 'rstrip' of 'str' objects}
-       41    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:71(join)
-      116    0.001    0.000    0.004    0.000 {method 'sum' of 'numpy.ndarray' objects}
-      392    0.001    0.000    0.001    0.000 {built-in method builtins.issubclass}
-      196    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/linalg/linalg.py:117(isComplexType)
-      123    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:216(_get)
-       10    0.001    0.000    0.016    0.002 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:68(new_round)
-      247    0.001    0.000    0.001    0.000 {method '__exit__' of '_thread.lock' objects}
-      132    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:146(get_state)
+      141   11.122    0.079   11.122    0.079 {built-in method time.sleep}
+    34713    1.578    0.000    1.578    0.000 {method 'blit' of 'pygame.surface.Surface' objects}
+        1    0.281    0.281    0.284    0.284 {built-in method pygame.display.set_mode}
+      142    0.258    0.002    1.896    0.013 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:553(render)
+      142    0.199    0.001    0.199    0.001 {built-in method pygame.display.flip}
+      396    0.137    0.000    0.368    0.001 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:69(state_to_features)
+        1    0.064    0.064    0.064    0.064 {built-in method _pickle.load}
+      728    0.045    0.000    0.128    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:288(__init__)
+        4    0.044    0.011    0.044    0.011 {built-in method io.open}
+    18707    0.043    0.000    0.043    0.000 {method 'get' of 'dict' objects}
+ 1023/607    0.040    0.000    0.136    0.000 {built-in method numpy.core._multiarray_umath.implement_array_function}
+     7168    0.032    0.000    0.032    0.000 {built-in method numpy.asanyarray}
+      742    0.028    0.000    0.028    0.000 {method 'flush' of '_io.TextIOWrapper' objects}
+     9714    0.022    0.000    0.022    0.000 {method 'append' of 'list' objects}
+      406    0.021    0.000    0.054    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/shape_base.py:458(<listcomp>)
+      622    0.021    0.000    0.021    0.000 {method 'render' of 'pygame.font.Font' objects}
+       66    0.019    0.000    0.617    0.009 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:33(act)
+      143    0.018    0.000    0.018    0.000 {built-in method pygame.display.set_caption}
+      142    0.016    0.000    0.016    0.000 {built-in method pygame.event.get}
+      728    0.014    0.000    0.032    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1514(findCaller)
+      728    0.014    0.000    0.067    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:655(format)
+     3054    0.013    0.000    0.020    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:374(<genexpr>)
+      406    0.013    0.000    0.118    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/shape_base.py:383(stack)
+      728    0.012    0.000    0.366    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1565(_log)
+      728    0.011    0.000    0.169    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:941(handle)
+      728    0.011    0.000    0.052    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1062(flush)
+     1604    0.010    0.000    0.010    0.000 {built-in method numpy.arange}
+      728    0.010    0.000    0.137    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1073(emit)
+      729    0.010    0.000    0.021    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:140(basename)
+      728    0.010    0.000    0.027    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:117(splitext)
+      728    0.010    0.000    0.025    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:588(formatTime)
+      622    0.009    0.000    0.038    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:542(render_text)
+     1573    0.009    0.000    0.009    0.000 {built-in method time.time}
+     2715    0.009    0.000    0.009    0.000 {built-in method builtins.hasattr}
+      728    0.009    0.000    0.013    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/genericpath.py:121(_splitext)
+      728    0.008    0.000    0.008    0.000 {built-in method time.localtime}
+     1456    0.008    0.000    0.013    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:898(acquire)
+     2285    0.008    0.000    0.008    0.000 {method 'rfind' of 'str' objects}
+        1    0.008    0.008   14.172   14.172 main.py:35(world_controller)
+      728    0.008    0.000    0.177    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1645(callHandlers)
+     1456    0.008    0.000    0.011    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:905(release)
+      663    0.008    0.000    0.233    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1424(debug)
+      142    0.008    0.000   13.236    0.093 main.py:42(render)
+      728    0.007    0.000    0.187    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1591(handle)
+       66    0.007    0.000    0.027    0.000 {built-in method builtins.sum}
+      728    0.007    0.000    0.135    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1550(makeRecord)
+      554    0.007    0.000    0.007    0.000 {built-in method numpy.array}
+      728    0.007    0.000    0.007    0.000 {built-in method time.strftime}
+     2882    0.007    0.000    0.007    0.000 {built-in method builtins.abs}
+     3018    0.007    0.000    0.007    0.000 {built-in method unicodedata.east_asian_width}
+      664    0.006    0.000    0.011    0.000 {built-in method builtins.any}
+       66    0.006    0.000    0.733    0.011 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:420(poll_and_run_agents)
+     2131    0.006    0.000    0.006    0.000 {built-in method builtins.isinstance}
+     2359    0.006    0.000    0.006    0.000 {built-in method posix.fspath}
+      406    0.006    0.000    0.006    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/shape_base.py:470(<listcomp>)
+      728    0.005    0.000    0.143    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1178(emit)
+      728    0.005    0.000    0.008    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:160(<lambda>)
+      869    0.005    0.000    0.008    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:41(_get_sep)
+      728    0.005    0.000    0.008    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:427(usesTime)
+      728    0.005    0.000    0.072    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:918(format)
+      728    0.005    0.000    0.013    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:633(usesTime)
+       10    0.005    0.000    0.016    0.002 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:348(build_arena)
+       66    0.005    0.000    0.834    0.013 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:158(do_step)
+     1456    0.005    0.000    0.005    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:796(filter)
+      729    0.005    0.000    0.007    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:1306(current_thread)
+      728    0.005    0.000    0.005    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:435(_format)
+     1490    0.005    0.000    0.005    0.000 {method 'acquire' of '_thread.RLock' objects}
+      728    0.005    0.000    0.007    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:52(normcase)
+      417    0.005    0.000    0.039    0.000 <__array_function__ internals>:177(concatenate)
+      728    0.005    0.000    0.007    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:119(getLevelName)
+       96    0.004    0.000    0.007    0.000 {method 'permutation' of 'numpy.random._generator.Generator' objects}
+      406    0.004    0.000    0.135    0.000 <__array_function__ internals>:177(stack)
+      266    0.004    0.000    0.149    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1436(info)
+      406    0.004    0.000    0.004    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/shape_base.py:462(<setcomp>)
+      728    0.004    0.000    0.009    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:438(format)
+       67    0.004    0.000    0.694    0.010 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:235(process_event)
+      929    0.004    0.000    0.004    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1689(isEnabledFor)
+      728    0.004    0.000    0.013    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:639(formatMessage)
+     1490    0.004    0.000    0.004    0.000 {method 'release' of '_thread.RLock' objects}
+     1473    0.004    0.000    0.004    0.000 {built-in method _thread.get_ident}
+       66    0.004    0.000    0.012    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:283(time_to_stop)
+       66    0.004    0.000    0.009    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:396(get_state_for_agent)
+      142    0.003    0.000   11.129    0.078 main.py:29(wait)
+        1    0.003    0.003    0.292    0.292 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:514(__init__)
+      406    0.003    0.000    0.007    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/shape_base.py:373(_stack_dispatcher)
+      284    0.003    0.000    0.005    0.000 main.py:23(is_due)
+1091/1072    0.003    0.000    0.003    0.000 {built-in method builtins.len}
+      728    0.003    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:364(getMessage)
+      742    0.003    0.000    0.003    0.000 {method 'write' of '_io.TextIOWrapper' objects}
+      728    0.003    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:1031(name)
+      782    0.003    0.000    0.003    0.000 {method 'find' of 'str' objects}
+      728    0.003    0.000    0.003    0.000 {built-in method sys._getframe}
+       84    0.003    0.000    0.006    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/linalg/linalg.py:2342(norm)
+      729    0.003    0.000    0.003    0.000 {built-in method posix.getpid}
+      729    0.003    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/process.py:37(current_process)
+        1    0.003    0.003    0.003    0.003 {method 'convert' of 'pygame.surface.Surface' objects}
+      406    0.003    0.000    0.004    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/shape_base.py:207(_arrays_for_stack_dispatcher)
+       67    0.003    0.000    0.703    0.010 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:303(send_event)
+      728    0.002    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/process.py:189(name)
+       56    0.002    0.000    0.002    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+      266    0.002    0.000    0.012    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:187(render)
+      237    0.002    0.000    0.003    0.000 {built-in method builtins.max}
+      416    0.002    0.000    0.002    0.000 {method 'reshape' of 'numpy.ndarray' objects}
+       67    0.002    0.000    0.006    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:121(put)
+      134    0.002    0.000    0.002    0.000 {built-in method posix.chdir}
+       32    0.002    0.000    0.014    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:99(render)
+       71    0.002    0.000    0.004    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:150(dirname)
+       12    0.002    0.000    0.023    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:467(format_meter)
+        3    0.002    0.001    0.002    0.001 {built-in method _imp.create_dynamic}
+        5    0.002    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:222(__init__)
+      142    0.002    0.000    0.002    0.000 main.py:26(note)
+       66    0.002    0.000    0.009    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:203(update_bombs)
+       67    0.002    0.000    0.005    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:153(get)
+      406    0.002    0.000    0.002    0.000 {built-in method numpy.core._multiarray_umath.normalize_axis_index}
+      134    0.002    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:341(notify)
+       66    0.001    0.000    0.008    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:176(wait_for_act)
+      654    0.001    0.000    0.001    0.000 {method 'get_rect' of 'pygame.surface.Surface' objects}
+       32    0.001    0.000    0.001    0.000 {built-in method pygame.transform.rotate}
+      129    0.001    0.000    0.002    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:137(add_event)
+       66    0.001    0.000    0.008    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:128(perform_agent_action)
+      417    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/multiarray.py:152(concatenate)
+      220    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:142(note_stat)
+       20    0.001    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:340(_broadcast_to)
+      360    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:147(<genexpr>)
+       26    0.001    0.000    0.010    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1337(add_argument)
+       17    0.001    0.000    0.005    0.000 <frozen importlib._bootstrap_external>:1498(find_spec)
+       10    0.001    0.000    0.025    0.003 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:68(new_round)
+       41    0.001    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:71(join)
+       96    0.001    0.000    0.002    0.000 <__array_function__ internals>:177(ndim)
+      276    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:146(<genexpr>)
+      300    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:149(<genexpr>)
+       86    0.001    0.000    0.001    0.000 {method 'format' of 'str' objects}
+       76    0.001    0.000    0.001    0.000 {built-in method numpy.zeros}
+       81    0.001    0.000    0.001    0.000 {built-in method posix.stat}
         7    0.001    0.000    0.001    0.000 {built-in method pygame.image.load}
-      122    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:179(collect_coins)
-       24    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:272(_is_ascii)
-     10/7    0.001    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:493(_parse)
-       20    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:340(_broadcast_to)
-      132    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:133(base_timeout)
-      247    0.001    0.000    0.001    0.000 {method '__enter__' of '_thread.lock' objects}
-      123    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:208(_qsize)
-       98    0.001    0.000    0.001    0.000 {method 'astype' of 'numpy.ndarray' objects}
-       88    0.001    0.000    0.002    0.000 <frozen importlib._bootstrap_external>:121(_path_join)
+      135    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:246(__enter__)
+       84    0.001    0.000    0.001    0.000 {method 'dot' of 'numpy.ndarray' objects}
+       70    0.001    0.000    0.001    0.000 {built-in method posix.getcwd}
+      228    0.001    0.000    0.001    0.000 {built-in method builtins.getattr}
+       66    0.001    0.000    0.005    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:239(evaluate_explosions)
+      135    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:261(_is_owned)
+     10/7    0.001    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:493(_parse)
+      240    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:148(<genexpr>)
+      135    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:249(__exit__)
+       84    0.001    0.000    0.008    0.000 <__array_function__ internals>:177(norm)
+       24    0.001    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:272(_is_ascii)
+      105    0.001    0.000    0.005    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:14(render)
+       67    0.001    0.000    0.006    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:279(get_with_time)
+       90    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:24(__init__)
+       66    0.001    0.000    0.639    0.010 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:173(act)
+      269    0.001    0.000    0.001    0.000 {method 'rstrip' of 'str' objects}
+       66    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:407(<listcomp>)
        88    0.001    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:123(<listcomp>)
-       95    0.001    0.000    0.003    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:14(render)
-      116    0.000    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/_methods.py:47(_sum)
-      135    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1308(register)
-        2    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1589(_fn)
-      122    0.000    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:406(<listcomp>)
-       82    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/os.py:748(encode)
-        9    0.000    0.000    0.005    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/gettext.py:538(find)
-     19/6    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:71(_compile)
-      262    0.000    0.000    0.000    0.000 {built-in method builtins.ord}
-       25    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1478(_get_optional_kwargs)
-      196    0.000    0.000    0.000    0.000 {method 'ravel' of 'numpy.ndarray' objects}
-       60    0.000    0.000    0.006    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/re.py:289(_compile)
-       90    0.000    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:24(__init__)
-      232    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:296(<genexpr>)
-      122    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:170(reset_game_events)
-       23    0.000    0.000    0.004    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:161(__init__)
-      122    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:190(update_explosions)
-       10    0.000    0.000    0.024    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1199(update)
-       82    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/os.py:670(__getitem__)
-      122    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:465(send_game_events)
-       11    0.000    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1255(__init__)
-       64    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:121(tile_is_free)
-      100    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:164(__getitem__)
-        8    0.000    0.000    0.006    0.001 <frozen importlib._bootstrap>:890(_find_spec)
-       18    0.000    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/gettext.py:212(_expand_lang)
-      152    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/fromnumeric.py:3152(ndim)
-      122    0.000    0.000    0.000    0.000 {built-in method _stat.S_ISREG}
-      196    0.000    0.000    0.000    0.000 {built-in method numpy.asarray}
-       12    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1447(format_dict)
-       23    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/shutil.py:1320(get_terminal_size)
-      196    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/linalg/linalg.py:2338(_norm_dispatcher)
-      152    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/fromnumeric.py:3148(_ndim_dispatcher)
-       61    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:231(__call__)
-      162    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
-      122    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:405(<listcomp>)
-        6    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:354(cache_from_source)
-        2    0.000    0.000    0.000    0.000 {built-in method marshal.loads}
-        8    0.000    0.000    0.005    0.001 <frozen importlib._bootstrap_external>:1367(_get_spec)
-      123    0.000    0.000    0.000    0.000 {method 'popleft' of 'collections.deque' objects}
+        9    0.001    0.000    0.007    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/gettext.py:538(find)
+       10    0.001    0.000    0.034    0.003 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1199(update)
+       82    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/os.py:748(encode)
+     19/6    0.001    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:71(_compile)
+       12    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1447(format_dict)
+       88    0.001    0.000    0.002    0.000 <frozen importlib._bootstrap_external>:121(_path_join)
+       82    0.001    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/os.py:670(__getitem__)
+      142    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:594(<lambda>)
+      135    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1308(register)
+      262    0.001    0.000    0.001    0.000 {built-in method builtins.ord}
+      138    0.001    0.000    0.001    0.000 {method 'acquire' of '_thread.lock' objects}
+       23    0.001    0.000    0.005    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:161(__init__)
+       25    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1478(_get_optional_kwargs)
+        2    0.001    0.000    0.001    0.000 {method 'fill' of 'pygame.surface.Surface' objects}
+       66    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:167(store_game_state)
+       66    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:179(collect_coins)
+        3    0.001    0.000    0.001    0.000 {built-in method marshal.loads}
+       60    0.001    0.000    0.008    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/re.py:289(_compile)
+      100    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:164(__getitem__)
+       76    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:146(get_state)
+      168    0.001    0.000    0.001    0.000 {built-in method builtins.issubclass}
+       12    0.001    0.000    0.037    0.003 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1465(display)
+       84    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/linalg/linalg.py:117(isComplexType)
+       12    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:51(get_blast_coords)
+       61    0.001    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:231(__call__)
+       18    0.001    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/gettext.py:212(_expand_lang)
+       66    0.001    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:406(<listcomp>)
+       11    0.001    0.000    0.004    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1255(__init__)
+       67    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:212(_put)
+       56    0.000    0.000    0.003    0.000 {method 'sum' of 'numpy.ndarray' objects}
+       12    0.000    0.000    0.024    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1151(__str__)
+        8    0.000    0.000    0.007    0.001 <frozen importlib._bootstrap>:890(_find_spec)
+       67    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:216(_get)
+       23    0.000    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/shutil.py:1320(get_terminal_size)
+       76    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:133(base_timeout)
       149    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
-      164    0.000    0.000    0.000    0.000 {method 'setdefault' of 'dict' objects}
-       23    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:400(format_interval)
-       10    0.000    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/function_base.py:4892(meshgrid)
-      122    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:237(<listcomp>)
-       36    0.000    0.000    0.021    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:377(disp_len)
-       60    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1312(_registry_get)
-        9    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:51(get_blast_coords)
+      162    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
+       20    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:100(split)
+       42    0.000    0.000    0.000    0.000 {method 'astype' of 'numpy.ndarray' objects}
+      135    0.000    0.000    0.000    0.000 {method '__exit__' of '_thread.lock' objects}
+       56    0.000    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/_methods.py:47(_sum)
+       96    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/fromnumeric.py:3152(ndim)
+       48    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:48(get_state)
       131    0.000    0.000    0.000    0.000 {method 'join' of 'str' objects}
-       12    0.000    0.000    0.018    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1151(__str__)
-      124    0.000    0.000    0.000    0.000 {method 'append' of 'collections.deque' objects}
-       57    0.000    0.000    0.004    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/re.py:250(compile)
-       27    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1398(_add_action)
-       36    0.000    0.000    0.021    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:373(_text_width)
-        2    0.000    0.000    0.000    0.000 {method 'fill' of 'pygame.surface.Surface' objects}
-       10    0.000    0.000    0.005    0.001 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:484(end_round)
-        1    0.000    0.000    0.001    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:50(__init__)
-       10    0.000    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:480(broadcast_arrays)
-        8    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:477(_init_module_attrs)
-       12    0.000    0.000    0.028    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1465(display)
-       11    0.000    0.000    0.027    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1161(__iter__)
-       10    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:96(<listcomp>)
-       11    0.000    0.000    0.000    0.000 {built-in method builtins.__build_class__}
-       93    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:222(_verbose_message)
-        9    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/encodings/__init__.py:43(normalize_encoding)
-       18    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/locale.py:384(normalize)
-       97    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:30(get_state)
-      8/4    0.000    0.000    0.016    0.004 <frozen importlib._bootstrap>:986(_find_and_load)
-       22    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:586(_format_args)
-     22/9    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:174(getwidth)
-       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:186(__format__)
-       10    0.000    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:269(end_round)
-       10    0.000    0.000    0.000    0.000 {method 'strftime' of 'datetime.date' objects}
-       27    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1514(_pop_action_class)
-       21    0.000    0.000    0.000    0.000 {built-in method now}
-       37    0.000    0.000    0.000    0.000 {method 'sub' of 're.Pattern' objects}
-       15    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:102(acquire)
-       11    0.000    0.000    0.026    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1326(refresh)
-       44    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:135(_path_stat)
-        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:64(parse_parts)
-      108    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:8(__init__)
-      2/1    0.000    0.000    0.003    0.003 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1809(_parse_known_args)
-      9/6    0.000    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:435(_parse_sub)
-      8/6    0.000    0.000    0.010    0.002 <frozen importlib._bootstrap>:650(_load_unlocked)
-       27    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1589(_add_action)
-        4    0.000    0.000    0.000    0.000 {built-in method io.open_code}
-       15    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:106(release)
+       23    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:400(format_interval)
+       66    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:190(update_explosions)
+      164    0.000    0.000    0.000    0.000 {method 'setdefault' of 'dict' objects}
+       84    0.000    0.000    0.000    0.000 {method 'ravel' of 'numpy.ndarray' objects}
+      112    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:296(<genexpr>)
+       67    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:208(_qsize)
+        9    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/encodings/__init__.py:43(normalize_encoding)
+       36    0.000    0.000    0.028    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:377(disp_len)
+      135    0.000    0.000    0.000    0.000 {method '__enter__' of '_thread.lock' objects}
+       66    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:237(<listcomp>)
+        8    0.000    0.000    0.006    0.001 <frozen importlib._bootstrap_external>:1367(_get_spec)
+       27    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1398(_add_action)
+       11    0.000    0.000    0.037    0.003 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1161(__iter__)
+      114    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:8(__init__)
+       15    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:102(acquire)
+       10    0.000    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:480(broadcast_arrays)
+       10    0.000    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:96(<listcomp>)
+       57    0.000    0.000    0.005    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/re.py:250(compile)
        10    0.000    0.000    0.000    0.000 {method 'random' of 'numpy.random._generator.Generator' objects}
-       83    0.000    0.000    0.000    0.000 {method 'encode' of 'str' objects}
-        6    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:536(_compile_info)
-       72    0.000    0.000    0.000    0.000 {built-in method builtins.min}
-        1    0.000    0.000   35.614   35.614 main.py:100(main)
-       36    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:48(get_state)
-        1    0.000    0.000    0.007    0.007 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:953(__init__)
-       36    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_collections_abc.py:657(get)
-       10    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:118(start_round)
-       36    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:254(get)
-       41    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:160(__len__)
+       36    0.000    0.000    0.027    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:373(_text_width)
+       66    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:465(send_game_events)
+       18    0.000    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/locale.py:384(normalize)
+       10    0.000    0.000    0.004    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/function_base.py:4892(meshgrid)
+       11    0.000    0.000    0.035    0.003 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1326(refresh)
+       60    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1312(_registry_get)
+       97    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:30(get_state)
+       15    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:106(release)
+       22    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:586(_format_args)
+      2/1    0.000    0.000    0.005    0.005 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1809(_parse_known_args)
+       66    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:170(reset_game_events)
+       92    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:222(_verbose_message)
+       21    0.000    0.000    0.000    0.000 {built-in method now}
+        8    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:477(_init_module_attrs)
+       37    0.000    0.000    0.000    0.000 {method 'sub' of 're.Pattern' objects}
+       10    0.000    0.000    0.000    0.000 {method 'strftime' of 'datetime.date' objects}
+      9/6    0.000    0.000    0.003    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:435(_parse_sub)
+       84    0.000    0.000    0.000    0.000 {built-in method numpy.asarray}
+       96    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/fromnumeric.py:3148(_ndim_dispatcher)
+       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:186(__format__)
+      8/4    0.000    0.000    0.015    0.004 <frozen importlib._bootstrap>:986(_find_and_load)
+       11    0.000    0.000    0.000    0.000 {built-in method builtins.__build_class__}
+     22/9    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:174(getwidth)
+       66    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:405(<listcomp>)
        38    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/genericpath.py:16(exists)
-        8    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:658(_parse_args)
-       12    0.000    0.000    0.010    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:460(print_status)
+       12    0.000    0.000    0.012    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:460(print_status)
+       10    0.000    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:269(end_round)
+       84    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/linalg/linalg.py:2338(_norm_dispatcher)
+        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:64(parse_parts)
+       36    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_collections_abc.py:657(get)
        10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/function_base.py:5032(<listcomp>)
-        3    0.000    0.000    0.005    0.002 <frozen importlib._bootstrap_external>:909(get_code)
-       60    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:280(<genexpr>)
-       62    0.000    0.000    0.000    0.000 {method 'pop' of 'dict' objects}
-      8/4    0.000    0.000    0.015    0.004 <frozen importlib._bootstrap>:956(_find_and_load_unlocked)
-        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:157(_get_module_lock)
-        8    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1567(__init__)
-       32    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:863(__enter__)
-        1    0.000    0.000    0.000    0.000 {built-in method _thread.start_new_thread}
-       32    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:867(__exit__)
-       58    0.000    0.000    0.000    0.000 {built-in method builtins.divmod}
-       61    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
-       76    0.000    0.000    0.000    0.000 {method 'lower' of 'str' objects}
-       10    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:280(<dictcomp>)
-        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:176(cb)
-        6    0.000    0.000    0.005    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:759(compile)
-       54    0.000    0.000    0.000    0.000 {method 'rpartition' of 'str' objects}
-       20    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:2435(_is_egg_path)
-       10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:416(_broadcast_shape)
-        4    0.000    0.000    0.002    0.001 {built-in method builtins.next}
-       60    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:345(<genexpr>)
-       20    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:2442(_is_zip_egg)
-        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:334(normpath)
-       18    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:218(_acquireLock)
-       46    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:233(__next)
+       27    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1589(_add_action)
+       42    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:135(_path_stat)
+       41    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:160(__len__)
+       10    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:118(start_round)
+        1    0.000    0.000   14.613   14.613 main.py:100(main)
+       12    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:37(__init__)
+        8    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:658(_parse_args)
+       12    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:81(__init__)
+        6    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:536(_compile_info)
+       83    0.000    0.000    0.000    0.000 {method 'encode' of 'str' objects}
        12    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:454(fp_write)
-       27    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:809(__init__)
-       51    0.000    0.000    0.000    0.000 {method 'replace' of 'str' objects}
+       36    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:254(get)
+       46    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:233(__next)
+       10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:416(_broadcast_shape)
+        3    0.000    0.000    0.000    0.000 {built-in method io.open_code}
         9    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/locale.py:350(_replace_encoding)
-        9    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:718(__str__)
-       22    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1680(_parents)
-       26    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:193(inner)
-       12    0.000    0.000    0.009    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:385(disp_trim)
-      2/1    0.000    0.000    0.004    0.004 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1774(parse_known_args)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1372(_clear_cache)
-       33    0.000    0.000    0.000    0.000 {method 'match' of 're.Pattern' objects}
-        1    0.000    0.000    0.008    0.008 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:199(__init__)
-       48    0.000    0.000    0.000    0.000 {built-in method _imp.release_lock}
-       20    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:2450(_is_unpacked_egg)
-        1    0.000    0.000    0.000    0.000 {built-in method posix.replace}
-        9    0.000    0.000    0.005    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/gettext.py:579(translation)
-        6    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:689(spec_from_file_location)
-       20    0.000    0.000    0.000    0.000 {method 'copy' of 'numpy.ndarray' objects}
-       21    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:145(_path_is_mode_type)
-       25    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:172(append)
-       23    0.000    0.000    0.004    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2480(_get_formatter)
-       48    0.000    0.000    0.000    0.000 {built-in method _imp.acquire_lock}
-       17    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:851(__init__)
-       23    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/types.py:171(__get__)
+       72    0.000    0.000    0.000    0.000 {built-in method builtins.min}
+       76    0.000    0.000    0.000    0.000 {method 'lower' of 'str' objects}
+       60    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:345(<genexpr>)
+        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:334(normpath)
+       10    0.000    0.000    0.001    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:280(<dictcomp>)
+       10    0.000    0.000    0.005    0.001 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:484(end_round)
+       17    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:121(tile_is_free)
+        3    0.000    0.000    0.002    0.001 <frozen importlib._bootstrap_external>:909(get_code)
+       27    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1514(_pop_action_class)
+       32    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:867(__exit__)
+      8/6    0.000    0.000    0.008    0.001 <frozen importlib._bootstrap>:650(_load_unlocked)
+        6    0.000    0.000    0.007    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:759(compile)
+       68    0.000    0.000    0.000    0.000 {method 'append' of 'collections.deque' objects}
+       20    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:2442(_is_zip_egg)
+        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:157(_get_module_lock)
+       60    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:280(<genexpr>)
+       32    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:863(__enter__)
+        1    0.000    0.000    0.001    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:50(__init__)
+       58    0.000    0.000    0.000    0.000 {built-in method builtins.divmod}
+       54    0.000    0.000    0.000    0.000 {method 'rpartition' of 'str' objects}
+       62    0.000    0.000    0.000    0.000 {method 'pop' of 'dict' objects}
+       51    0.000    0.000    0.000    0.000 {method 'replace' of 'str' objects}
        44    0.000    0.000    0.000    0.000 {built-in method builtins.setattr}
-        8    0.000    0.000    0.003    0.000 <frozen importlib._bootstrap>:549(module_from_spec)
-       10    0.000    0.000    0.003    0.000 <__array_function__ internals>:177(meshgrid)
-        5    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:276(_optimize_charset)
-       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:153(__init__)
-       26    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1747(_add_action)
-       22    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:286(tell)
-        3    0.000    0.000    0.010    0.003 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1638(__init__)
-        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/_distutils_hack/__init__.py:89(find_spec)
+        6    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:354(cache_from_source)
+       12    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:230(<listcomp>)
+       23    0.000    0.000    0.005    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2480(_get_formatter)
+        1    0.000    0.000    0.042    0.042 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:199(__init__)
+      8/4    0.000    0.000    0.015    0.004 <frozen importlib._bootstrap>:956(_find_and_load_unlocked)
         7    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:712(_make_child)
-        9    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:37(__init__)
-       27    0.000    0.000    0.000    0.000 {method 'extend' of 'list' objects}
-        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1029(get_data)
-       10    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:546(<listcomp>)
-       41    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:619(<lambda>)
-        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:103(release)
-       10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:538(<listcomp>)
-       20    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/function_base.py:346(iterable)
-        6    0.000    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:937(parse)
-        1    0.000    0.000    0.003    0.003 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:11(<module>)
-        9    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:230(<listcomp>)
-       15    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/enum.py:313(__call__)
+        1    0.000    0.000    0.007    0.007 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:953(__init__)
+      2/1    0.000    0.000    0.005    0.005 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1774(parse_known_args)
+       26    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1747(_add_action)
+       67    0.000    0.000    0.000    0.000 {method 'popleft' of 'collections.deque' objects}
+        8    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1567(__init__)
+       10    0.000    0.000    0.005    0.000 <__array_function__ internals>:177(meshgrid)
+       20    0.000    0.000    0.000    0.000 {method 'copy' of 'numpy.ndarray' objects}
+       26    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:193(inner)
+       33    0.000    0.000    0.000    0.000 {method 'match' of 're.Pattern' objects}
+       23    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/types.py:171(__get__)
+       10    0.000    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:546(<listcomp>)
         1    0.000    0.000    0.000    0.000 {numpy.random._generator.default_rng}
-        1    0.000    0.000    0.001    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/_monitor.py:30(__init__)
-       10    0.000    0.000    0.002    0.000 <__array_function__ internals>:177(broadcast_arrays)
-       23    0.000    0.000    0.000    0.000 {built-in method posix.get_terminal_size}
-       18    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:227(_releaseLock)
+       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:153(__init__)
+       25    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:172(append)
        45    0.000    0.000    0.000    0.000 {method 'isalnum' of 'str' objects}
-       22    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:579(format)
-        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:79(_unpack_uint32)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/util.py:10(<module>)
-       30    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:89(is_dangerous)
-        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/random.py:250(_randbelow_with_getrandbits)
-       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:389(parent)
-     13/8    0.000    0.000    0.009    0.001 <frozen importlib._bootstrap>:211(_call_with_frames_removed)
-        9    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:81(__init__)
+       27    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:809(__init__)
+       12    0.000    0.000    0.012    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:385(disp_trim)
+       20    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/function_base.py:346(iterable)
+       61    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1372(_clear_cache)
+        8    0.000    0.000    0.003    0.000 <frozen importlib._bootstrap>:549(module_from_spec)
+       20    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:2435(_is_egg_path)
+        6    0.000    0.000    0.004    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:937(parse)
+       20    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:2450(_is_unpacked_egg)
+        3    0.000    0.000    0.014    0.005 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1638(__init__)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1029(get_data)
+       48    0.000    0.000    0.000    0.000 {built-in method _imp.acquire_lock}
+       48    0.000    0.000    0.000    0.000 {built-in method _imp.release_lock}
        10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/function_base.py:5045(<listcomp>)
-        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:691(_from_parsed_parts)
-        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:58(__init__)
-       21    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1330(_path_importer_cache)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:761(__init__)
-        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:147(__enter__)
-       20    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:542(<genexpr>)
-       15    0.000    0.000    0.000    0.000 {method 'acquire' of '_multiprocessing.SemLock' objects}
-        1    0.000    0.000    0.000    0.000 {built-in method posix.open}
-       23    0.000    0.000    0.000    0.000 {method 'fileno' of '_io.TextIOWrapper' objects}
-       23    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:202(__init__)
-       26    0.000    0.000    0.000    0.000 {method 'lstrip' of 'str' objects}
-        1    0.000    0.000    0.003    0.003 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:332(_screen_shape_linux)
-       30    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:249(match)
-        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/random.py:285(choice)
-        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:60(isabs)
-        6    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1493(_get_spec)
-       16    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:154(_path_isfile)
-       27    0.000    0.000    0.000    0.000 {method 'split' of 'str' objects}
-        8    0.000    0.000    0.005    0.001 <frozen importlib._bootstrap_external>:1399(find_spec)
-       27    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1527(_check_conflict)
-        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:78(acquire)
+       10    0.000    0.000    0.003    0.000 <__array_function__ internals>:177(broadcast_arrays)
+       22    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1680(_parents)
         2    0.000    0.000    0.000    0.000 {built-in method posix.listdir}
-       14    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:129(<genexpr>)
-        9    0.000    0.000    0.005    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/gettext.py:660(dgettext)
-        6    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:484(_get_cached)
-        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/enum.py:938(__and__)
-        7    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:127(_path_split)
-       18    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:81(groups)
-        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:372(abspath)
-       10    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:97(<listcomp>)
-      7/5    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:461(_get_literal_prefix)
-       26    0.000    0.000    0.000    0.000 {method 'reverse' of 'list' objects}
-        1    0.000    0.000    0.001    0.001 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:56(__init__)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1284(getLogger)
-        1    0.000    0.000    0.002    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1135(__call__)
-        4    0.000    0.000    0.000    0.000 {method 'read' of '_io.BufferedReader' objects}
-        6    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1388(add_argument_group)
-        3    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:1164(create_module)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2358(_get_values)
-       11    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1518(_get_handler)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2124(_signature_from_function)
-        7    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2414(_get_value)
-       22    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:570(_metavar_formatter)
-        2    0.000    0.000    0.002    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:397(get_provider)
-        6    0.000    0.000    0.002    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:598(_code)
-      3/1    0.000    0.000    0.002    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1856(take_action)
-        1    0.000    0.000    0.001    0.001 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:58(setup_logging)
-       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:595(isstring)
-        1    0.000    0.000    0.000    0.000 {built-in method marshal.dumps}
-        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1459(__init__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1086(__init__)
-       23    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/enum.py:753(value)
-       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:107(__init__)
-       26    0.000    0.000    0.000    0.000 {built-in method builtins.iter}
-        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:355(_escape)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/ntpath.py:61(isabs)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1595(_validate_resource_path)
-       14    0.000    0.000    0.000    0.000 {built-in method sys.intern}
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:3229(_find_adapter)
-       10    0.000    0.000    0.000    0.000 {built-in method builtins.all}
-        1    0.000    0.000    0.000    0.000 {built-in method pygame.display.set_icon}
-       19    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:111(__init__)
-        9    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:728(__fspath__)
-        1    0.000    0.000    0.008    0.008 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:666(__new__)
-       12    0.000    0.000    0.000    0.000 {method 'update' of 'dict' objects}
-        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:423(_simple)
-        9    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:376(cached)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2218(_signature_from_callable)
-        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1221(_get_parent_path)
-        1    0.000    0.000    0.000    0.000 {function Random.seed at 0x7f2179af5160}
-        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:224(__init__)
-       20    0.000    0.000    0.000    0.000 {built-in method _thread.allocate_lock}
-        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:151(__exit__)
-        3    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2106(_match_arguments_partial)
-        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:553(_classify_pyc)
-        1    0.000    0.000    0.007    0.007 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/context.py:70(RLock)
+        1    0.000    0.000    0.004    0.004 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:11(<module>)
+       22    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:579(format)
+       20    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:145(_path_is_mode_type)
+        4    0.000    0.000    0.002    0.001 {built-in method builtins.next}
+       22    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:286(tell)
+       17    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:851(__init__)
+       18    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:218(_acquireLock)
+        5    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:276(_optimize_charset)
+        1    0.000    0.000    0.000    0.000 {built-in method _thread.start_new_thread}
+       27    0.000    0.000    0.000    0.000 {method 'extend' of 'list' objects}
+       15    0.000    0.000    0.000    0.000 {method 'acquire' of '_multiprocessing.SemLock' objects}
+       21    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1330(_path_importer_cache)
+       10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:538(<listcomp>)
+        1    0.000    0.000    0.066    0.066 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:56(__init__)
+       23    0.000    0.000    0.000    0.000 {built-in method posix.get_terminal_size}
+        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/random.py:285(choice)
+       18    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:227(_releaseLock)
+       16    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:154(_path_isfile)
+       26    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:89(is_dangerous)
+        6    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:689(spec_from_file_location)
+       15    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/enum.py:313(__call__)
+        9    0.000    0.000    0.007    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/gettext.py:579(translation)
        10    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:342(__init__)
-        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:180(_write_atomic)
+        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:60(isabs)
+        9    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:728(__fspath__)
+        8    0.000    0.000    0.006    0.001 <frozen importlib._bootstrap_external>:1399(find_spec)
+        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/_distutils_hack/__init__.py:89(find_spec)
+       26    0.000    0.000    0.000    0.000 {built-in method builtins.iter}
+       30    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:249(match)
+       22    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:570(_metavar_formatter)
+      7/5    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:461(_get_literal_prefix)
+       27    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1527(_check_conflict)
+        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:103(release)
+        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/enum.py:938(__and__)
+        9    0.000    0.000    0.007    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/gettext.py:660(dgettext)
+        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:176(cb)
+       27    0.000    0.000    0.000    0.000 {method 'split' of 'str' objects}
+        4    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/posixpath.py:372(abspath)
+        3    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:638(_compile_bytecode)
+       26    0.000    0.000    0.000    0.000 {method 'lstrip' of 'str' objects}
+       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:389(parent)
+       10    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:97(<listcomp>)
+       20    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:542(<genexpr>)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/util.py:10(<module>)
+        6    0.000    0.000    0.003    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:598(_code)
+        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:78(acquire)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2124(_signature_from_function)
+        3    0.000    0.000    0.000    0.000 {method 'read' of '_io.BufferedReader' objects}
+        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:58(__init__)
         8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:800(find_spec)
-       20    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:25(_maybe_view_as_subclass)
-       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:111(__format__)
-       18    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
-       13    0.000    0.000    0.000    0.000 {built-in method __new__ of type object at 0x70d560}
-        1    0.000    0.000    0.000    0.000 {function SeedSequence.generate_state at 0x7f2179b3eaf0}
-        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:293(splitroot)
-        5    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:249(_compile_charset)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/tempfile.py:133(rng)
-       10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:193(_checkLevel)
-       15    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/enum.py:631(__new__)
-      5/4    0.000    0.000    0.002    0.000 <frozen importlib._bootstrap>:1017(_handle_fromlist)
-        7    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:933(__truediv__)
-        9    0.000    0.000    0.005    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/gettext.py:735(gettext)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1404(__init__)
+       18    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:81(groups)
+        6    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:484(_get_cached)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1284(getLogger)
+        9    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:376(cached)
+        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:691(_from_parsed_parts)
+        1    0.000    0.000    0.064    0.064 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:13(setup)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:79(_unpack_uint32)
+        8    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:147(__enter__)
+        1    0.000    0.000    0.003    0.003 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1135(__call__)
+        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/random.py:250(_randbelow_with_getrandbits)
+        1    0.000    0.000    0.011    0.011 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:58(setup_logging)
+       22    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
+       11    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1518(_get_handler)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:761(__init__)
+        6    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1493(_get_spec)
+        7    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2414(_get_value)
+        9    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:718(__str__)
        16    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1465(<genexpr>)
-        2    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1129(__init__)
-      3/2    0.000    0.000    0.008    0.004 <frozen importlib._bootstrap_external>:837(exec_module)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:682(_get_free_pos)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:251(_is_utf)
-        2    0.000    0.000    0.002    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1698(_setup_prefix)
+     12/7    0.000    0.000    0.009    0.001 <frozen importlib._bootstrap>:211(_call_with_frames_removed)
+       20    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:25(_maybe_view_as_subclass)
+       23    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/enum.py:753(value)
+        6    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:127(_path_split)
+       23    0.000    0.000    0.000    0.000 {method 'fileno' of '_io.TextIOWrapper' objects}
+        1    0.000    0.000    0.000    0.000 {function SeedSequence.generate_state at 0x7f90881eaaf0}
+        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:355(_escape)
+        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1221(_get_parent_path)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2218(_signature_from_callable)
+        6    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1388(add_argument_group)
         6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:701(_format_parsed_parts)
-        1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:13(setup)
+       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:595(isstring)
+      6/5    0.000    0.000    0.002    0.000 <frozen importlib._bootstrap>:1017(_handle_fromlist)
+       23    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:202(__init__)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2358(_get_values)
+        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:423(_simple)
+       19    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:111(__init__)
+       15    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/enum.py:631(__new__)
+      3/1    0.000    0.000    0.003    0.003 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1856(take_action)
+       10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:193(_checkLevel)
+       10    0.000    0.000    0.000    0.000 {built-in method builtins.all}
         7    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2122(_parse_optional)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:441(status_printer)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1417(setLevel)
-        9    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/os.py:752(decode)
-      3/2    0.000    0.000    0.003    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1954(consume_positionals)
+        1    0.000    0.000    0.109    0.109 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:108(add_agent)
+       26    0.000    0.000    0.000    0.000 {method 'reverse' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method pygame.display.set_icon}
        15    0.000    0.000    0.000    0.000 {method 'release' of '_multiprocessing.SemLock' objects}
-        1    0.000    0.000    0.000    0.000 {method 'write' of '_io.FileIO' objects}
-        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1172(exec_module)
-        1    0.000    0.000    0.001    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:33(__init__)
-        1    0.000    0.000    0.000    0.000 {built-in method fcntl.ioctl}
-       17    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:68(_relax_case)
-        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:909(__init__)
-        1    0.000    0.000    0.010    0.010 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:108(add_agent)
-        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1606(_add_action)
-        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:921(fix_flags)
-        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:638(_compile_bytecode)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:58(__iter__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:212(__init__)
-        2    0.000    0.000    0.002    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1694(__init__)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1489(__init__)
-        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:586(_validate_timestamp_pyc)
-        6    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:92(next_stage)
-        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:725(find_spec)
-        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1211(_find_parent_path_names)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:505(__init__)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2489(__init__)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:26(__exit__)
-        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:35(_new_module)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1716(add_subparsers)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:411(_mk_bitmap)
-        1    0.000    0.000    0.007    0.007 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:116(create_mp_lock)
-       10    0.000    0.000    0.000    0.000 {method 'getrandbits' of '_random.Random' objects}
-       15    0.000    0.000    0.000    0.000 {method 'clear' of 'dict' objects}
-        4    0.000    0.000    0.000    0.000 {built-in method builtins.locals}
-        2    0.000    0.000    0.002    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1266(close)
-       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:167(colour)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/ntpath.py:124(splitdrive)
-        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:81(add)
-       10    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:98(<listcomp>)
-        9    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:1049(_init)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:862(__init__)
-        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:651(_code_to_timestamp_pyc)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2772(__init__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/random.py:123(seed)
-        5    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2821(<genexpr>)
-        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:113(__exit__)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/_ufunc_config.py:33(seterr)
-       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:163(colour)
-      6/4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1225(_recalculate)
-        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:886(__init__)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2225(_get_nargs_pattern)
-        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1549(_fill_cache)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:270(wait)
-        2    0.000    0.000    0.001    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2084(_match_argument)
-        1    0.000    0.000    0.007    0.007 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:763(get_lock)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/tempfile.py:147(<listcomp>)
-        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:143(__init__)
-        1    0.000    0.000    0.007    0.007 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:90(__init__)
-        1    0.000    0.000    0.003    0.003 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pygame/pkgdata.py:45(getResource)
-        4    0.000    0.000    0.000    0.000 {built-in method _imp.is_builtin}
-       10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:453(_get_iscased)
+        5    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:249(_compile_charset)
+       18    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:619(<lambda>)
+        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:224(__init__)
+        1    0.000    0.000    0.008    0.008 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:666(__new__)
+       14    0.000    0.000    0.000    0.000 {built-in method sys.intern}
+       12    0.000    0.000    0.000    0.000 {method 'update' of 'dict' objects}
+        2    0.000    0.000    0.002    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:397(get_provider)
         1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:689(_decr_instances)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:208(format_help)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:834(start)
-      4/3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1238(__iter__)
-        8    0.000    0.000    0.000    0.000 {built-in method _imp.is_frozen}
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/contextlib.py:72(inner)
-        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1080(set_data)
-        7    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:102(join_parsed_parts)
-        2    0.000    0.000    0.000    0.000 <frozen zipimport>:63(__init__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/functools.py:404(__get__)
-        2    0.000    0.000    0.001    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1877(consume_optional)
-        1    0.000    0.000    0.001    0.001 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:47(__init__)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1601(addHandler)
-        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1070(path_stats)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:493(unwrap)
-        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1317(_path_hooks)
-        8    0.000    0.000    0.000    0.000 {method 'bit_length' of 'int' objects}
-        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:110(__enter__)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:891(createLock)
-       10    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
-        9    0.000    0.000    0.000    0.000 {method 'find' of 'bytearray' objects}
-        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:175(_path_isabs)
-      3/1    0.000    0.000    0.007    0.007 <frozen importlib._bootstrap>:1002(_gcd_import)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:84(opengroup)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1393(add_mutually_exclusive_group)
-        2    0.000    0.000    0.005    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1109(add_parser)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1031(__init__)
-        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1148(__init__)
+       13    0.000    0.000    0.000    0.000 {built-in method __new__ of type object at 0x70d560}
+       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:107(__init__)
+        9    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/os.py:752(decode)
+       12    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:129(<genexpr>)
+      3/2    0.000    0.000    0.005    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1954(consume_positionals)
+        2    0.000    0.000    0.045    0.023 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1129(__init__)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_bootlocale.py:33(getpreferredencoding)
+       20    0.000    0.000    0.000    0.000 {built-in method _thread.allocate_lock}
+       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:111(__format__)
+        8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:293(splitroot)
+       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:167(colour)
+        7    0.000    0.000    0.001    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:933(__truediv__)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:553(_classify_pyc)
+        1    0.000    0.000    0.002    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:33(__init__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/tempfile.py:133(rng)
+        1    0.000    0.000    0.004    0.004 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:332(_screen_shape_linux)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1459(__init__)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2489(__init__)
+        3    0.000    0.000    0.002    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2106(_match_arguments_partial)
+        2    0.000    0.000    0.003    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1266(close)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/ntpath.py:61(isabs)
+        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:151(__exit__)
+      6/4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1225(_recalculate)
+       12    0.000    0.000    0.000    0.000 {method 'remove' of 'list' objects}
+        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:921(fix_flags)
+        1    0.000    0.000    0.001    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/_monitor.py:30(__init__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1716(add_subparsers)
+        3    0.000    0.000    0.002    0.001 <frozen importlib._bootstrap_external>:1164(create_module)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:862(__init__)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:58(__iter__)
+      3/2    0.000    0.000    0.006    0.003 <frozen importlib._bootstrap_external>:837(exec_module)
+        1    0.000    0.000    0.007    0.007 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/context.py:70(RLock)
+        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:909(__init__)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1404(__init__)
+        9    0.000    0.000    0.007    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/gettext.py:735(gettext)
+        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:886(__init__)
         2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:843(_addHandlerRef)
+        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1211(_find_parent_path_names)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1549(_fill_cache)
+        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:81(add)
+        2    0.000    0.000    0.000    0.000 <frozen zipimport>:63(__init__)
+      4/3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1238(__iter__)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:3229(_find_adapter)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1595(_validate_resource_path)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:441(status_printer)
+        9    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:1049(_init)
+        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1606(_add_action)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:559(__init__)
+        1    0.000    0.000    0.000    0.000 {function Random.seed at 0x7f90881a1160}
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:84(opengroup)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1489(__init__)
+        1    0.000    0.000    0.007    0.007 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:90(__init__)
+       10    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:98(<listcomp>)
+        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:725(find_spec)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/_ufunc_config.py:33(seterr)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:212(__init__)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1172(exec_module)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:682(_get_free_pos)
+       15    0.000    0.000    0.000    0.000 {method 'clear' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method fcntl.ioctl}
+        9    0.000    0.000    0.000    0.000 {method 'find' of 'bytearray' objects}
+        2    0.000    0.000    0.002    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1877(consume_optional)
+        2    0.000    0.000    0.007    0.003 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1109(add_parser)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2772(__init__)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:516(_check_name_wrapper)
+       16    0.000    0.000    0.000    0.000 {method 'getrandbits' of '_random.Random' objects}
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:175(_path_isabs)
+       10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/function_base.py:4887(_meshgrid_dispatcher)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/contextlib.py:72(inner)
+        4    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/items.py:92(next_stage)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1601(addHandler)
+        1    0.000    0.000    0.007    0.007 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:116(create_mp_lock)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:586(_validate_timestamp_pyc)
+        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:110(__enter__)
+        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:143(__init__)
+       17    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:68(_relax_case)
+      3/1    0.000    0.000    0.005    0.005 <frozen importlib._bootstrap>:1002(_gcd_import)
+        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:35(_new_module)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:493(unwrap)
+       10    0.000    0.000    0.000    0.000 {built-in method from_bytes}
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/ntpath.py:124(splitdrive)
+        2    0.000    0.000    0.002    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2084(_match_argument)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1589(_fn)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:270(wait)
+        1    0.000    0.000    0.109    0.109 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:338(setup_agents)
+        9    0.000    0.000    0.000    0.000 {method 'index' of 'str' objects}
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:891(createLock)
+       12    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:163(colour)
+        2    0.000    0.000    0.000    0.000 {built-in method _locale.nl_langinfo}
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:26(__exit__)
+        1    0.000    0.000    0.001    0.001 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:504(end)
+        8    0.000    0.000    0.000    0.000 {built-in method _imp.is_frozen}
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2225(_get_nargs_pattern)
+        2    0.000    0.000    0.000    0.000 {method 'search' of 're.Pattern' objects}
+        9    0.000    0.000    0.000    0.000 {method 'decode' of 'bytes' objects}
         2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1205(__init__)
         2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:248(_register_at_fork_reinit_lock)
-        9    0.000    0.000    0.000    0.000 {method 'decode' of 'bytes' objects}
-        1    0.000    0.000    0.010    0.010 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:338(setup_agents)
-      3/2    0.000    0.000    0.003    0.002 {built-in method builtins.exec}
-        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:516(_check_name_wrapper)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:288(_join_parts)
-       10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/function_base.py:4887(_meshgrid_dispatcher)
-        3    0.000    0.000    0.000    0.000 {method 'remove' of 'set' objects}
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:492(_get_charset_prefix)
-        9    0.000    0.000    0.000    0.000 {method 'index' of 'str' objects}
-        5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:159(_path_isdir)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1759(_get_positional_actions)
-        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:397(has_location)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:559(__init__)
-        8    0.000    0.000    0.000    0.000 {method 'remove' of 'list' objects}
-        3    0.000    0.000    0.002    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/re.py:188(match)
-        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:74(_pack_uint32)
-        1    0.000    0.000    0.012    0.012 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:332(__init__)
-        9    0.000    0.000    0.000    0.000 {built-in method from_bytes}
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1601(__init__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/weakref.py:159(__setitem__)
-        5    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1675(getEffectiveLevel)
-        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:999(__init__)
-        1    0.000    0.000    0.007    0.007 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/importlib/__init__.py:109(import_module)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:430(validate)
+        1    0.000    0.000    0.008    0.008 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:763(get_lock)
         6    0.000    0.000    0.000    0.000 {built-in method _sre.compile}
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:540(wait)
-       10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:476(_broadcast_arrays_dispatcher)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:360(Barrier)
-        1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:504(end)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/_ufunc_config.py:132(geterr)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:492(_get_charset_prefix)
+        2    0.000    0.000    0.002    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1694(__init__)
+        2    0.000    0.000    0.002    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1698(_setup_prefix)
+        5    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2821(<genexpr>)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:159(_path_isdir)
+        3    0.000    0.000    0.003    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/re.py:188(match)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1317(_path_hooks)
         6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:76(__init__)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1335(_fixupParents)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/weakref.py:102(__init__)
+        1    0.000    0.000    0.120    0.120 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:332(__init__)
+       10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/lib/stride_tricks.py:476(_broadcast_arrays_dispatcher)
+      3/2    0.000    0.000    0.004    0.002 {built-in method builtins.exec}
+        1    0.000    0.000    0.002    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pygame/pkgdata.py:45(getResource)
+        7    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:102(join_parsed_parts)
+       10    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:453(_get_iscased)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:2018(getLogger)
+        1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:678(_from_parts)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/random.py:123(seed)
+        3    0.000    0.000    0.000    0.000 {method 'remove' of 'set' objects}
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1070(path_stats)
         3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:151(wrapper_setattr)
-        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1590(path_hook_for_FileFinder)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:413(<listcomp>)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:20(__enter__)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:186(disable_on_exception)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:505(__init__)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1417(setLevel)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/tempfile.py:147(<listcomp>)
         5    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:776(__init__)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_bootlocale.py:33(getpreferredencoding)
-        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:158(isfunction)
+        4    0.000    0.000    0.000    0.000 {built-in method _imp.is_builtin}
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1335(_fixupParents)
+        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:113(__exit__)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1148(__init__)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:937(_sanity_check)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:106(remove)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:945(parent)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:124(__eq__)
         1    0.000    0.000    0.001    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1203(resource_exists)
         8    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:168(__setitem__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/util.py:171(register_after_fork)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:2018(getLogger)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:114(_make_name)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/weakref.py:284(update)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2851(from_callable)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/tempfile.py:144(__next__)
-        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:937(_sanity_check)
         2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2180(_get_option_tuples)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:281(format_help)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1154(_comparable)
-        1    0.000    0.000    0.002    0.002 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1217(resource_stream)
-        1    0.000    0.000    0.001    0.001 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:296(__init__)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1051(__init__)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:3103(signature)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:432(_uniq)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:221(__eq__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2398(<listcomp>)
-        6    0.000    0.000    0.000    0.000 {built-in method builtins.id}
-        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/_distutils_hack/__init__.py:96(<lambda>)
-        1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:107(setup)
-        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1676(identity)
-        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:65(_combine_flags)
-        7    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:604(<listcomp>)
-        1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agent_code/cavallo_pazzo/callbacks.py:1(<module>)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/random.py:721(getrandbits)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:96(closegroup)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:430(validate)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:432(_generate_overlap_table)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:265(_supports_unicode)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1287(fp_write)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1171(_open)
-        2    0.000    0.000    0.000    0.000 {method 'search' of 're.Pattern' objects}
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:288(_join_parts)
+       10    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/_ufunc_config.py:132(geterr)
+        5    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1675(getEffectiveLevel)
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.locals}
         5    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1276(disable)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:138(__getattr__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:1039(__new__)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1760(<listcomp>)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1031(__init__)
+        1    0.000    0.000    0.005    0.005 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/importlib/__init__.py:109(import_module)
+        1    0.000    0.000    0.042    0.042 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:300(start)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1759(_get_positional_actions)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1051(__init__)
+        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:65(_combine_flags)
+        2    0.000    0.000    0.044    0.022 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:1171(_open)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:432(_uniq)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:208(format_help)
         2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:574(<listcomp>)
-        1    0.000    0.000    0.001    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1502(has_resource)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:685(<setcomp>)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:678(_from_parts)
-        1    0.000    0.000    0.001    0.001 {built-in method builtins.__import__}
-        4    0.000    0.000    0.000    0.000 {built-in method numpy.geterrobj}
-        1    0.000    0.000    0.003    0.003 <frozen importlib._bootstrap_external>:901(source_to_code)
-        2    0.000    0.000    0.000    0.000 {built-in method _locale.nl_langinfo}
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:487(getmro)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/random.py:721(getrandbits)
+        8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:397(has_location)
+        1    0.000    0.000    0.065    0.065 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:107(setup)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/weakref.py:102(__init__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:281(format_help)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/tempfile.py:144(__next__)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:432(_generate_overlap_table)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:834(start)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:411(_mk_bitmap)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1393(add_mutually_exclusive_group)
+        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:158(isfunction)
+        1    0.000    0.000    0.002    0.002 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:296(__init__)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:3103(signature)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1154(_comparable)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/weakref.py:284(update)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1590(path_hook_for_FileFinder)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/functools.py:404(__get__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:360(Barrier)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1601(__init__)
         2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1247(__len__)
-        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1075(_cache_bytecode)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:3219(_always_object)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/_ufunc_config.py:430(__enter__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:155(__init__)
-        3    0.000    0.000    0.000    0.000 {built-in method _imp.exec_dynamic}
-        1    0.000    0.000    0.008    0.008 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:300(start)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1723(get_resource_stream)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:46(SemLock)
-        2    0.000    0.000    0.000    0.000 {built-in method _imp._fix_co_filename}
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2539(name)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:255(_release_save)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:513(_is_wrapper)
+        1    0.000    0.000    0.011    0.011 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:47(__init__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/weakref.py:159(__setitem__)
+        8    0.000    0.000    0.000    0.000 {method 'bit_length' of 'int' objects}
         1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1714(_has)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/ntpath.py:34(_get_bothseps)
-        2    0.000    0.000    0.000    0.000 {built-in method fromkeys}
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:226(__init__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:1110(daemon)
-        4    0.000    0.000    0.000    0.000 {method 'extend' of 'bytearray' objects}
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:52(_commit_removals)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/genericpath.py:27(isfile)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:1039(__new__)
+        7    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:604(<listcomp>)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:540(wait)
         1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:307(end)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/pathlib.py:945(parent)
-        2    0.000    0.000    0.000    0.000 {built-in method numpy.seterrobj}
-        1    0.000    0.000    0.000    0.000 {built-in method _pickle.dump}
-        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:162(__delitem__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:281(_screen_shape_wrapper)
-        1    0.000    0.000    0.000    0.000 {built-in method utcfromtimestamp}
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:81(RLock)
-        1    0.000    0.000    0.001    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:186(__init__)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2407(<listcomp>)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2857(parameters)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/random.py:94(__init__)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:912(setLevel)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:251(add_usage)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1240(__init__)
-        3    0.000    0.000    0.000    0.000 {method 'values' of 'dict' objects}
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/util.py:182(Finalize)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/codecs.py:186(__init__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/weakref.py:323(__new__)
-        2    0.000    0.000    0.000    0.000 {built-in method _weakref.proxy}
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1158(__hash__)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:289(<listcomp>)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:210(Condition)
-        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:496(_calc_mode)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:16(__init__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1462(_get_positional_kwargs)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:513(is_set)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:903(__call__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2112(<listcomp>)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2440(_check_value)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:106(remove)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:213(<listcomp>)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/weakref.py:328(__init__)
-        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1983(<listcomp>)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:124(__eq__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/abc.py:96(__instancecheck__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:276(get)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:1177(_make_invoke_excepthook)
-        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1024(get_filename)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/_ufunc_config.py:435(__exit__)
-        3    0.000    0.000    0.000    0.000 {method 'to_bytes' of 'int' objects}
-        3    0.000    0.000    0.000    0.000 {method 'isidentifier' of 'str' objects}
-        1    0.000    0.000    0.000    0.000 {built-in method posix.sysconf}
-        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:834(create_module)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:293(_format_usage)
-        1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:342(<listcomp>)
-        2    0.000    0.000    0.000    0.000 {built-in method atexit.register}
-        1    0.000    0.000    0.000    0.000 {built-in method _abc._abc_instancecheck}
-        1    0.000    0.000    0.000    0.000 {method 'difference' of 'set' objects}
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/util.py:368(ForkAwareThreadLock)
-        1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:263(__init__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:205(_init)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:424(__init__)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:186(disable_on_exception)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:20(__enter__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:114(_make_name)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2851(from_callable)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1287(fp_write)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:96(closegroup)
+        4    0.000    0.000    0.000    0.000 {built-in method numpy.geterrobj}
         1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:734(_newname)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/context.py:233(get_context)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1148(__del__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:311(<dictcomp>)
-        1    0.000    0.000    0.000    0.000 main.py:19(__init__)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:1095(daemon)
-        2    0.000    0.000    0.000    0.000 {method 'setter' of 'property' objects}
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:90(_make_methods)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:258(_acquire_restore)
-        1    0.000    0.000    0.004    0.004 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1767(parse_args)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:123(Semaphore)
-        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:959(setFormatter)
+        1    0.000    0.000    0.002    0.002 {built-in method builtins.__import__}
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1760(<listcomp>)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:999(__init__)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:912(setLevel)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2398(<listcomp>)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:265(_supports_unicode)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:221(__eq__)
+        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_parse.py:162(__delitem__)
+        3    0.000    0.000    0.000    0.000 {built-in method _imp._fix_co_filename}
+        3    0.000    0.000    0.000    0.000 {method 'values' of 'dict' objects}
+        6    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1676(identity)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:46(SemLock)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/codecs.py:186(__init__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:685(<setcomp>)
+        5    0.000    0.000    0.000    0.000 {built-in method builtins.id}
+        1    0.000    0.000    0.001    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1217(resource_stream)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1502(has_resource)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/random.py:94(__init__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/util.py:171(register_after_fork)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/_ufunc_config.py:430(__enter__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:276(get)
+        3    0.000    0.000    0.000    0.000 {built-in method _imp.exec_dynamic}
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:1723(get_resource_stream)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:138(__getattr__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1462(_get_positional_kwargs)
         1    0.000    0.000    0.000    0.000 {built-in method posix.urandom}
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2116(<listcomp>)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:321(Event)
-        2    0.000    0.000    0.000    0.000 {built-in method sys.getrecursionlimit}
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:513(_is_wrapper)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/numpy/core/_ufunc_config.py:435(__exit__)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:52(_commit_removals)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1158(__hash__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1086(__init__)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2539(name)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/ntpath.py:34(_get_bothseps)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:81(RLock)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/_weakrefset.py:16(__init__)
+        2    0.000    0.000    0.000    0.000 {built-in method fromkeys}
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/weakref.py:323(__new__)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:424(__init__)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1983(<listcomp>)
+        3    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:226(__init__)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/pkg_resources/__init__.py:3219(_always_object)
+        2    0.000    0.000    0.000    0.000 {built-in method numpy.seterrobj}
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:155(__init__)
+        4    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/_distutils_hack/__init__.py:96(<lambda>)
+        1    0.000    0.000    0.000    0.000 {built-in method utcfromtimestamp}
+        3    0.000    0.000    0.000    0.000 {method 'isidentifier' of 'str' objects}
+        1    0.000    0.000    0.001    0.001 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:186(__init__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/sre_compile.py:413(<listcomp>)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:251(add_usage)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:210(Condition)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2440(_check_value)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2407(<listcomp>)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:213(<listcomp>)
         2    0.000    0.000    0.000    0.000 {method 'group' of 're.Match' objects}
-        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1286(exec_module)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:142(BoundedSemaphore)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:231(_add_item)
+        1    0.000    0.000    0.000    0.000 {built-in method posix.sysconf}
+        2    0.000    0.000    0.000    0.000 {method 'setter' of 'property' objects}
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:2857(parameters)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:251(_is_utf)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/logging/__init__.py:959(setFormatter)
+        2    0.000    0.000    0.000    0.000 {built-in method atexit.register}
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1148(__del__)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1024(get_filename)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:834(create_module)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:1177(_make_invoke_excepthook)
+        2    0.000    0.000    0.000    0.000 {built-in method _weakref.proxy}
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:903(__call__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/abc.py:96(__instancecheck__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:311(<dictcomp>)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/util.py:182(Finalize)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/inspect.py:487(getmro)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:293(_format_usage)
+        1    0.000    0.000    0.005    0.005 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1767(parse_args)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/queue.py:205(_init)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:1110(daemon)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2112(<listcomp>)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:321(Event)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:255(_release_save)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:1240(__init__)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:513(is_set)
         2    0.000    0.000    0.000    0.000 {method 'strip' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:231(_add_item)
         1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:880(__call__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/weakref.py:328(__init__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/agents.py:263(__init__)
+        1    0.000    0.000    0.000    0.000 main.py:19(__init__)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/context.py:197(get_start_method)
+        1    0.000    0.000    0.000    0.000 {method 'difference' of 'set' objects}
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/util.py:108(_platform_supports_abstract_sockets)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:123(Semaphore)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:142(BoundedSemaphore)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/context.py:233(get_context)
+        2    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:289(<listcomp>)
+        1    0.000    0.000    0.000    0.000 {method 'translate' of 'bytearray' objects}
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:184(RLock)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/utils.py:281(_screen_shape_wrapper)
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:90(_make_methods)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:1095(daemon)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/util.py:368(ForkAwareThreadLock)
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.vars}
+        1    0.000    0.000    0.000    0.000 {built-in method _abc._abc_instancecheck}
+        1    0.000    0.000    0.000    0.000 /home/alessio/Desktop/Machine_Learning/final_project/Reinforced-Bomberman/environment.py:342(<listcomp>)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/threading.py:258(_acquire_restore)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1286(exec_module)
+        2    0.000    0.000    0.000    0.000 {built-in method sys.getrecursionlimit}
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/argparse.py:2116(<listcomp>)
         1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:159(Lock)
         1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/util.py:385(ForkAwareLocal)
-        1    0.000    0.000    0.000    0.000 {built-in method builtins.vars}
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/util.py:48(debug)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/util.py:108(_platform_supports_abstract_sockets)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/synchronize.py:184(RLock)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/context.py:197(get_start_method)
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/contextlib.py:59(_recreate_cm)
-        1    0.000    0.000    0.000    0.000 {method 'groups' of 're.Match' objects}
-        1    0.000    0.000    0.000    0.000 {method 'translate' of 'bytearray' objects}
-        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
-        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:98(<listcomp>)
+        1    0.000    0.000    0.000    0.000 {method 'pop' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method _stat.S_ISREG}
         1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:1302(<lambda>)
         1    0.000    0.000    0.000    0.000 {method 'release' of '_thread.lock' objects}
-        1    0.000    0.000    0.000    0.000 {method 'pop' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/contextlib.py:59(_recreate_cm)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/multiprocessing/util.py:48(debug)
+        1    0.000    0.000    0.000    0.000 /home/alessio/miniconda3/envs/ml_project/lib/python3.8/site-packages/tqdm/std.py:98(<listcomp>)
         1    0.000    0.000    0.000    0.000 {method 'count' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 {method 'groups' of 're.Match' objects}
 
 
