@@ -111,6 +111,7 @@ def act(self, game_state):
     # If agent has been in the same location three times recently, it's a loop
     if self.coordinate_history.count((x, y)) > 2:
         self.ignore_others_timer = 5
+        
     else:
         self.ignore_others_timer -= 1
     self.coordinate_history.append((x, y))

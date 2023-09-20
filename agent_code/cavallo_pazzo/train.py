@@ -22,7 +22,7 @@ ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 # Hyper parameters -- DO modify
 TRANSITION_HISTORY_SIZE = 8  # keep only ... last transitions TODO remove once sure not needed
 RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ... TODO remove once sure not needed
-LEARNING_RATE = 0.8 # TODO fine tune this
+LEARNING_RATE = 0.5 # TODO fine tune this
 DISCOUNT_RATE = 0.1 # TODO fine tune this
 
 # Custom events
@@ -82,9 +82,16 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     :param events: The events that occurred when going from  `old_game_state` to `new_game_state`
     """
 
+    old_features = state_to_features(old_game_state)
+    new_features = state_to_features(new_game_state)
 
-    self.transitions.append(Transition(state_to_features(old_game_state), self_action, state_to_features(new_game_state), reward_from_events(self, events)))
+    # Appending custom events to events:
+    events = custom_events(self, self_action, old_features, new_features, events)
 
+    # Appending transition:
+    self.transitions.append(Transition(old_features, self_action, new_features, reward_from_events(self, events)))
+
+    # Debug messages for features
     self.logger.debug("Closest coin is in " + self.transitions[-1].next_state[1] + " " + self.transitions[-1].next_state[2])
     self.logger.debug("1 for danger, -1 explosion, 0 nothing. You're now in: "+ self.transitions[-1].next_state[0])
     self.logger.debug("down " + self.transitions[-1].next_state[7])
@@ -102,19 +109,14 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     self.logger.debug("Closest crate is in " + self.transitions[-1].next_state[15] + " " + self.transitions[-1].next_state[16])
     self.logger.debug("Can he drop a bomb? " + self.transitions[-1].next_state[17])
     self.logger.debug("Can he destroy a crate from here? " + self.transitions[-1].next_state[18])
+    self.logger.debug("Danger info: " + self.transitions[-1].next_state[19])
 
-    # VARIABLES:
-    pos = np.array(new_game_state.get("self")[3])
-
-    # CUSTOM EVENTS:
-    events = custom_events(self,self_action, events)
+    # Debug message for events:
     self.logger.debug(f'Encountered game event(s) {", ".join(map(repr, events))} in step {new_game_state["step"]}')
-
 
     # Perform update of the Q table.
     # We don't store in q_table.pt because we found out it takes a lot of computational time
-
-    self.q_table[tuple(self.transitions[-1].state),self_action] = (1 - (LEARNING_RATE)) * self.q_table[tuple(self.transitions[-1].state),self_action] + (LEARNING_RATE) * (self.transitions[-1].reward + (DISCOUNT_RATE) * value_function(self, tuple(self.transitions[-1].next_state)))
+    self.q_table[tuple(self.transitions[-1].state),self_action] = (1 - LEARNING_RATE) * self.q_table[tuple(self.transitions[-1].state),self_action] + (LEARNING_RATE) * (self.transitions[-1].reward + (DISCOUNT_RATE) * value_function(self, tuple(self.transitions[-1].next_state)))
 
 
 def end_of_round(self, last_game_state: dict, last_action: str, events: List[str]):
@@ -130,10 +132,16 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
 
     :param self: The same object that is passed to all of your callbacks.
     """
-    events = custom_events(self, last_action, events)
-    
+    features = state_to_features(last_game_state)
+
+    # Appending custom events to events:
+    events = custom_events(self, last_action, features, [], events)
+
+    # Appending transition:
+    self.transitions.append(Transition(features, last_action, None, reward_from_events(self, events)))
+
+    # Debug message for events:
     self.logger.debug(f'Encountered event(s) {", ".join(map(repr, events))} in final step')
-    self.transitions.append(Transition(state_to_features(last_game_state), last_action, None, reward_from_events(self, events)))
 
     # Update the Q table.
     self.q_table[tuple(self.transitions[-1].state),last_action] = (1 - (LEARNING_RATE)) * self.q_table[tuple(self.transitions[-1].state),last_action] + (LEARNING_RATE) * self.transitions[-1].reward
@@ -152,29 +160,29 @@ def reward_from_events(self, events: List[str]) -> int:
     certain behavior.
     """
     game_rewards = {
-        e.COIN_COLLECTED: 1,
-        COIN_NOT_COLLECTED: -1,
-        GOING_AWAY_FROM_COIN: -0.2,
-        GOING_TO_COIN: 1,
+        e.COIN_COLLECTED: 5,
+        COIN_NOT_COLLECTED: -5,
+        GOING_AWAY_FROM_COIN: -1,
+        GOING_TO_COIN: 5,
 
-        e.CRATE_DESTROYED: 0.1,
-        BOMB_AND_CRATE: 0.7,
-        GOING_TO_CRATE : 0.5,
-        GOING_AWAY_FROM_CRATE: -0.5,
+        e.CRATE_DESTROYED: 1,
+        BOMB_AND_CRATE: 1,
+        GOING_TO_CRATE : 3,
+        GOING_AWAY_FROM_CRATE: -4,
 
-        GOING_AWAY_FROM_BOMB: 2,
-        NO_ESCAPE: -10,
-        GOING_TO_BOMB: -2,
+        GOING_AWAY_FROM_BOMB: 8,
+        NO_ESCAPE: -80,
+        GOING_TO_BOMB: -9,
         e.GOT_KILLED: -0.5,
         e.KILLED_SELF: -20,
 
         # e.KILLED_OPPONENT: 5,
-        e.BOMB_DROPPED: -0.1,
-        e.INVALID_ACTION: -10,
+        e.BOMB_DROPPED: -1,
+        e.INVALID_ACTION: -100,
         # e.WAITED:,
-        TOO_WAITS: -3,
-        GOING_INTO_WALL: -10,
-        UNDECIDED: -6,
+        #TOO_WAITS: -3,
+        #GOING_INTO_WALL: -10,
+        #UNDECIDED: -6,
     }
     reward_sum = 0
     for event in events:
@@ -194,26 +202,27 @@ def value_function(self, features)->float:
 
     return value
 
-def custom_events (self, self_action, events: List[str]) -> List[str]:
+def custom_events (self, self_action, old_features, new_features, events: List[str]) -> List[str]:
     # There's coin but it was not collected
-    if not (e.COIN_COLLECTED in events) and not str(self.transitions[-1].state[1]) == "FREE":
+    if not (e.COIN_COLLECTED in events) and not str(old_features[1]) == "FREE":
         events.append(COIN_NOT_COLLECTED)
 
     # Moving towards coin and going away from it
-    if self.transitions[-1].state[1] == self.transitions[-1].action or self.transitions[-1].state[2] == self.transitions[-1].action:
+    if old_features[1] == self_action or old_features[2] == self_action:
         events.append(GOING_TO_COIN)
-    elif not (self.transitions[-1].state[1] == "FREE" and self.transitions[-1].state[2] == "FREE"):
+    elif not (old_features[1] == "FREE" and old_features[2] == "FREE"):
         events.append(GOING_AWAY_FROM_COIN)
 
     # Moving towards crate and going away from it
-    if self.transitions[-1].state[15] == self.transitions[-1].action or self.transitions[-1].state[16] == self.transitions[-1].action:
+    if old_features[15] == self_action or old_features[16] == self_action:
         events.append(GOING_TO_CRATE)
-    elif not (self.transitions[-1].state[15] == "FREE" and self.transitions[-1].state[16] == "FREE"):
+    elif not (old_features[15] == "FREE" and old_features[16] == "FREE") and not self_action == "WAIT" and not self_action == "BOMB":
         events.append(GOING_AWAY_FROM_CRATE)
 
     # Going from dangerous to non-dangerous zone
-    if int(self.transitions[-1].state[0]) == 1 and int(self.transitions[-1].next_state[0]) == 0:
-        events.append(GOING_AWAY_FROM_BOMB)
+    if not len(new_features) == 0:
+        if int(old_features[0]) == 1 and int(new_features[0]) == 0:
+            events.append(GOING_AWAY_FROM_BOMB)
 
     # Going from non-dangerous to dangerous zone (unless you just dropped bomb)
     # if int(self.transitions[-1].state[0]) == 0 and int(self.transitions[-1].next_state[0]) == 1:
@@ -221,28 +230,28 @@ def custom_events (self, self_action, events: List[str]) -> List[str]:
     #         events.append(GOING_TO_BOMB)
     
     # Remaining or going to dangerous-zone
-    if (int(self.transitions[-1].state[7]) == 1 and self_action == "DOWN") or (int(self.transitions[-1].state[8]) == 1 and self_action == "UP") or (int(self.transitions[-1].state[9]) == 1 and self_action == "LEFT") or (int(self.transitions[-1].state[10]) == 1 and self_action == "RIGHT") or (int(self.transitions[-1].state[0]) == 1 and self_action == "WAIT"):
+    if (int(old_features[7]) == 1 and self_action == "DOWN") or (int(old_features[8]) == 1 and self_action == "UP") or (int(old_features[9]) == 1 and self_action == "LEFT") or (int(old_features[10]) == 1 and self_action == "RIGHT") or (int(old_features[0]) == 1 and self_action == "WAIT"):
         events.append(GOING_TO_BOMB)
 
     # NO_ESCAPE when the agent traps himself and ESCAPING if he picks a correct escape direction
-    if len(self.transitions) > 1:
-        if self.transitions[-1].action == "BOMB" and (int(self.transitions[-1].state[11]) + int(self.transitions[-1].state[12]) + int(self.transitions[-1].state[13]) + int(self.transitions[-1].state[14]) == 0):
+    if len(self.transitions) > 0:
+        if self_action == "BOMB" and (int(old_features[11]) + int(old_features[12]) + int(old_features[13]) + int(old_features[14]) == 0):
             events.append(NO_ESCAPE)
-        elif self.transitions[-2].action == "BOMB":
-            if self_action == "UP" and int(self.transitions[-1].state[11]) == 0:
+        elif self.transitions[-1].action == "BOMB":
+            if self_action == "UP" and int(old_features[11]) == 0:
                 events.append(NO_ESCAPE)
-            elif self_action == "DOWN" and int(self.transitions[-1].state[12]) == 0:
+            elif self_action == "DOWN" and int(old_features[12]) == 0:
                 events.append(NO_ESCAPE)
-            elif self_action == "LEFT" and int(self.transitions[-1].state[13]) == 0:
+            elif self_action == "LEFT" and int(old_features[13]) == 0:
                 events.append(NO_ESCAPE)
-            elif self_action == "RIGHT" and int(self.transitions[-1].state[14]) == 0:
+            elif self_action == "RIGHT" and int(old_features[14]) == 0:
                 events.append(NO_ESCAPE)
             elif not (self_action == "WAIT" or self_action == "BOMB"):
                 events.append(ESCAPING)
 
 
     # When he wants to hug walls (punish behaviour) TODO remove because invalid action
-    features = tuple(self.transitions[-1].state)
+    features = tuple(old_features)
     if int(features[3]) == 1 and self_action == "DOWN":
         events.append(GOING_INTO_WALL)
     if int(features[4]) == 1 and self_action == "UP":
@@ -253,26 +262,25 @@ def custom_events (self, self_action, events: List[str]) -> List[str]:
         events.append(GOING_INTO_WALL)
 
     # Punish when he goes crazy
-    if len(self.transitions) > 3:
-        if self.transitions[-1].action == self.transitions[-3].action and self.transitions[-2].action == self.transitions[-4].action:
+    if len(self.transitions) > 2:
+        if self_action == self.transitions[-2].action and self.transitions[-1].action == self.transitions[-3].action:
             events.append(UNDECIDED)
 
-    if len(self.transitions) > 5:
-        if self.transitions[-1].action == self.transitions[-4].action and self.transitions[-2].action == self.transitions[-5].action and self.transitions[-3].action == self.transitions[-6].action:
+    if len(self.transitions) > 4:
+        if self_action == self.transitions[-3].action and self.transitions[-1].action == self.transitions[-4].action and self.transitions[-2].action == self.transitions[-5].action:
             events.append(UNDECIDED)
 
-    if len(self.transitions) > 7:
-        if self.transitions[-1].action == self.transitions[-5].action and self.transitions[-2].action == self.transitions[-6].action and self.transitions[-3].action == self.transitions[-7].action and self.transitions[-4].action == self.transitions[-8].action:
+    if len(self.transitions) > 6:
+        if self_action == self.transitions[-4].action and self.transitions[-1].action == self.transitions[-5].action and self.transitions[-2].action == self.transitions[-6].action and self.transitions[-3].action == self.transitions[-7].action:
             events.append(UNDECIDED)
 
     # When he puts a bomb close to a crate
-    for i in range(3,7):
-        if int(features[i]) == 2 and self_action == "BOMB":
-            events.append(BOMB_AND_CRATE)
+    if int(features[18]) == 1 and self_action == "BOMB":
+        events.append(BOMB_AND_CRATE)
 
     # When he waits too much
-    if len(self.transitions) > 2:
-        if self.transitions[-1].action == self.transitions[-2].action == self.transitions[-3].action == "WAIT":
+    if len(self.transitions) > 1:
+        if self_action == self.transitions[-1].action == self.transitions[-2].action == "WAIT":
             events.append(TOO_WAITS)
     
     return events

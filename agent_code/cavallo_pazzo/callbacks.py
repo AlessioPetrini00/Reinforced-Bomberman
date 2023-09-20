@@ -8,7 +8,7 @@ from collections import defaultdict
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyperparameters.
-EXPLORATION_RATE = 1 # TODO fine tune this
+EXPLORATION_RATE = 0 # TODO fine tune this
 
 def setup(self):
     """
@@ -124,7 +124,6 @@ def state_to_features(game_state: dict) -> np.array:
         if np.linalg.norm(pos_coin - current_position) < np.linalg.norm(nearest_coin - current_position):
             nearest_coin = pos_coin
     
-    # When no coins look for nearest crate
     if not nearest_coin[0] == float('inf'):
         # Compute direction from coin position
         if nearest_coin[0] - current_position[0] > 0:
@@ -205,7 +204,7 @@ def state_to_features(game_state: dict) -> np.array:
             escape_right = 1
             break
 
-    #
+    # Feature 16 & 17 - Crate direction
     crate_first_dir = ["FREE"]
     crate_second_dir = ["FREE"]
     flag = 0
@@ -263,6 +262,46 @@ def state_to_features(game_state: dict) -> np.array:
             if game_state.get("field")[x, y - i] == 1:
                 destroyable_crates = 1
 
+    #
+    escape = "NO DANGER AND CAN ESCAPE"
+    for i in np.arange(1,4):
+        if not (game_state.get("field")[current_position[0], current_position[1] - i] == 1 or game_state.get("field")[current_position[0], current_position[1] - i] == -1):
+            if game_state.get("field")[current_position[0] + 1, current_position[1] - i] == 0 or game_state.get("field")[current_position[0] - 1, current_position[1] - i] == 0:
+                escape = "UP"
+                break
+            elif i == 3 and game_state.get("field")[current_position[0], current_position[1] - i - 1] == 0:
+                escape = "UP"
+                break
+    
+        if not (game_state.get("field")[current_position[0], current_position[1] + i] == 1 or game_state.get("field")[current_position[0], current_position[1] + i] == -1):
+            if game_state.get("field")[current_position[0] + 1, current_position[1] + i] == 0 or game_state.get("field")[current_position[0] - 1, current_position[1] + i] == 0:
+                escape = "DOWN"
+                break
+            elif i == 3 and game_state.get("field")[current_position[0], current_position[1] + i + 1] == 0:
+                escape = "DOWN"
+                break
+    
+        if not (game_state.get("field")[current_position[0] - i, current_position[1]] == 1 or game_state.get("field")[current_position[0] - i, current_position[1]] == -1):
+            if game_state.get("field")[current_position[0] - i, current_position[1] - 1] == 0 or game_state.get("field")[current_position[0] - i, current_position[1] + 1] == 0:
+                escape = "LEFT"
+                break
+            elif i == 3 and game_state.get("field")[current_position[0] - i - 1, current_position[1]] == 0:
+                escape = "LEFT"
+                break
+
+        if not (game_state.get("field")[current_position[0] + i, current_position[1]] == 1 or game_state.get("field")[current_position[0] + i, current_position[1]] == -1):
+            if game_state.get("field")[current_position[0] + i, current_position[1] - 1] == 0 or game_state.get("field")[current_position[0] + i, current_position[1] + 1] == 0:
+                escape = "RIGHT"
+                break
+            elif i == 3 and game_state.get("field")[current_position[0] + i + 1, current_position[1]] == 0:
+                escape = "RIGHT"
+                break
+    if escape == "NO DANGER AND CAN ESCAPE":
+        if danger == 1:
+            escape = "NO ESCAPE"
+        else:
+            escape = "NO DANGER NO ESCAPE"
+    
 
     # Appending every feature
     channels.append(danger) #0
@@ -284,7 +323,10 @@ def state_to_features(game_state: dict) -> np.array:
     channels.append(crate_second_dir) #16
     channels.append([game_state.get("self")[2]]) #17 - Can he drop bomb?
     channels.append([destroyable_crates]) #18
-
+    channels.append([escape])
+    
+    #Vision e danger possono essere accorpati togliendo le crate e considerando esplosioni come blocchi e timer lunghi come case libere
+    #Volendo abbiamo crate da 8 a 5
 
     # Concatenate them as a feature tensor (they must have the same shape), ...
     stacked_channels = np.stack(channels)
