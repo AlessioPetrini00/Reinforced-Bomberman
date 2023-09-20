@@ -39,7 +39,7 @@ def act(self, game_state: dict) -> str:
     :param game_state: The dictionary that describes everything on the board.
     :return: The action to take as a string.
     """
-    
+    self.logger.debug("-------------------------------------------------------------------")
     #Exploration path
     if self.train and random.random() < EXPLORATION_RATE:
         # 80%: walk in any direction. 10% wait. 10% bomb.
@@ -55,7 +55,7 @@ def act(self, game_state: dict) -> str:
     best_action = 'WAIT'
 
     for action in ACTIONS:
-        features = tuple(state_to_features(game_state))
+        features = tuple(state_to_features(self, game_state))
         self.logger.debug("The value for action " + action + " is " + str(self.q_table[(features, action)]))
         if self.q_table[features, action] > q_value:
             q_value = self.q_table[(features, action)]
@@ -66,7 +66,7 @@ def act(self, game_state: dict) -> str:
     return best_action
 
 
-def state_to_features(game_state: dict) -> np.array:
+def state_to_features(self, game_state: dict) -> np.array:
     """
     Converts the game state to the input of your model, i.e.
     a feature vector.
@@ -264,43 +264,79 @@ def state_to_features(game_state: dict) -> np.array:
 
     #
     escape = "NO DANGER AND CAN ESCAPE"
-    for i in np.arange(1,4):
-        if not (game_state.get("field")[current_position[0], current_position[1] - i] == 1 or game_state.get("field")[current_position[0], current_position[1] - i] == -1):
-            if game_state.get("field")[current_position[0] + 1, current_position[1] - i] == 0 or game_state.get("field")[current_position[0] - 1, current_position[1] - i] == 0:
-                escape = "UP"
-                break
-            elif i == 3 and game_state.get("field")[current_position[0], current_position[1] - i - 1] == 0:
-                escape = "UP"
-                break
-    
-        if not (game_state.get("field")[current_position[0], current_position[1] + i] == 1 or game_state.get("field")[current_position[0], current_position[1] + i] == -1):
-            if game_state.get("field")[current_position[0] + 1, current_position[1] + i] == 0 or game_state.get("field")[current_position[0] - 1, current_position[1] + i] == 0:
-                escape = "DOWN"
-                break
-            elif i == 3 and game_state.get("field")[current_position[0], current_position[1] + i + 1] == 0:
-                escape = "DOWN"
-                break
-    
-        if not (game_state.get("field")[current_position[0] - i, current_position[1]] == 1 or game_state.get("field")[current_position[0] - i, current_position[1]] == -1):
-            if game_state.get("field")[current_position[0] - i, current_position[1] - 1] == 0 or game_state.get("field")[current_position[0] - i, current_position[1] + 1] == 0:
-                escape = "LEFT"
-                break
-            elif i == 3 and game_state.get("field")[current_position[0] - i - 1, current_position[1]] == 0:
-                escape = "LEFT"
-                break
+    timers = np.where(game_state.get("field") == 1, -1, 0)
+    timers = np.where(game_state.get("field") == -1, -1, timers)
+    timers = np.where(game_state.get("explosion_map") > 0, -1, timers)
+    for players in game_state.get("others"):
+        timers[players[3][0], players[3][1]] = -1
 
-        if not (game_state.get("field")[current_position[0] + i, current_position[1]] == 1 or game_state.get("field")[current_position[0] + i, current_position[1]] == -1):
-            if game_state.get("field")[current_position[0] + i, current_position[1] - 1] == 0 or game_state.get("field")[current_position[0] + i, current_position[1] + 1] == 0:
+    for bomb in game_state.get("bombs"):
+        if not(current_position[0], current_position[1]) == (bomb[0][0], bomb[0][1]):
+            timers[bomb[0][0], bomb[0][1]] = -1
+        for i in range(1, 4):
+            if game_state.get("field")[bomb[0][0] - i, bomb[0][1]] == -1:
+                break
+            timers[bomb[0][0] - i, bomb[0][1]] = bomb[1]
+
+        for i in range(1, 4):
+            if game_state.get("field")[bomb[0][0] + i, bomb[0][1]] == -1:
+                break
+            timers[bomb[0][0] + i, bomb[0][1]] = bomb[1]
+
+        for i in range(1, 4):
+            if game_state.get("field")[bomb[0][0], bomb[0][1] - i] == -1:
+                break
+            timers[bomb[0][0], bomb[0][1] - i] = bomb[1]
+
+        for i in range(1, 4):
+            if game_state.get("field")[bomb[0][0], bomb[0][1] + i] == -1:
+                break
+            timers[bomb[0][0], bomb[0][1] + i] = bomb[1]
+
+    num = 3
+    if not (int(timers[current_position[0], current_position[1]]) == 0):
+        num = int(timers[current_position[0], current_position[1]])
+    #TODO if not in danger modify timers to think there's a bomb in currentposition
+
+    for i in range(1, num + 1):
+        if not (timers[current_position[0], current_position[1] - i] == -1):
+            if timers[current_position[0] + 1, current_position[1] - i + 1] == 0 or timers[current_position[0] - 1, current_position[1] - i + 1] == 0 or timers[current_position[0], current_position[1] - i] == 0 or timers[current_position[0], current_position[1] - 1] == 0:
+                escape = "UP"
+                break
+        else:
+            break
+
+    for i in range(1, num + 1):
+        if not (timers[current_position[0], current_position[1] + i] == -1):
+            if timers[current_position[0] + 1, current_position[1] + i - 1] == 0 or timers[current_position[0] - 1, current_position[1] + i - 1] == 0 or timers[current_position[0], current_position[1] + i] == 0 or timers[current_position[0], current_position[1] + 1] == 0:
+                escape = "DOWN"
+                break
+        else:
+            break
+
+    for i in range(1, num + 1):
+        if not (timers[current_position[0] - i, current_position[1]] == -1):
+            if timers[current_position[0] - i + 1, current_position[1] - 1] == 0 or timers[current_position[0] - i + 1, current_position[1] + 1] == 0 or timers[current_position[0] - i, current_position[1]] == 0 or timers[current_position[0] - 1, current_position[1]] == 0:
+                escape = "LEFT"
+                break
+        else:
+            break
+
+    for i in range(1, num + 1):
+        if not (timers[current_position[0] + i, current_position[1]] == -1):
+            if timers[current_position[0] + i - 1, current_position[1] - 1] == 0 or timers[current_position[0] + i - 1, current_position[1] + 1] == 0 or timers[current_position[0] + i, current_position[1]] == 0 or timers[current_position[0], current_position[1] + 1] == 0:
                 escape = "RIGHT"
                 break
-            elif i == 3 and game_state.get("field")[current_position[0] + i + 1, current_position[1]] == 0:
-                escape = "RIGHT"
-                break
+        else:
+            break
+
     if escape == "NO DANGER AND CAN ESCAPE":
-        if danger == 1:
+        if danger[0] == 1:
             escape = "NO ESCAPE"
         else:
             escape = "NO DANGER NO ESCAPE"
+    elif danger[0] == 0:
+        escape = "NO DANGER AND CAN ESCAPE"
     
 
     # Appending every feature

@@ -82,8 +82,8 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     :param events: The events that occurred when going from  `old_game_state` to `new_game_state`
     """
 
-    old_features = state_to_features(old_game_state)
-    new_features = state_to_features(new_game_state)
+    old_features = state_to_features(self, old_game_state)
+    new_features = state_to_features(self, new_game_state)
 
     # Appending custom events to events:
     events = custom_events(self, self_action, old_features, new_features, events)
@@ -132,7 +132,7 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
 
     :param self: The same object that is passed to all of your callbacks.
     """
-    features = state_to_features(last_game_state)
+    features = state_to_features(self, last_game_state)
 
     # Appending custom events to events:
     events = custom_events(self, last_action, features, [], events)
@@ -221,7 +221,7 @@ def custom_events (self, self_action, old_features, new_features, events: List[s
 
     # Going from dangerous to non-dangerous zone
     if not len(new_features) == 0:
-        if int(old_features[0]) == 1 and int(new_features[0]) == 0:
+        if not (str(old_features[19]) == "NO DANGER AND CAN ESCAPE" or str(old_features[19]) == "NO DANGER NO ESCAPE") and (str(new_features[19]) == "NO DANGER AND CAN ESCAPE" or str(new_features[19]) == "NO DANGER NO ESCAPE"):
             events.append(GOING_AWAY_FROM_BOMB)
 
     # Going from non-dangerous to dangerous zone (unless you just dropped bomb)
@@ -230,24 +230,17 @@ def custom_events (self, self_action, old_features, new_features, events: List[s
     #         events.append(GOING_TO_BOMB)
     
     # Remaining or going to dangerous-zone
-    if (int(old_features[7]) == 1 and self_action == "DOWN") or (int(old_features[8]) == 1 and self_action == "UP") or (int(old_features[9]) == 1 and self_action == "LEFT") or (int(old_features[10]) == 1 and self_action == "RIGHT") or (int(old_features[0]) == 1 and self_action == "WAIT"):
+    if (str(old_features[19]) == "NO DANGER AND CAN ESCAPE" or str(old_features[19]) == "NO DANGER NO ESCAPE") and not (str(new_features[19]) == "NO DANGER AND CAN ESCAPE" or str(new_features[19]) == "NO DANGER NO ESCAPE"):
         events.append(GOING_TO_BOMB)
 
     # NO_ESCAPE when the agent traps himself and ESCAPING if he picks a correct escape direction
     if len(self.transitions) > 0:
-        if self_action == "BOMB" and (int(old_features[11]) + int(old_features[12]) + int(old_features[13]) + int(old_features[14]) == 0):
+        if str(new_features[19] == "NO ESCAPE"):
             events.append(NO_ESCAPE)
-        elif self.transitions[-1].action == "BOMB":
-            if self_action == "UP" and int(old_features[11]) == 0:
-                events.append(NO_ESCAPE)
-            elif self_action == "DOWN" and int(old_features[12]) == 0:
-                events.append(NO_ESCAPE)
-            elif self_action == "LEFT" and int(old_features[13]) == 0:
-                events.append(NO_ESCAPE)
-            elif self_action == "RIGHT" and int(old_features[14]) == 0:
-                events.append(NO_ESCAPE)
-            elif not (self_action == "WAIT" or self_action == "BOMB"):
-                events.append(ESCAPING)
+        if self_action == "BOMB" and old_features[19] == "NO DANGER NO ESCAPE":
+            events.append(NO_ESCAPE)
+        if self_action == old_features[19]:
+            events.append(ESCAPING)
 
 
     # When he wants to hug walls (punish behaviour) TODO remove because invalid action
