@@ -92,24 +92,24 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     self.transitions.append(Transition(old_features, self_action, new_features, reward_from_events(self, events)))
 
     # Debug messages for features
-    self.logger.debug("Closest coin is in " + self.transitions[-1].next_state[1] + " " + self.transitions[-1].next_state[2])
-    self.logger.debug("1 for danger, -1 explosion, 0 nothing. You're now in: "+ self.transitions[-1].next_state[0])
-    self.logger.debug("down " + self.transitions[-1].next_state[7])
-    self.logger.debug("up " + self.transitions[-1].next_state[8])
-    self.logger.debug("left " + self.transitions[-1].next_state[9])
-    self.logger.debug("right " + self.transitions[-1].next_state[10])
-    self.logger.debug("vision is 1 for non walkable and 0 otherwise - down " + self.transitions[-1].next_state[3])
-    self.logger.debug("vision is 1 for non walkable and 0 otherwise - up " + self.transitions[-1].next_state[4])
-    self.logger.debug("vision is 1 for non walkable and 0 otherwise - left " + self.transitions[-1].next_state[5])
-    self.logger.debug("vision is 1 for non walkable and 0 otherwise - right " + self.transitions[-1].next_state[6])
-    self.logger.debug("escape up? " + self.transitions[-1].next_state[11])
-    self.logger.debug("escape down? " + self.transitions[-1].next_state[12])
-    self.logger.debug("escape left? " + self.transitions[-1].next_state[13])
-    self.logger.debug("escape right? " + self.transitions[-1].next_state[14])
-    self.logger.debug("Closest crate is in " + self.transitions[-1].next_state[15] + " " + self.transitions[-1].next_state[16])
-    self.logger.debug("Can he drop a bomb? " + self.transitions[-1].next_state[17])
-    self.logger.debug("Can he destroy a crate from here? " + self.transitions[-1].next_state[18])
-    self.logger.debug("Danger info: " + self.transitions[-1].next_state[19])
+    self.logger.debug("Closest coin is in " + self.transitions[-1].next_state[0] + " " + self.transitions[-1].next_state[1])
+    #self.logger.debug("1 for danger, -1 explosion, 0 nothing. You're now in: "+ self.transitions[-1].next_state[0])
+    self.logger.debug("down " + self.transitions[-1].next_state[6])
+    self.logger.debug("up " + self.transitions[-1].next_state[7])
+    self.logger.debug("left " + self.transitions[-1].next_state[8])
+    self.logger.debug("right " + self.transitions[-1].next_state[9])
+    self.logger.debug("vision is 1 for non walkable and 0 otherwise - down " + self.transitions[-1].next_state[2])
+    self.logger.debug("vision is 1 for non walkable and 0 otherwise - up " + self.transitions[-1].next_state[3])
+    self.logger.debug("vision is 1 for non walkable and 0 otherwise - left " + self.transitions[-1].next_state[4])
+    self.logger.debug("vision is 1 for non walkable and 0 otherwise - right " + self.transitions[-1].next_state[5])
+    # self.logger.debug("escape up? " + self.transitions[-1].next_state[11])
+    # self.logger.debug("escape down? " + self.transitions[-1].next_state[12])
+    # self.logger.debug("escape left? " + self.transitions[-1].next_state[13])
+    # self.logger.debug("escape right? " + self.transitions[-1].next_state[14])
+    self.logger.debug("Closest crate is in " + self.transitions[-1].next_state[10] + " " + self.transitions[-1].next_state[11])
+    self.logger.debug("Can he drop a bomb? " + self.transitions[-1].next_state[12])
+    self.logger.debug("Can he destroy a crate from here? " + self.transitions[-1].next_state[13])
+    self.logger.debug("Danger info: " + self.transitions[-1].next_state[14])
 
     # Debug message for events:
     self.logger.debug(f'Encountered game event(s) {", ".join(map(repr, events))} in step {new_game_state["step"]}')
@@ -204,24 +204,24 @@ def value_function(self, features)->float:
 
 def custom_events (self, self_action, old_features, new_features, events: List[str]) -> List[str]:
     # There's coin but it was not collected
-    if not (e.COIN_COLLECTED in events) and not str(old_features[1]) == "FREE":
+    if not (e.COIN_COLLECTED in events) and not str(old_features[0]) == "FREE":
         events.append(COIN_NOT_COLLECTED)
 
     # Moving towards coin and going away from it
-    if old_features[1] == self_action or old_features[2] == self_action:
+    if old_features[0] == self_action or old_features[1] == self_action:
         events.append(GOING_TO_COIN)
-    elif not (old_features[1] == "FREE" and old_features[2] == "FREE"):
+    elif not (old_features[0] == "FREE" and old_features[1] == "FREE"):
         events.append(GOING_AWAY_FROM_COIN)
 
     # Moving towards crate and going away from it
-    if old_features[15] == self_action or old_features[16] == self_action:
+    if old_features[10] == self_action or old_features[11] == self_action:
         events.append(GOING_TO_CRATE)
-    elif not (old_features[15] == "FREE" and old_features[16] == "FREE") and not self_action == "WAIT" and not self_action == "BOMB":
+    elif not (old_features[10] == "FREE" and old_features[11] == "FREE") and not self_action == "WAIT" and not self_action == "BOMB":
         events.append(GOING_AWAY_FROM_CRATE)
 
     # Going from dangerous to non-dangerous zone
     if not len(new_features) == 0:
-        if not (str(old_features[19]) == "NO DANGER AND CAN ESCAPE" or str(old_features[19]) == "NO DANGER NO ESCAPE") and (str(new_features[19]) == "NO DANGER AND CAN ESCAPE" or str(new_features[19]) == "NO DANGER NO ESCAPE"):
+        if not (str(old_features[14]) == "NO DANGER AND CAN ESCAPE" or str(old_features[14]) == "NO DANGER NO ESCAPE") and (str(new_features[14]) == "NO DANGER AND CAN ESCAPE" or str(new_features[14]) == "NO DANGER NO ESCAPE"):
             events.append(GOING_AWAY_FROM_BOMB)
 
     # Going from non-dangerous to dangerous zone (unless you just dropped bomb)
@@ -230,28 +230,29 @@ def custom_events (self, self_action, old_features, new_features, events: List[s
     #         events.append(GOING_TO_BOMB)
     
     # Remaining or going to dangerous-zone
-    if (str(old_features[19]) == "NO DANGER AND CAN ESCAPE" or str(old_features[19]) == "NO DANGER NO ESCAPE") and not (str(new_features[19]) == "NO DANGER AND CAN ESCAPE" or str(new_features[19]) == "NO DANGER NO ESCAPE"):
-        events.append(GOING_TO_BOMB)
+    if not len(new_features) == 0:
+        if (str(old_features[14]) == "NO DANGER AND CAN ESCAPE" or str(old_features[14]) == "NO DANGER NO ESCAPE") and not (str(new_features[14]) == "NO DANGER AND CAN ESCAPE" or str(new_features[14]) == "NO DANGER NO ESCAPE") and not (self_action == "BOMB" or self_action == "WAIT"):
+            events.append(GOING_TO_BOMB)
 
     # NO_ESCAPE when the agent traps himself and ESCAPING if he picks a correct escape direction
-    if len(self.transitions) > 0:
-        if str(new_features[19] == "NO ESCAPE"):
+    if not len(new_features) == 0:
+        if str(new_features[14]) == "NO ESCAPE":
             events.append(NO_ESCAPE)
-        if self_action == "BOMB" and old_features[19] == "NO DANGER NO ESCAPE":
-            events.append(NO_ESCAPE)
-        if self_action == old_features[19]:
-            events.append(ESCAPING)
+    if self_action == "BOMB" and str(old_features[14]) == "NO DANGER NO ESCAPE":
+        events.append(NO_ESCAPE)
+    if self_action == str(old_features[14]):
+        events.append(ESCAPING)
 
 
     # When he wants to hug walls (punish behaviour) TODO remove because invalid action
     features = tuple(old_features)
-    if int(features[3]) == 1 and self_action == "DOWN":
+    if int(features[2]) == 1 and self_action == "DOWN":
         events.append(GOING_INTO_WALL)
-    if int(features[4]) == 1 and self_action == "UP":
+    if int(features[3]) == 1 and self_action == "UP":
         events.append(GOING_INTO_WALL)
-    if int(features[5]) == 1 and self_action == "LEFT":
+    if int(features[4]) == 1 and self_action == "LEFT":
         events.append(GOING_INTO_WALL)
-    if int(features[6]) == 1 and self_action == "RIGHT":
+    if int(features[5]) == 1 and self_action == "RIGHT":
         events.append(GOING_INTO_WALL)
 
     # Punish when he goes crazy
@@ -268,7 +269,7 @@ def custom_events (self, self_action, old_features, new_features, events: List[s
             events.append(UNDECIDED)
 
     # When he puts a bomb close to a crate
-    if int(features[18]) == 1 and self_action == "BOMB":
+    if int(features[13]) == 1 and self_action == "BOMB":
         events.append(BOMB_AND_CRATE)
 
     # When he waits too much
