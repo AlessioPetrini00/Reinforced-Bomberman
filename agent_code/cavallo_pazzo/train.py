@@ -10,8 +10,6 @@ import os
 
 import numpy as np
 
-import matplotlib.pyplot as plt #TODO add this as dependency
-
 # Loading experience buffer
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
@@ -23,7 +21,7 @@ ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 TRANSITION_HISTORY_SIZE = 8  # keep only ... last transitions TODO remove once sure not needed
 RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ... TODO remove once sure not needed
 LEARNING_RATE = 0.5 # TODO fine tune this
-DISCOUNT_RATE = 0.1 # TODO fine tune this
+DISCOUNT_RATE = 0.9 # TODO fine tune this
 
 # Custom events
 COIN_NOT_COLLECTED = "COIN_NOT_COLLECTED"
@@ -39,7 +37,7 @@ NO_ESCAPE = "N0_ESCAPE"
 ESCAPING = "ESCAPING"
 GOING_AWAY_FROM_COIN = "GOING_AWAY_FROM_COIN"
 GOING_AWAY_FROM_CRATE = "GOING_AWAY_FROM_CRATE"
-
+NO_BOMB = "NO_BOMB"
 
 
 
@@ -93,23 +91,14 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
 
     # Debug messages for features
     self.logger.debug("Closest coin is in " + self.transitions[-1].next_state[0] + " " + self.transitions[-1].next_state[1])
-    #self.logger.debug("1 for danger, -1 explosion, 0 nothing. You're now in: "+ self.transitions[-1].next_state[0])
-    self.logger.debug("down " + self.transitions[-1].next_state[6])
-    self.logger.debug("up " + self.transitions[-1].next_state[7])
-    self.logger.debug("left " + self.transitions[-1].next_state[8])
-    self.logger.debug("right " + self.transitions[-1].next_state[9])
     self.logger.debug("vision is 1 for non walkable and 0 otherwise - down " + self.transitions[-1].next_state[2])
     self.logger.debug("vision is 1 for non walkable and 0 otherwise - up " + self.transitions[-1].next_state[3])
     self.logger.debug("vision is 1 for non walkable and 0 otherwise - left " + self.transitions[-1].next_state[4])
     self.logger.debug("vision is 1 for non walkable and 0 otherwise - right " + self.transitions[-1].next_state[5])
-    # self.logger.debug("escape up? " + self.transitions[-1].next_state[11])
-    # self.logger.debug("escape down? " + self.transitions[-1].next_state[12])
-    # self.logger.debug("escape left? " + self.transitions[-1].next_state[13])
-    # self.logger.debug("escape right? " + self.transitions[-1].next_state[14])
-    self.logger.debug("Closest crate is in " + self.transitions[-1].next_state[10] + " " + self.transitions[-1].next_state[11])
-    self.logger.debug("Can he drop a bomb? " + self.transitions[-1].next_state[12])
-    self.logger.debug("Can he destroy a crate from here? " + self.transitions[-1].next_state[13])
-    self.logger.debug("Danger info: " + self.transitions[-1].next_state[14])
+    self.logger.debug("Closest crate is in " + self.transitions[-1].next_state[6] + " " + self.transitions[-1].next_state[7])
+    self.logger.debug("Can he drop a bomb? " + self.transitions[-1].next_state[8])
+    self.logger.debug("Can he destroy a crate from here? " + self.transitions[-1].next_state[9])
+    self.logger.debug("Danger info: " + self.transitions[-1].next_state[10])
 
     # Debug message for events:
     self.logger.debug(f'Encountered game event(s) {", ".join(map(repr, events))} in step {new_game_state["step"]}')
@@ -117,6 +106,9 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     # Perform update of the Q table.
     # We don't store in q_table.pt because we found out it takes a lot of computational time
     self.q_table[tuple(self.transitions[-1].state),self_action] = (1 - LEARNING_RATE) * self.q_table[tuple(self.transitions[-1].state),self_action] + (LEARNING_RATE) * (self.transitions[-1].reward + (DISCOUNT_RATE) * value_function(self, tuple(self.transitions[-1].next_state)))
+    for action in ACTIONS:
+        self.logger.debug("The value for action " + action + " is " + str(self.q_table[(tuple(self.transitions[-1].state), action)]))
+
 
 
 def end_of_round(self, last_game_state: dict, last_action: str, events: List[str]):
@@ -160,29 +152,30 @@ def reward_from_events(self, events: List[str]) -> int:
     certain behavior.
     """
     game_rewards = {
-        e.COIN_COLLECTED: 5,
-        COIN_NOT_COLLECTED: -5,
+        e.COIN_COLLECTED: 10,
+        COIN_NOT_COLLECTED: -3,
         GOING_AWAY_FROM_COIN: -1,
-        GOING_TO_COIN: 5,
+        GOING_TO_COIN: 3,
 
-        e.CRATE_DESTROYED: 1,
-        BOMB_AND_CRATE: 1,
+        e.CRATE_DESTROYED: 2,
+        BOMB_AND_CRATE: 3,
         GOING_TO_CRATE : 3,
         GOING_AWAY_FROM_CRATE: -4,
 
-        GOING_AWAY_FROM_BOMB: 8,
+        #GOING_AWAY_FROM_BOMB: 8,
         NO_ESCAPE: -80,
-        GOING_TO_BOMB: -9,
+        #GOING_TO_BOMB: -9,
         e.GOT_KILLED: -0.5,
-        e.KILLED_SELF: -20,
+        e.KILLED_SELF: -30,
 
         # e.KILLED_OPPONENT: 5,
-        e.BOMB_DROPPED: -1,
-        e.INVALID_ACTION: -100,
+        e.BOMB_DROPPED: -3,
+        e.INVALID_ACTION: -50,
         # e.WAITED:,
         #TOO_WAITS: -3,
-        #GOING_INTO_WALL: -10,
-        #UNDECIDED: -6,
+        GOING_INTO_WALL: -20,
+        UNDECIDED: -6,
+        NO_BOMB: -10
     }
     reward_sum = 0
     for event in events:
@@ -214,15 +207,15 @@ def custom_events (self, self_action, old_features, new_features, events: List[s
         events.append(GOING_AWAY_FROM_COIN)
 
     # Moving towards crate and going away from it
-    if old_features[10] == self_action or old_features[11] == self_action:
+    if old_features[6] == self_action or old_features[7] == self_action:
         events.append(GOING_TO_CRATE)
-    elif not (old_features[10] == "FREE" and old_features[11] == "FREE") and not self_action == "WAIT" and not self_action == "BOMB":
+    elif not (old_features[6] == "FREE" and old_features[7] == "FREE") and not self_action == "WAIT" and not self_action == "BOMB":
         events.append(GOING_AWAY_FROM_CRATE)
 
     # Going from dangerous to non-dangerous zone
-    if not len(new_features) == 0:
-        if not (str(old_features[14]) == "NO DANGER AND CAN ESCAPE" or str(old_features[14]) == "NO DANGER NO ESCAPE") and (str(new_features[14]) == "NO DANGER AND CAN ESCAPE" or str(new_features[14]) == "NO DANGER NO ESCAPE"):
-            events.append(GOING_AWAY_FROM_BOMB)
+    # if not len(new_features) == 0:
+    #     if not (str(old_features[10]) == "NO DANGER AND CAN ESCAPE" or str(old_features[10]) == "NO DANGER NO ESCAPE") and (str(new_features[10]) == "NO DANGER AND CAN ESCAPE" or str(new_features[10]) == "NO DANGER NO ESCAPE"):
+    #         events.append(GOING_AWAY_FROM_BOMB)
 
     # Going from non-dangerous to dangerous zone (unless you just dropped bomb)
     # if int(self.transitions[-1].state[0]) == 0 and int(self.transitions[-1].next_state[0]) == 1:
@@ -231,16 +224,16 @@ def custom_events (self, self_action, old_features, new_features, events: List[s
     
     # Remaining or going to dangerous-zone
     if not len(new_features) == 0:
-        if (str(old_features[14]) == "NO DANGER AND CAN ESCAPE" or str(old_features[14]) == "NO DANGER NO ESCAPE") and not (str(new_features[14]) == "NO DANGER AND CAN ESCAPE" or str(new_features[14]) == "NO DANGER NO ESCAPE") and not (self_action == "BOMB" or self_action == "WAIT"):
+        if (str(old_features[10]) == "NO DANGER AND CAN ESCAPE" or str(old_features[10]) == "NO DANGER NO ESCAPE") and not (str(new_features[10]) == "NO DANGER AND CAN ESCAPE" or str(new_features[10]) == "NO DANGER NO ESCAPE") and not (self_action == "BOMB" or self_action == "WAIT"):
             events.append(GOING_TO_BOMB)
 
     # NO_ESCAPE when the agent traps himself and ESCAPING if he picks a correct escape direction
-    if not len(new_features) == 0:
-        if str(new_features[14]) == "NO ESCAPE":
-            events.append(NO_ESCAPE)
-    if self_action == "BOMB" and str(old_features[14]) == "NO DANGER NO ESCAPE":
+    # if not len(new_features) == 0:
+    #     if str(new_features[10]) == "NO ESCAPE":
+    #         events.append(NO_ESCAPE)
+    if self_action == "BOMB" and str(old_features[10]) == "NO DANGER NO ESCAPE":
         events.append(NO_ESCAPE)
-    if self_action == str(old_features[14]):
+    if self_action == str(old_features[10]):
         events.append(ESCAPING)
 
 
@@ -269,43 +262,15 @@ def custom_events (self, self_action, old_features, new_features, events: List[s
             events.append(UNDECIDED)
 
     # When he puts a bomb close to a crate
-    if int(features[13]) == 1 and self_action == "BOMB":
+    if int(features[9]) == 1 and self_action == "BOMB":
         events.append(BOMB_AND_CRATE)
 
+    if (old_features[8] == 0) and (self_action == "BOMB"):
+        events.append(NO_BOMB)
+
     # When he waits too much
-    if len(self.transitions) > 1:
-        if self_action == self.transitions[-1].action == self.transitions[-2].action == "WAIT":
-            events.append(TOO_WAITS)
+    # if len(self.transitions) > 1:
+    #     if self_action == self.transitions[-1].action == self.transitions[-2].action == "WAIT":
+    #         events.append(TOO_WAITS)
     
     return events
-
-"""
-
-def optimize(self, n :int) -> list:
-    # inizializza i valori a zero
-    game_rewards = np.zeros((n,1))
-
-    # fai un round ed estrai il punteggio
-    
-    punteggio0 = 0
-
-    # inizializza i valori random
-    rewards = np.random(n)
-
-    # train
-
-    # estrai il punteggio
-    punteggio1 = 0
-
-    # calcola il delta punteggio
-    delta_punteggio = 0
-
-    # modifica parametro i di delta_punteggio * 0.1
-
-    # train
-    # round
-    # delta punteggio
-    # parametro 2 ...
-
-    # restituisci i valori finali
-"""

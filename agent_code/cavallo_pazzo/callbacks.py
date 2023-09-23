@@ -8,7 +8,7 @@ from collections import defaultdict
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyperparameters.
-EXPLORATION_RATE = 1 # TODO fine tune this
+EXPLORATION_RATE = 0.3 # TODO fine tune this
 
 def setup(self):
     """
@@ -39,13 +39,13 @@ def act(self, game_state: dict) -> str:
     :param game_state: The dictionary that describes everything on the board.
     :return: The action to take as a string.
     """
-    self.logger.debug("-------------------------------------------------------------------")
+    self.logger.info("-------------------------------------------------------------------")
     #Exploration path
     if self.train and random.random() < EXPLORATION_RATE:
         # 80%: walk in any direction. 10% wait. 10% bomb.
         choice = np.random.choice(ACTIONS, p=[.2, .2, .2, .2, .1, .1])
 
-        self.logger.debug("Returning random choice: " + choice)
+        self.logger.info("Returning random choice: " + choice)
 
         return choice
     
@@ -61,7 +61,7 @@ def act(self, game_state: dict) -> str:
             q_value = self.q_table[(features, action)]
             best_action = action
 
-    self.logger.debug("La migliore azione è " + best_action)
+    self.logger.info("The best action is: " + best_action)
 
     return best_action
 
@@ -83,7 +83,33 @@ def state_to_features(self, game_state: dict) -> np.array:
 
     # VARIABLES:
     current_position = np.array(game_state.get("self")[3])    
-    
+    bombs = game_state.get("bombs")
+    field = game_state.get("field")
+    explosions = game_state.get("explosion_map")
+    map_size = game_state.get("field").shape[0]
+
+    # Map of future explosions that are just about to go off:
+    blast_map = np.zeros((map_size, map_size))
+    for bomb in bombs:
+        if (bomb[1] == 0):
+            x, y = bomb[0][0], bomb[0][1]
+            for i in range(1, 4):
+                if (field[x + i, y] == -1):
+                    break
+                blast_map[x + i, y] = 1
+            for i in range(1, 4):
+                if (field[x - i, y] == -1):
+                    break
+                blast_map[x - i, y] = 1
+            for i in range(1, 4):
+                if (field[x, y + i] == -1):
+                    break
+                blast_map[x, y + i] = 1
+            for i in range(1, 4):
+                if (field[x, y - i] == -1):
+                    break
+                blast_map[x, y - i] = 1
+
     # Computing coordinates where there will be an explosion
     blast_coords = []
     for bomb in game_state.get("bombs"):
@@ -105,20 +131,22 @@ def state_to_features(self, game_state: dict) -> np.array:
             if game_state.get("field")[x, y - i] == -1:
                 break
             blast_coords.append((x, y - i))
+
+    # Is the agent in the path of a future explosion?
+    danger = 1 if ((current_position[0], current_position[1]) in blast_coords if blast_coords else False) else 0
     
-    map_size = game_state.get("field").shape[0]
+
+    # Get the bombs and if not in danger imagine you just dropped a bomb to see if you COULD escape
+    modified_bombs = bombs
+    if danger == 0:
+        modified_bombs = modified_bombs + [((current_position[0], current_position[1]), 3)]
 
     # Timers matrix with -1 in non-walkable, 0 in walkable and not in blast_cords and the timer of the bomb anywhere else
     # -1 where walls, 0 elsewhere
     timers = np.where(game_state.get("field") == -1, -1, 0)
-
-    # Get the bombs and if not in danger imagine you just dropped a bomb to see if you COULD escape
-    bombs = game_state.get("bombs")
-    if danger[0] == 0:
-        bombs.append(((current_position[0], current_position[1]), 3))
-
+                
     # Put bomb timers in blast cordinates and -1 where bomb except for the one on top of agent
-    for bomb in bombs:
+    for bomb in modified_bombs:
         if not(current_position[0], current_position[1]) == (bomb[0][0], bomb[0][1]):
             timers[bomb[0][0], bomb[0][1]] = -1
         else:
@@ -142,7 +170,7 @@ def state_to_features(self, game_state: dict) -> np.array:
             if game_state.get("field")[bomb[0][0], bomb[0][1] + i] == -1:
                 break
             timers[bomb[0][0], bomb[0][1] + i] = bomb[1]
-    
+
     # Put -1 where crates
     timers = np.where(game_state.get("field") == 1, -1, timers)
     # Put -1 where explosion
@@ -151,10 +179,6 @@ def state_to_features(self, game_state: dict) -> np.array:
     #Put -1 where other players
     for players in game_state.get("others"):
         timers[players[3][0], players[3][1]] = -1
-
-
-    # Is the agent in the path of a future explosion?
-    danger = [1 if ((current_position[0], current_position[1]) in blast_coords if blast_coords else False) else 0]
 
 
     # FEATURES:
@@ -186,71 +210,16 @@ def state_to_features(self, game_state: dict) -> np.array:
             coin_second_dir = ["DOWN"]  
         else:
             coin_second_dir = ["ALIGNED"]
+    
+    # Feature 3 & 4 & 5 & 6 - Surroundings:
+        # 1 when there's an obstacle, an imminent explosion or currently an explosion unless it's about to vanish
+        # 0 when free tile with explosion far in the future or just about to vanish
+    vision_down = [1 if ((field[current_position[0], current_position[1] + 1] == -1)  or (any(x == (current_position[0], current_position[1] + 1) for x, _ in bombs) if bombs else False) or (blast_map[current_position[0], current_position[1] + 1] == 1) or (explosions[current_position[0], current_position[1] + 1] != 0) or (field[current_position[0], current_position[1] + 1] == 1)) else 0]
+    vision_up = [1 if ((field[current_position[0], current_position[1] - 1] == -1) or (any(x == (current_position[0], current_position[1] - 1) for x, _ in bombs) if bombs else False) or (blast_map[current_position[0], current_position[1] - 1] == 1) or (explosions[current_position[0], current_position[1] - 1] != 0) or (field[current_position[0], current_position[1] - 1] == 1)) else 0]
+    vision_left = [1 if ((field[current_position[0] - 1, current_position[1]] == -1) or (any(x == (current_position[0] - 1, current_position[1]) for x, _ in bombs) if bombs else False) or (blast_map[current_position[0] - 1, current_position[1]] == 1) or (explosions[current_position[0] - 1, current_position[1]] != 0) or (field[current_position[0] - 1, current_position[1]] == 1)) else 0]
+    vision_right = [1 if ((field[current_position[0] + 1, current_position[1]] == -1) or (any(x == (current_position[0] + 1, current_position[1]) for x, _ in bombs) if bombs else False) or (blast_map[current_position[0] + 1, current_position[1]] == 1) or (explosions[current_position[0] + 1, current_position[1]] != 0) or (field[current_position[0] + 1, current_position[1]] == 1)) else 0]
 
-    #Feature 3 & 4 & 5 & 6 - Obstacle detection: returns 1 when non-walkable tile, 2 if crate and 0 when free tile TODO detect other players
-    vision_down = [1 if game_state.get("field")[current_position[0], current_position[1] + 1] == -1  or (any(x == (current_position[0], current_position[1] + 1) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) else 2 if game_state.get("field")[current_position[0], current_position[1] + 1] == 1 else 0]
-    vision_up = [1 if game_state.get("field")[current_position[0], current_position[1] - 1] == -1 or (any(x == (current_position[0], current_position[1] - 1) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) else 2 if game_state.get("field")[current_position[0], current_position[1] - 1] == 1 else 0]
-    vision_left = [1 if game_state.get("field")[current_position[0] - 1, current_position[1]] == -1 or (any(x == (current_position[0] - 1, current_position[1]) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) else 2 if game_state.get("field")[current_position[0] - 1, current_position[1]] == 1 else 0]
-    vision_right = [1 if game_state.get("field")[current_position[0] + 1, current_position[1]] == -1 or (any(x == (current_position[0] + 1, current_position[1]) for x, _ in game_state.get("bombs")) if game_state.get("bombs") else False) else 2 if game_state.get("field")[current_position[0] + 1, current_position[1]] == 1 else 0]
-
-
-    # Feature 7 & 8 & 9 & 10 - Danger detection: returns 1 when in that direction there will be an explosion, -1 when in that direction there currently is an explosion and 0 otherwise
-    danger_down = [1 if ((current_position[0], current_position[1] + 1) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0], current_position[1] + 1] > 0 else 0]
-    danger_up = [1 if ((current_position[0], current_position[1] - 1) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0], current_position[1] - 1] > 0 else 0]
-    danger_left = [1 if ((current_position[0] - 1, current_position[1]) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0] - 1, current_position[1]] > 0 else 0]
-    danger_right = [1 if ((current_position[0] + 1, current_position[1]) in blast_coords if blast_coords else False) else -1 if game_state.get("explosion_map")[current_position[0] + 1, current_position[1]] > 0 else 0]
-
-
-    # Feature 12 - Crate vision: returns 1 if he's close to crate 0 otherwise
-    # vision_crate = 0
-    # for i,j in [(-1,0), (1, 0), (0,1), (0, -1)]:
-    #         if game_state.get("field")[current_position[0] + i, current_position[1] + j] == 1:
-    #             vision_crate = 1
-    #             break
-
-    # Feature 13 & 14 & 15 & 16 - Escape possibility: returns 1 if in that direction there's a possible escape in the hypothesis that he drops a bomb now
-    # escape_up = 0
-    # for i in np.arange(1,4):
-    #     if game_state.get("field")[current_position[0], current_position[1] - i] == 1 or game_state.get("field")[current_position[0], current_position[1] - i] == -1:
-    #         break
-    #     elif game_state.get("field")[current_position[0] + 1, current_position[1] - i] == 0 or game_state.get("field")[current_position[0] - 1, current_position[1] - i] == 0:
-    #         escape_up = 1
-    #         break
-    #     elif i == 3 and game_state.get("field")[current_position[0], current_position[1] - i - 1] == 0:
-    #         escape_up = 1
-    #         break
-    # escape_down = 0
-    # for i in np.arange(1,4):
-    #     if game_state.get("field")[current_position[0], current_position[1] + i] == 1 or game_state.get("field")[current_position[0], current_position[1] + i] == -1:
-    #         break
-    #     elif game_state.get("field")[current_position[0] + 1, current_position[1] + i] == 0 or game_state.get("field")[current_position[0] - 1, current_position[1] + i] == 0:
-    #         escape_down = 1
-    #         break
-    #     elif i == 3 and game_state.get("field")[current_position[0], current_position[1] + i + 1] == 0:
-    #         escape_down = 1
-    #         break
-    # escape_left = 0
-    # for i in np.arange(1,4):
-    #     if game_state.get("field")[current_position[0] - i, current_position[1]] == 1 or game_state.get("field")[current_position[0] - i, current_position[1]] == -1:
-    #         break
-    #     elif game_state.get("field")[current_position[0] - i, current_position[1] - 1] == 0 or game_state.get("field")[current_position[0] - i, current_position[1] + 1] == 0:
-    #         escape_left = 1
-    #         break
-    #     elif i == 3 and game_state.get("field")[current_position[0] - i - 1, current_position[1]] == 0:
-    #         escape_left = 1
-    #         break
-    # escape_right = 0
-    # for i in np.arange(1,4):
-    #     if game_state.get("field")[current_position[0] + i, current_position[1]] == 1 or game_state.get("field")[current_position[0] + i, current_position[1]] == -1:
-    #         break
-    #     elif game_state.get("field")[current_position[0] + i, current_position[1] - 1] == 0 or game_state.get("field")[current_position[0] + i, current_position[1] + 1] == 0:
-    #         escape_right = 1
-    #         break
-    #     elif i == 3 and game_state.get("field")[current_position[0] + i + 1, current_position[1]] == 0:
-    #         escape_right = 1
-    #         break
-
-    # Feature 11 & 12 - Crate direction
+    # Feature 7 & 8 - Crate direction
     crate_first_dir = ["FREE"]
     crate_second_dir = ["FREE"]
     flag = 0
@@ -280,34 +249,38 @@ def state_to_features(self, game_state: dict) -> np.array:
             if flag:
                 break
 
-    #Feature 14 - Destroyable crate: returns 1 if by dropping a bomb in agent position he would destroy a crate
+    #Feature 10 - Destroyable crate: returns 1 if by dropping a bomb in agent position he would destroy a crate
     destroyable_crates = 0
     x, y = current_position[0], current_position[1]
     for i in range(1, 4):
-        if game_state.get("field")[x + i, y] == -1:
+        if field[x + i, y] == -1:
             break
-        if game_state.get("field")[x + i, y] == 1:
+        if field[x + i, y] == 1:
             destroyable_crates = 1
+            break
     if not destroyable_crates:
         for i in range(1, 4):
-            if game_state.get("field")[x - i, y] == -1:
+            if field[x - i, y] == -1:
                 break
-            if game_state.get("field")[x - i, y] == 1:
+            if field[x - i, y] == 1:
                 destroyable_crates = 1
+                break
     if not destroyable_crates:
         for i in range(1, 4):
-            if game_state.get("field")[x, y + i] == -1:
+            if field[x, y + i] == -1:
                 break
-            if game_state.get("field")[x, y + i] == 1:
+            if field[x, y + i] == 1:
                 destroyable_crates = 1
+                break
     if not destroyable_crates:
         for i in range(1, 4):
-            if game_state.get("field")[x, y - i] == -1:
+            if field[x, y - i] == -1:
                 break
-            if game_state.get("field")[x, y - i] == 1:
+            if field[x, y - i] == 1:
                 destroyable_crates = 1
+                break
 
-    # Feature 15 - Danger info: 
+    # Feature 11 - Danger info: 
         # NO DANGER AND CAN ESCAPE: agent not in danger and could drop bomb without trapping himself
         # NO DANGER NO ESCAPE: agent not in danger but would trap himself if he was to drop a bomb
         # NO ESCAPE: agent in danger and there's nothing he can do
@@ -362,41 +335,32 @@ def state_to_features(self, game_state: dict) -> np.array:
                 break
 
     if escape == "NO DANGER AND CAN ESCAPE":
-        if danger[0] == 1:
+        if danger == 1:
             escape = "NO ESCAPE"
         else:
             escape = "NO DANGER NO ESCAPE"
-    elif danger[0] == 0:
+    elif danger == 0:
         escape = "NO DANGER AND CAN ESCAPE"
     
+
 
     # Appending every feature
     channels = []
 
-    #channels.append(danger) #0
     channels.append(coin_first_dir) #0
     channels.append(coin_second_dir) #1 - Cardinality: 9
     channels.append(vision_down) #2
     channels.append(vision_up) #3
     channels.append(vision_left) #4
-    channels.append(vision_right) #5 - Cardinality: 81
-    channels.append(danger_down) #6
-    channels.append(danger_up) #7
-    channels.append(danger_left) #8
-    channels.append(danger_right) #9 - Cardinality: 81
-    # channels.append([escape_up]) #11
-    # channels.append([escape_down]) #12
-    # channels.append([escape_left]) #13
-    # channels.append([escape_right]) #14
-    channels.append(crate_first_dir) #10
-    channels.append(crate_second_dir) #11 - Cardinality: 9
-    channels.append([game_state.get("self")[2]]) #12 - Can he drop bomb? - Cardinality: 2
-    channels.append([destroyable_crates]) #13 - Cardinality: 2
-    channels.append([escape]) #14 - Cardinality: 7
+    channels.append(vision_right) #5 - Cardinality: 16
+    channels.append(crate_first_dir) #6
+    channels.append(crate_second_dir) #7 - Cardinality: 9
+    channels.append([game_state.get("self")[2]]) #8 - Can he drop bomb? - Cardinality: 2
+    channels.append([destroyable_crates]) #9 - Cardinality: 2
+    channels.append([escape]) #10 - Cardinality: 7
 
-    # Features combinations: 14.880.348
+    # Features combinations: 36.288
     
-    #TODO Vision e danger possono essere accorpati togliendo le crate e considerando esplosioni come blocchi e timer lunghi come case libere
     #TODO Volendo abbiamo crate da 8 a 5
 
     # Concatenate them as a feature tensor (they must have the same shape), ...

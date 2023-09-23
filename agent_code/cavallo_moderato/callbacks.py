@@ -8,7 +8,7 @@ from collections import defaultdict
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyperparameters.
-EXPLORATION_RATE = 0 # TODO fine tune this
+EXPLORATION_RATE = 0.5 # TODO fine tune this
 
 def setup(self):
     """
