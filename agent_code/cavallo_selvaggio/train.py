@@ -22,7 +22,7 @@ ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 # Hyper parameters -- DO modify
 TRANSITION_HISTORY_SIZE = 8  # keep only ... last transitions TODO remove once sure not needed
 RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ... TODO remove once sure not needed
-LEARNING_RATE = 0.05 # TODO fine tune this
+LEARNING_RATE = 0.5 # TODO fine tune this
 DISCOUNT_RATE = 0.8 # TODO fine tune this
 N_FEATURES = 19
 
@@ -120,7 +120,7 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     n = min(TRANSITION_HISTORY_SIZE, len(self.transitions))
     for t in np.arange(-1, -n, -1):
         index = ACTIONS.index(self.transitions[t].action)
-        Y = self.transitions[t].reward + (DISCOUNT_RATE**(-t)) * np.max(self.weights[index] @ convert(self,self.transitions[t].next_state))
+        Y = self.transitions[t].reward + (DISCOUNT_RATE) * np.max(self.weights[index] @ convert(self,self.transitions[t].next_state))
         sum = sum + convert(self, self.transitions[t].state) * (Y - self.weights[index] @ convert(self,self.transitions[t].state))
         self.error.append(np.abs(Y - self.weights[index] @ convert(self,self.transitions[t].state)))
         self.logger.debug("Error: " + str(self.error[-1]))
@@ -180,21 +180,21 @@ def reward_from_events(self, events: List[str]) -> int:
     """
     game_rewards = {
         e.COIN_COLLECTED: 10,
-        COIN_NOT_COLLECTED: -.1,
-        #GOING_AWAY_FROM_COIN: -.2,
+        COIN_NOT_COLLECTED: -1,
+        GOING_AWAY_FROM_COIN: -5,
         GOING_TO_COIN: 5,
 
         e.CRATE_DESTROYED: 5,
-        BOMB_AND_CRATE: 3,
-        GOING_TO_CRATE : 10,
-        #GOING_AWAY_FROM_CRATE: -1,
+        # BOMB_AND_CRATE: 3,
+        # GOING_TO_CRATE : 3,
+        # GOING_AWAY_FROM_CRATE: -3,
 
-        NO_ESCAPE: -10,
+        NO_ESCAPE: -50,
         e.GOT_KILLED: -1,
         e.KILLED_SELF: -5,
-        #NO_ESCAPING: -3,
-        ESCAPING: 50,
-        e.BOMB_DROPPED: -.1,
+        NO_ESCAPING: -20,
+        ESCAPING: 20,
+        e.BOMB_DROPPED: -3,
         NO_BOMB: -5,
 
         # e.KILLED_OPPONENT: 5,
