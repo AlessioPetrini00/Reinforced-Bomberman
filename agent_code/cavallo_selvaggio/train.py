@@ -4,7 +4,7 @@ import pickle
 from typing import List
 
 import events as e
-from .callbacks import state_to_features
+from .callbacks import state_to_features, convert
 
 import os
 
@@ -22,18 +22,16 @@ ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 # Hyper parameters -- DO modify
 TRANSITION_HISTORY_SIZE = 8  # keep only ... last transitions TODO remove once sure not needed
 RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ... TODO remove once sure not needed
-LEARNING_RATE = 0.5 # TODO fine tune this
-DISCOUNT_RATE = 0.9 # TODO fine tune this
-N_FEATURES = 11
+LEARNING_RATE = 0.05 # TODO fine tune this
+DISCOUNT_RATE = 0.8 # TODO fine tune this
+N_FEATURES = 19
 
 # Custom events
 COIN_NOT_COLLECTED = "COIN_NOT_COLLECTED"
 GOING_TO_COIN = "GOING_TO_COIN"
 GOING_TO_CRATE = "GOING_TO_CRATE"
-GOING_AWAY_FROM_BOMB = "GOING_AWAY_FROM_BOMB"
 GOING_INTO_WALL = "GOING_INTO_WALL"
 UNDECIDED = "UNDECIDED"
-GOING_TO_BOMB = "GOING_TO_BOMB"
 BOMB_AND_CRATE = "BOMB_AND_CRATE"
 TOO_WAITS = "TOO_WAITS"
 NO_ESCAPE = "N0_ESCAPE"
@@ -41,7 +39,7 @@ ESCAPING = "ESCAPING"
 GOING_AWAY_FROM_COIN = "GOING_AWAY_FROM_COIN"
 GOING_AWAY_FROM_CRATE = "GOING_AWAY_FROM_CRATE"
 NO_BOMB = "NO_BOMB"
-
+NO_ESCAPING = "NO_ESCAPING"
 
 
 def setup_training(self):
@@ -54,12 +52,13 @@ def setup_training(self):
     """
     # Example: Setup an array that will note transition tuples
     self.transitions = deque(maxlen=TRANSITION_HISTORY_SIZE)
+    self.error = []
 
     # Load or create weights.
     if not os.path.isfile("my-saved-weights.pt"):
-        self.weights = np.zeros((N_FEATURES, len(ACTIONS)))
+        self.weights = np.zeros((len(ACTIONS), N_FEATURES))
         with open("my-saved-weights.pt", "wb") as file:
-            pickle.dump(self.weights,file)
+            pickle.dump(self.weights, file)
     else:
         with open("my-saved-weights.pt", "rb") as file:
             self.weights = pickle.load(file)
@@ -93,33 +92,41 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     self.transitions.append(Transition(old_features, self_action, new_features, reward_from_events(self, events)))
 
     # Debug messages for features
-    self.logger.debug("Closest coin is in " + self.transitions[-1].next_state[0] + " " + self.transitions[-1].next_state[1])
-    self.logger.debug("vision is 1 for non walkable and 0 otherwise - down " + self.transitions[-1].next_state[2])
-    self.logger.debug("vision is 1 for non walkable and 0 otherwise - up " + self.transitions[-1].next_state[3])
-    self.logger.debug("vision is 1 for non walkable and 0 otherwise - left " + self.transitions[-1].next_state[4])
-    self.logger.debug("vision is 1 for non walkable and 0 otherwise - right " + self.transitions[-1].next_state[5])
-    self.logger.debug("Closest crate is in " + self.transitions[-1].next_state[6] + " " + self.transitions[-1].next_state[7])
-    self.logger.debug("Can he drop a bomb? " + self.transitions[-1].next_state[8])
-    self.logger.debug("Can he destroy a crate from here? " + self.transitions[-1].next_state[9])
-    self.logger.debug("Danger info: " + self.transitions[-1].next_state[10])
-
+    #self.logger.debug("Closest coin is in " + self.transitions[-1].next_state[0] + " " + self.transitions[-1].next_state[1])
+    self.logger.debug("Coin right? " + self.transitions[-1].next_state[0])  
+    self.logger.debug("Coin left? " + self.transitions[-1].next_state[1])
+    self.logger.debug("Coin up? " + self.transitions[-1].next_state[2])
+    self.logger.debug("Coin down? " + self.transitions[-1].next_state[3])
+    self.logger.debug("vision is 1 for non walkable and 0 otherwise - down " + self.transitions[-1].next_state[4])
+    self.logger.debug("vision is 1 for non walkable and 0 otherwise - up " + self.transitions[-1].next_state[5])
+    self.logger.debug("vision is 1 for non walkable and 0 otherwise - left " + self.transitions[-1].next_state[6])
+    self.logger.debug("vision is 1 for non walkable and 0 otherwise - right " + self.transitions[-1].next_state[7])
+    #self.logger.debug("Closest crate is in " + self.transitions[-1].next_state[6] + " " + self.transitions[-1].next_state[7])
+    self.logger.debug("Crate right? " + self.transitions[-1].next_state[8])  
+    self.logger.debug("Crate left? " + self.transitions[-1].next_state[9])
+    self.logger.debug("Crate up? " + self.transitions[-1].next_state[10])
+    self.logger.debug("Crate down? " + self.transitions[-1].next_state[11])
+    self.logger.debug("Can he drop a bomb? " + self.transitions[-1].next_state[12])
+    self.logger.debug("Can he destroy a crate from here? " + self.transitions[-1].next_state[13])
+    self.logger.debug("Is he in danger? " + self.transitions[-1].next_state[14])
+    self.logger.debug("Can he escape up? " + self.transitions[-1].next_state[15])
+    self.logger.debug("Can he escape down? " + self.transitions[-1].next_state[16])
+    self.logger.debug("Can he escape left? " + self.transitions[-1].next_state[17])
+    self.logger.debug("Can he escape right? " + self.transitions[-1].next_state[18])
     # Debug message for events:
     self.logger.debug(f'Encountered game event(s) {", ".join(map(repr, events))} in step {new_game_state["step"]}')
 
-    # state_to_features is defined in callbacks.py
-    self.transitions.append(Transition(state_to_features(old_game_state), self_action, state_to_features(new_game_state), reward_from_events(self, events)))
-
-
-    if not hasattr(self, "weights"):
-        self.weights = np.zeros((len))
-
     sum = 0
-    for t in np.arange(-1, -TRANSITION_HISTORY_SIZE, -1):
+    n = min(TRANSITION_HISTORY_SIZE, len(self.transitions))
+    for t in np.arange(-1, -n, -1):
         index = ACTIONS.index(self.transitions[t].action)
-        Y = self.transitions[t].reward + DISCOUNT_RATE * np.max(self.transitions[t].next_state @ self.weights[index])
-        sum = sum + self.transitions[t].state * (Y - self.weights[index] @ self.transitions[t].state)
+        Y = self.transitions[t].reward + (DISCOUNT_RATE**(-t)) * np.max(self.weights[index] @ convert(self,self.transitions[t].next_state))
+        sum = sum + convert(self, self.transitions[t].state) * (Y - self.weights[index] @ convert(self,self.transitions[t].state))
+        self.error.append(np.abs(Y - self.weights[index] @ convert(self,self.transitions[t].state)))
+        self.logger.debug("Error: " + str(self.error[-1]))
     index = ACTIONS.index(self_action)
-    self.weights[index] = self.weights[index] + (LEARNING_RATE / TRANSITION_HISTORY_SIZE) * sum
+    self.weights[index] = self.weights[index] + (LEARNING_RATE / TRANSITION_HISTORY_SIZE) * sum 
+
 
 
 
@@ -146,17 +153,18 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
 
     # Debug message for events:
     self.logger.debug(f'Encountered event(s) {", ".join(map(repr, events))} in final step')
-    self.transitions.append(Transition(state_to_features(last_game_state), last_action, None, reward_from_events(self, events)))
 
     sum = 0
-    for t in np.arange(-2, -TRANSITION_HISTORY_SIZE, -1):
+    n = min(TRANSITION_HISTORY_SIZE, len(self.transitions))
+    for t in np.arange(-2, -n, -1):
         index = ACTIONS.index(self.transitions[t].action)
-        Y = self.transitions[t].reward + DISCOUNT_RATE * np.max(self.transitions[t].next_state @ self.weights[index])
-        sum = sum + self.transitions[t].state * (Y - self.weights[index] @ self.transitions[t].state)
+        Y = self.transitions[t].reward + DISCOUNT_RATE * np.max(self.weights[index] @ convert(self, self.transitions[t].next_state))
+        sum = sum + convert(self, self.transitions[t].state) * (Y - (self.weights[index] @ convert(self, self.transitions[t].state)))
     index = ACTIONS.index(last_action)
-    sum = self.transitions[-1].state * (self.transitions[-1].reward - self.weights[index] @ self.transitions[-1].state)
+    sum = convert(self, self.transitions[-1].state) * (self.transitions[-1].reward - self.weights[index] @ convert(self, self.transitions[-1].state))
     self.weights[index] = self.weights[index] + (LEARNING_RATE / TRANSITION_HISTORY_SIZE) * sum
 
+    self.transitions.clear()
     # Store the weights
     with open("my-saved-weights.pt", "wb") as file:
         pickle.dump(self.weights, file)
@@ -172,29 +180,29 @@ def reward_from_events(self, events: List[str]) -> int:
     """
     game_rewards = {
         e.COIN_COLLECTED: 10,
-        COIN_NOT_COLLECTED: -3,
-        GOING_AWAY_FROM_COIN: -1,
-        GOING_TO_COIN: 3,
+        COIN_NOT_COLLECTED: -.1,
+        #GOING_AWAY_FROM_COIN: -.2,
+        GOING_TO_COIN: 5,
 
-        e.CRATE_DESTROYED: 1,
-        BOMB_AND_CRATE: 1,
-        GOING_TO_CRATE : 3,
-        GOING_AWAY_FROM_CRATE: -4,
+        e.CRATE_DESTROYED: 5,
+        BOMB_AND_CRATE: 3,
+        GOING_TO_CRATE : 10,
+        #GOING_AWAY_FROM_CRATE: -1,
 
-        #GOING_AWAY_FROM_BOMB: 8,
-        NO_ESCAPE: -80,
-        #GOING_TO_BOMB: -9,
-        e.GOT_KILLED: -0.5,
-        e.KILLED_SELF: -30,
+        NO_ESCAPE: -10,
+        e.GOT_KILLED: -1,
+        e.KILLED_SELF: -5,
+        #NO_ESCAPING: -3,
+        ESCAPING: 50,
+        e.BOMB_DROPPED: -.1,
+        NO_BOMB: -5,
 
         # e.KILLED_OPPONENT: 5,
-        e.BOMB_DROPPED: -1,
-        e.INVALID_ACTION: -50,
-        # e.WAITED:,
-        #TOO_WAITS: -3,
-        GOING_INTO_WALL: -20,
-        UNDECIDED: -6,
-        NO_BOMB: -10
+
+        e.INVALID_ACTION: -5,
+        TOO_WAITS: -10,
+        GOING_INTO_WALL: -10,
+        UNDECIDED: -10
     }
     reward_sum = 0
     for event in events:
@@ -207,43 +215,41 @@ def reward_from_events(self, events: List[str]) -> int:
 
 def custom_events (self, self_action, old_features, new_features, events: List[str]) -> List[str]:
     # There's coin but it was not collected
-    if not (e.COIN_COLLECTED in events) and not str(old_features[0]) == "FREE":
+    if not (e.COIN_COLLECTED in events) and not (str(old_features[0]) == "FREE" and str(old_features)[2] == "FREE" or str(old_features[1]) == "FREE" and str(old_features)[3] == "FREE"):
         events.append(COIN_NOT_COLLECTED)
 
     # Moving towards coin and going away from it
-    if old_features[0] == self_action or old_features[1] == self_action:
+    if old_features[0] == self_action or old_features[1] == self_action or old_features[2] == self_action or old_features[3] == self_action:
         events.append(GOING_TO_COIN)
-    elif not (old_features[0] == "FREE" and old_features[1] == "FREE"):
+    elif not (old_features[0] == "FREE" and old_features[2] == "FREE" and old_features[1] == "FREE" and old_features[3] == "FREE"):
         events.append(GOING_AWAY_FROM_COIN)
 
     # Moving towards crate and going away from it
-    if old_features[6] == self_action or old_features[7] == self_action:
+    if old_features[8] == self_action or old_features[9] == self_action or old_features[10] == self_action or old_features[11] == self_action:
         events.append(GOING_TO_CRATE)
-    elif not (old_features[6] == "FREE" and old_features[7] == "FREE") and not self_action == "WAIT" and not self_action == "BOMB":
+    elif not (old_features[8] == "FREE" and old_features[10] == "FREE" and old_features[9] == "FREE" and old_features[11] == "FREE") and not self_action == "WAIT" and not self_action == "BOMB":
         events.append(GOING_AWAY_FROM_CRATE)
 
-    
-    # Remaining or going to dangerous-zone
     if not len(new_features) == 0:
-        if (str(old_features[10]) == "NO DANGER AND CAN ESCAPE" or str(old_features[10]) == "NO DANGER NO ESCAPE") and not (str(new_features[10]) == "NO DANGER AND CAN ESCAPE" or str(new_features[10]) == "NO DANGER NO ESCAPE") and not (self_action == "BOMB" or self_action == "WAIT"):
-            events.append(GOING_TO_BOMB)
-
-
-    if self_action == "BOMB" and str(old_features[10]) == "NO DANGER NO ESCAPE":
-        events.append(NO_ESCAPE)
-    if self_action == str(old_features[10]):
-        events.append(ESCAPING)
-
+        if old_features[14] == -1:
+            if old_features[15] == self_action or old_features[16] == self_action or old_features[17] == self_action or old_features[18] == self_action:
+                events.append(ESCAPING)
+            elif not(old_features[15] == 'NO DANGER AND CAN ESCAPE' and old_features[16] == 'NO DANGER AND CAN ESCAPE' and old_features[17] == 'NO DANGER AND CAN ESCAPE' and old_features[18] == 'NO DANGER AND CAN ESCAPE'):
+                events.append(NO_ESCAPING)
+        else:
+            if self_action == "BOMB" and (old_features[15] == 'NO DANGER AND CAN ESCAPE' and old_features[16] == 'NO DANGER AND CAN ESCAPE' and old_features[17] == 'NO DANGER AND CAN ESCAPE' and old_features[18] == 'NO DANGER AND CAN ESCAPE'):
+                events.append(NO_ESCAPE)
+  
 
     # When he wants to hug walls (punish behaviour) TODO remove because invalid action
     features = tuple(old_features)
-    if int(features[2]) == 1 and self_action == "DOWN":
+    if int(features[4]) == -1 and self_action == "DOWN":
         events.append(GOING_INTO_WALL)
-    if int(features[3]) == 1 and self_action == "UP":
+    if int(features[5]) == -1 and self_action == "UP":
         events.append(GOING_INTO_WALL)
-    if int(features[4]) == 1 and self_action == "LEFT":
+    if int(features[6]) == -1 and self_action == "LEFT":
         events.append(GOING_INTO_WALL)
-    if int(features[5]) == 1 and self_action == "RIGHT":
+    if int(features[7]) == -1 and self_action == "RIGHT":
         events.append(GOING_INTO_WALL)
 
 
@@ -262,10 +268,10 @@ def custom_events (self, self_action, old_features, new_features, events: List[s
 
 
     # When he puts a bomb close to a crate
-    if int(features[9]) == 1 and self_action == "BOMB":
+    if int(features[13]) == 1 and self_action == "BOMB":
         events.append(BOMB_AND_CRATE)
 
-    if (old_features[8] == 0) and (self_action == "BOMB"):
+    if (old_features[12] == -1) and (self_action == "BOMB"):
         events.append(NO_BOMB)
 
 

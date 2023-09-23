@@ -6,10 +6,10 @@ from collections import defaultdict
 
 
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
-N_FEATURES = 11
+N_FEATURES = 19
 
 # Hyperparameters.
-EXPLORATION_RATE = 0 # TODO fine tune this
+EXPLORATION_RATE = 0.5 # TODO fine tune this
 
 def setup(self):
     """
@@ -22,11 +22,11 @@ def setup(self):
     :param self: This object is passed to all callbacks and you can set arbitrary values.
     """
     # Load or create Q table.
-    if self.train or not os.path.isfile("my-saved-weights.pt"):
+    if not os.path.isfile("my-saved-weights.pt"):
         self.logger.info("Setting up model from scratch.")
-        self.weights = np.zeros((N_FEATURES, len(ACTIONS)))
+        self.weights = np.zeros((len(ACTIONS), N_FEATURES))
         with open("my-saved-weights.pt", "wb") as file:
-            pickle.dump(self.weights,file)
+            pickle.dump(self.weights, file)
     else:
         self.logger.info("Loading model from saved state.")
         with open("my-saved-weights.pt", "rb") as file:
@@ -51,9 +51,15 @@ def act(self, game_state: dict) -> str:
 
         return choice
     else:
-        print(type(self.weights))
-        self.model = state_to_features(self, game_state) @ self.weights
+        features = state_to_features(self, game_state)
+        features = convert(self, features)
+        self.model = self.weights @ features
+        #self.logger.info("Features: " + str(features))
+        #self.logger.info("Weights: " + "\n" + str(self.weights))
+        self.logger.info("The model is: " + str(self.model))
         self.logger.info("The best action is: " + ACTIONS[np.argmax(self.model)])
+        if np.abs(max(self.model)) > 1000:
+            print("occhio")
         return ACTIONS[np.argmax(self.model)]
 
 
@@ -123,7 +129,7 @@ def state_to_features(self, game_state: dict) -> np.array:
             blast_coords.append((x, y - i))
 
     # Is the agent in the path of a future explosion?
-    danger = 1 if ((current_position[0], current_position[1]) in blast_coords if blast_coords else False) else 0
+    danger = -1 if ((current_position[0], current_position[1]) in blast_coords if blast_coords else False) else 1
     
 
     # Get the bombs and if not in danger imagine you just dropped a bomb to see if you COULD escape
@@ -176,8 +182,10 @@ def state_to_features(self, game_state: dict) -> np.array:
     
     # Feature 1 & 2 - Nearest coin: return direction for nearest coin or "FREE" "FREE" if there's no coin
     nearest_coin = [float('inf'), float('inf')]
-    coin_first_dir = ["FREE"]
-    coin_second_dir = ["FREE"]
+    coin_right = ["FREE"]
+    coin_left = ["FREE"]
+    coin_up = ["FREE"]
+    coin_down = ["FREE"]
 
     # Find coordinates for nearest coin
     for coin in game_state.get("coins"):
@@ -188,32 +196,30 @@ def state_to_features(self, game_state: dict) -> np.array:
     if not nearest_coin[0] == float('inf'):
         # Compute direction from coin position
         if nearest_coin[0] - current_position[0] > 0:
-            coin_first_dir = ["RIGHT"]
+            coin_right = ["RIGHT"]
         elif nearest_coin[0] - current_position[0] < 0:
-            coin_first_dir = ["LEFT"]  
-        else:
-            coin_first_dir = ["ALIGNED"]
-
+            coin_left= ["LEFT"]  
+        
     if not nearest_coin[1] == float('inf'):
         if nearest_coin[1] - current_position[1] < 0:
-            coin_second_dir = ["UP"]
+            coin_up = ["UP"]
         elif nearest_coin[1] - current_position[1] > 0:
-            coin_second_dir = ["DOWN"]  
-        else:
-            coin_second_dir = ["ALIGNED"]
-
+            coin_down = ["DOWN"]  
+        
     # Feature 3 - 4 - 5 - 6
 
-    vision_down = [1 if ((field[current_position[0], current_position[1] + 1] == -1)  or (any(x == (current_position[0], current_position[1] + 1) for x, _ in bombs) if bombs else False) or (blast_map[current_position[0], current_position[1] + 1] == 1) or (explosions[current_position[0], current_position[1] + 1] != 0) or (field[current_position[0], current_position[1] + 1] == 1)) else 0]
-    vision_up = [1 if ((field[current_position[0], current_position[1] - 1] == -1) or (any(x == (current_position[0], current_position[1] - 1) for x, _ in bombs) if bombs else False) or (blast_map[current_position[0], current_position[1] - 1] == 1) or (explosions[current_position[0], current_position[1] - 1] != 0) or (field[current_position[0], current_position[1] - 1] == 1)) else 0]
-    vision_left = [1 if ((field[current_position[0] - 1, current_position[1]] == -1) or (any(x == (current_position[0] - 1, current_position[1]) for x, _ in bombs) if bombs else False) or (blast_map[current_position[0] - 1, current_position[1]] == 1) or (explosions[current_position[0] - 1, current_position[1]] != 0) or (field[current_position[0] - 1, current_position[1]] == 1)) else 0]
-    vision_right = [1 if ((field[current_position[0] + 1, current_position[1]] == -1) or (any(x == (current_position[0] + 1, current_position[1]) for x, _ in bombs) if bombs else False) or (blast_map[current_position[0] + 1, current_position[1]] == 1) or (explosions[current_position[0] + 1, current_position[1]] != 0) or (field[current_position[0] + 1, current_position[1]] == 1)) else 0]
+    vision_down = [-1 if ((field[current_position[0], current_position[1] + 1] == -1)  or (any(x == (current_position[0], current_position[1] + 1) for x, _ in bombs) if bombs else False) or (blast_map[current_position[0], current_position[1] + 1] == 1) or (explosions[current_position[0], current_position[1] + 1] != 0) or (field[current_position[0], current_position[1] + 1] == 1)) else 1]
+    vision_up = [-1 if ((field[current_position[0], current_position[1] - 1] == -1) or (any(x == (current_position[0], current_position[1] - 1) for x, _ in bombs) if bombs else False) or (blast_map[current_position[0], current_position[1] - 1] == 1) or (explosions[current_position[0], current_position[1] - 1] != 0) or (field[current_position[0], current_position[1] - 1] == 1)) else 1]
+    vision_left = [-1 if ((field[current_position[0] - 1, current_position[1]] == -1) or (any(x == (current_position[0] - 1, current_position[1]) for x, _ in bombs) if bombs else False) or (blast_map[current_position[0] - 1, current_position[1]] == 1) or (explosions[current_position[0] - 1, current_position[1]] != 0) or (field[current_position[0] - 1, current_position[1]] == 1)) else 1]
+    vision_right = [-1 if ((field[current_position[0] + 1, current_position[1]] == -1) or (any(x == (current_position[0] + 1, current_position[1]) for x, _ in bombs) if bombs else False) or (blast_map[current_position[0] + 1, current_position[1]] == 1) or (explosions[current_position[0] + 1, current_position[1]] != 0) or (field[current_position[0] + 1, current_position[1]] == 1)) else 1]
 
     
 
     # Feature 11 & 12 - Crate direction
-    crate_first_dir = ["FREE"]
-    crate_second_dir = ["FREE"]
+    crate_right = ["FREE"]
+    crate_left = ["FREE"]
+    crate_up = ["FREE"]
+    crate_down = ["FREE"]
     flag = 0
     for raggio in range(1, map_size + 1):
             for i in range(current_position[0] - raggio, current_position[0] + raggio + 1):
@@ -224,17 +230,14 @@ def state_to_features(self, game_state: dict) -> np.array:
                                 if game_state.get("field")[i,j] == 1:
                                     flag = 1
                                     if i - current_position[0] > 0:
-                                        crate_first_dir = ["RIGHT"]
+                                        crate_right = ["RIGHT"]
                                     elif i - current_position[0] < 0:
-                                        crate_first_dir = ["LEFT"]  
-                                    else:
-                                        crate_first_dir = ["ALIGNED"]
+                                        crate_left = ["LEFT"]  
+                                        
                                     if j - current_position[1] < 0:
-                                        crate_second_dir = ["UP"]
+                                        crate_up = ["UP"]
                                     elif j - current_position[1] > 0:
-                                        crate_second_dir = ["DOWN"]  
-                                    else:
-                                        crate_second_dir = ["ALIGNED"]
+                                        crate_down = ["DOWN"]  
                                     break
                     if flag:
                         break
@@ -242,7 +245,7 @@ def state_to_features(self, game_state: dict) -> np.array:
                 break
 
     #Feature 14 - Destroyable crate: returns 1 if by dropping a bomb in agent position he would destroy a crate
-    destroyable_crates = 0
+    destroyable_crates = -1
     x, y = current_position[0], current_position[1]
     for i in range(1, 4):
         if field[x + i, y] == -1:
@@ -278,77 +281,83 @@ def state_to_features(self, game_state: dict) -> np.array:
         # NO ESCAPE: agent in danger and there's nothing he can do
         # DOWN, UP, LEFT, RIGHT: agent in danger but can get safe following this direction
 
-    escape = "NO DANGER AND CAN ESCAPE"
+    escape_up = "NO DANGER AND CAN ESCAPE"
+    escape_down = "NO DANGER AND CAN ESCAPE"
+    escape_left = "NO DANGER AND CAN ESCAPE"
+    escape_right = "NO DANGER AND CAN ESCAPE"
 
     num = int(timers[current_position[0], current_position[1]]) 
 
     if timers[current_position[0], current_position[1] - 1] == 0:
-        escape = "UP"
+        escape_up = "UP"
     else:
         for i in range(1, num + 1):
             if not (timers[current_position[0], current_position[1] - i] == -1):
                 if timers[current_position[0] + 1, current_position[1] - i] == 0 or timers[current_position[0] - 1, current_position[1] - i] == 0 or timers[current_position[0], current_position[1] - i - 1] == 0:
-                    escape = "UP"
+                    escape_up = "UP"
                     break
             else:
                 break
 
     if timers[current_position[0], current_position[1] + 1] == 0:
-        escape = "DOWN"
+        escape_down = "DOWN"
     else:
         for i in range(1, num + 1):
             if not (timers[current_position[0], current_position[1] + i] == -1):
                 if timers[current_position[0] + 1, current_position[1] + i] == 0 or timers[current_position[0] - 1, current_position[1] + i] == 0 or timers[current_position[0], current_position[1] + i + 1] == 0:
-                    escape = "DOWN"
+                    escape_down = "DOWN"
                     break
             else:
                 break
 
     if timers[current_position[0] - 1, current_position[1]] == 0:
-        escape = "LEFT"
+        escape_left = "LEFT"
     else:
         for i in range(1, num + 1):
             if not (timers[current_position[0] - i, current_position[1]] == -1):
                 if timers[current_position[0] - i, current_position[1] - 1] == 0 or timers[current_position[0] - i, current_position[1] + 1] == 0 or timers[current_position[0] - i - 1, current_position[1]] == 0:
-                    escape = "LEFT"
+                    escape_left = "LEFT"
                     break
             else:
                 break
 
     if timers[current_position[0] + 1, current_position[1]] == 0:
-        escape = "RIGHT"
+        escape_right = "RIGHT"
     else: 
         for i in range(1, num + 1):
             if not (timers[current_position[0] + i, current_position[1]] == -1):
                 if timers[current_position[0] + i, current_position[1] - 1] == 0 or timers[current_position[0] + i, current_position[1] + 1] == 0 or timers[current_position[0] + i + 1, current_position[1]] == 0:
-                    escape = "RIGHT"
+                    escape_right = "RIGHT"
                     break
             else:
                 break
 
-    if escape == "NO DANGER AND CAN ESCAPE":
-        if danger == 1:
-            escape = "NO ESCAPE"
-        else:
-            escape = "NO DANGER NO ESCAPE"
-    elif danger == 0:
-        escape = "NO DANGER AND CAN ESCAPE"
+    bomb_available = [game_state.get("self")[2] if game_state.get("self")[2] == 1 else -1]
     
 
     # Appending every feature
     channels = []
 
-    channels.append(coin_first_dir) #0
-    channels.append(coin_second_dir) #1 - Cardinality: 9
-    channels.append(vision_down) #2
-    channels.append(vision_up) #3
-    channels.append(vision_left) #4
-    channels.append(vision_right) #5 - Cardinality: 16
-    channels.append(crate_first_dir) #6
-    channels.append(crate_second_dir) #7 - Cardinality: 9
-    channels.append([game_state.get("self")[2]]) #8 - Can he drop bomb? - Cardinality: 2
-    channels.append([destroyable_crates]) #9 - Cardinality: 2
-    channels.append([escape]) #10 - Cardinality: 7
+    channels.append(coin_right) #0
+    channels.append(coin_left) #1
+    channels.append(coin_up) #2
+    channels.append(coin_down) #3
+    channels.append(vision_down) #4
+    channels.append(vision_up) #5
+    channels.append(vision_left) #6
+    channels.append(vision_right) #7 
+    channels.append(crate_right) #8
+    channels.append(crate_left) #9 
+    channels.append(crate_up) #10
+    channels.append(crate_down) #11 
+    channels.append(bomb_available) #12 - Can he drop bomb? 
+    channels.append([destroyable_crates]) #13
+    channels.append([danger]) #14
+    channels.append([escape_up]) #15
+    channels.append([escape_down]) #16
+    channels.append([escape_left]) #17
+    channels.append([escape_right]) #18
+
 
     # Features combinations: 36.288
     
@@ -359,3 +368,18 @@ def state_to_features(self, game_state: dict) -> np.array:
     stacked_channels = np.stack(channels)
     # ... and return them as a vector
     return stacked_channels.reshape(-1)
+
+
+def convert(self, features):
+    features = np.where(np.array(features, dtype=object) == 'UP', 1, features)
+    features = np.where(np.array(features, dtype=object) == 'DOWN', 1, features)
+    features = np.where(np.array(features, dtype=object) == 'RIGHT', 1, features)
+    features = np.where(np.array(features, dtype=object) == 'LEFT', 1, features)
+    features = np.where(np.array(features, dtype=object) == 'FREE', -1, features)
+    features = np.where(np.array(features, dtype=object) == 'NO DANGER NO ESCAPE', 1, features)
+    features = np.where(np.array(features, dtype=object) == 'NO DANGER AND CAN ESCAPE', -1, features)
+    features = np.where(np.array(features, dtype=object) == 'True', 1, features)
+    features = np.where(np.array(features, dtype=object) == 'False', -1, features)
+    return features.astype('float64')
+
+
