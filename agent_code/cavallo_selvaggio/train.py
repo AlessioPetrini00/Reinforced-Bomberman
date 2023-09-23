@@ -14,15 +14,15 @@ import matplotlib.pyplot as plt #TODO add this as dependency
 
 # Loading experience buffer
 Transition = namedtuple('Transition',
-                        ('state', 'action', 'next_state', 'reward'))
+                        ('state', 'action', 'next_state', 'reward', 'weights'))
 
 # Possible actions
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyper parameters -- DO modify
-TRANSITION_HISTORY_SIZE = 8  # keep only ... last transitions TODO remove once sure not needed
+TRANSITION_HISTORY_SIZE = 20  # keep only ... last transitions TODO remove once sure not needed
 RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ... TODO remove once sure not needed
-LEARNING_RATE = 0.5 # TODO fine tune this
+LEARNING_RATE = 0.05 # TODO fine tune this
 DISCOUNT_RATE = 0.8 # TODO fine tune this
 N_FEATURES = 19
 
@@ -40,6 +40,7 @@ GOING_AWAY_FROM_COIN = "GOING_AWAY_FROM_COIN"
 GOING_AWAY_FROM_CRATE = "GOING_AWAY_FROM_CRATE"
 NO_BOMB = "NO_BOMB"
 NO_ESCAPING = "NO_ESCAPING"
+NOT_MOVING = "NOT_MOVING"
 
 
 def setup_training(self):
@@ -89,7 +90,8 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     events = custom_events(self, self_action, old_features, new_features, events)
 
     # Appending transition:
-    self.transitions.append(Transition(old_features, self_action, new_features, reward_from_events(self, events)))
+    self.transitions.append(Transition(old_features, self_action, new_features, reward_from_events(self, events), self.weights))
+                                       
 
     # Debug messages for features
     #self.logger.debug("Closest coin is in " + self.transitions[-1].next_state[0] + " " + self.transitions[-1].next_state[1])
@@ -117,17 +119,20 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     self.logger.debug(f'Encountered game event(s) {", ".join(map(repr, events))} in step {new_game_state["step"]}')
 
     sum = 0
+    n_a = 0
     n = min(TRANSITION_HISTORY_SIZE, len(self.transitions))
     for t in np.arange(-1, -n, -1):
         index = ACTIONS.index(self.transitions[t].action)
-        Y = self.transitions[t].reward + (DISCOUNT_RATE) * np.max(self.weights[index] @ convert(self,self.transitions[t].next_state))
-        sum = sum + convert(self, self.transitions[t].state) * (Y - self.weights[index] @ convert(self,self.transitions[t].state))
-        self.error.append(np.abs(Y - self.weights[index] @ convert(self,self.transitions[t].state)))
+        if self.transitions[t].action == ACTIONS[index]:
+            n_a += 1
+            Y = self.transitions[t].reward + DISCOUNT_RATE * np.max(self.transitions[t].weights[index] @ convert(self,self.transitions[t].next_state))
+            sum = sum + convert(self, self.transitions[t].state) * (Y - self.transitions[t].weights[index] @ convert(self,self.transitions[t].state))
+        self.error.append((Y - self.weights[index] @ convert(self,self.transitions[t].state))**2)
         self.logger.debug("Error: " + str(self.error[-1]))
     index = ACTIONS.index(self_action)
-    self.weights[index] = self.weights[index] + (LEARNING_RATE / TRANSITION_HISTORY_SIZE) * sum 
-
-
+    if n_a == 0:
+        n_a = 1
+    self.weights[index] = self.weights[index] + (LEARNING_RATE / n_a) * sum 
 
 
 def end_of_round(self, last_game_state: dict, last_action: str, events: List[str]):
@@ -149,20 +154,25 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
     events = custom_events(self, last_action, features, [], events)
 
     # Appending transition:
-    self.transitions.append(Transition(features, last_action, None, reward_from_events(self, events)))
+    self.transitions.append(Transition(features, last_action, None, reward_from_events(self, events), self.weights))
 
     # Debug message for events:
     self.logger.debug(f'Encountered event(s) {", ".join(map(repr, events))} in final step')
 
     sum = 0
     n = min(TRANSITION_HISTORY_SIZE, len(self.transitions))
+    n_a = 0
     for t in np.arange(-2, -n, -1):
         index = ACTIONS.index(self.transitions[t].action)
-        Y = self.transitions[t].reward + DISCOUNT_RATE * np.max(self.weights[index] @ convert(self, self.transitions[t].next_state))
-        sum = sum + convert(self, self.transitions[t].state) * (Y - (self.weights[index] @ convert(self, self.transitions[t].state)))
+        if self.transitions[t].action == ACTIONS[index]:
+            n_a += 1
+            Y = self.transitions[t].reward + DISCOUNT_RATE * np.max(self.transitions[t].weights[index] @ convert(self, self.transitions[t].next_state))
+            sum = sum + convert(self, self.transitions[t].state) * (Y - (self.transitions[t].weights[index] @ convert(self, self.transitions[t].state)))
     index = ACTIONS.index(last_action)
     sum = convert(self, self.transitions[-1].state) * (self.transitions[-1].reward - self.weights[index] @ convert(self, self.transitions[-1].state))
-    self.weights[index] = self.weights[index] + (LEARNING_RATE / TRANSITION_HISTORY_SIZE) * sum
+    if n_a == 0:
+        n_a = 1
+    self.weights[index] = self.weights[index] + (LEARNING_RATE / n_a) * sum
 
     self.transitions.clear()
     # Store the weights
@@ -179,30 +189,32 @@ def reward_from_events(self, events: List[str]) -> int:
     certain behavior.
     """
     game_rewards = {
-        e.COIN_COLLECTED: 10,
-        COIN_NOT_COLLECTED: -1,
-        GOING_AWAY_FROM_COIN: -5,
-        GOING_TO_COIN: 5,
+        e.COIN_COLLECTED: 20,
+        #COIN_NOT_COLLECTED: -.1,
+        #GOING_AWAY_FROM_COIN: -.2,
+        GOING_TO_COIN: 10,
 
-        e.CRATE_DESTROYED: 5,
-        # BOMB_AND_CRATE: 3,
-        # GOING_TO_CRATE : 3,
-        # GOING_AWAY_FROM_CRATE: -3,
+        e.CRATE_DESTROYED: 10,
+        BOMB_AND_CRATE: 5,
+        GOING_TO_CRATE : 5,
+        #GOING_AWAY_FROM_CRATE: -1,
 
-        NO_ESCAPE: -50,
+        NO_ESCAPE: -100,
         e.GOT_KILLED: -1,
-        e.KILLED_SELF: -5,
-        NO_ESCAPING: -20,
-        ESCAPING: 20,
-        e.BOMB_DROPPED: -3,
+        e.KILLED_SELF: -50,
+        #NO_ESCAPING: -3,
+        ESCAPING: 50,
+        #e.BOMB_DROPPED: -.1,
         NO_BOMB: -5,
 
         # e.KILLED_OPPONENT: 5,
 
-        e.INVALID_ACTION: -5,
+        NOT_MOVING: -30,
+
+        e.INVALID_ACTION: -1,
         TOO_WAITS: -10,
-        GOING_INTO_WALL: -10,
-        UNDECIDED: -10
+        GOING_INTO_WALL: -20,
+        UNDECIDED: -5
     }
     reward_sum = 0
     for event in events:
@@ -273,6 +285,9 @@ def custom_events (self, self_action, old_features, new_features, events: List[s
 
     if (old_features[12] == -1) and (self_action == "BOMB"):
         events.append(NO_BOMB)
+
+    if self_action == "WAIT" and not(old_features[4] == -1 and old_features[5] == -1 and old_features[6] == -1 and old_features[7] == -1):
+        events.append(NOT_MOVING)
 
 
     return events

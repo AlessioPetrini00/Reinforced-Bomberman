@@ -9,7 +9,7 @@ ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 N_FEATURES = 19
 
 # Hyperparameters.
-EXPLORATION_RATE = 0.9 # TODO fine tune this
+EXPLORATION_RATE = 0.7 # TODO fine tune this
 
 def setup(self):
     """
