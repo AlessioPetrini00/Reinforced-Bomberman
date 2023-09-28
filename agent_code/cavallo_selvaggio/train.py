@@ -10,7 +10,6 @@ import os
 
 import numpy as np
 import pickle
-import matplotlib.pyplot as plt #TODO add this as dependency
 
 # Loading experience buffer
 Transition = namedtuple('Transition',
@@ -19,11 +18,11 @@ Transition = namedtuple('Transition',
 # Possible actions
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
-# Hyper parameters -- DO modify
-TRANSITION_HISTORY_SIZE = 20  # keep only ... last transitions TODO remove once sure not needed
+# Hyperparameters:
+TRANSITION_HISTORY_SIZE = 50  # keep only ... last transitions
 RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ... TODO remove once sure not needed
-LEARNING_RATE = 0.05 # TODO fine tune this
-DISCOUNT_RATE = 0.8 # TODO fine tune this
+LEARNING_RATE = 0.03 
+DISCOUNT_RATE = 0.8 
 N_FEATURES = 19
 
 # Custom events
@@ -41,6 +40,8 @@ GOING_AWAY_FROM_CRATE = "GOING_AWAY_FROM_CRATE"
 NO_BOMB = "NO_BOMB"
 NO_ESCAPING = "NO_ESCAPING"
 NOT_MOVING = "NOT_MOVING"
+USELESS = "USELESS"
+OK_WAIT = "OK_WAIT"
 
 
 def setup_training(self):
@@ -51,9 +52,8 @@ def setup_training(self):
 
     :param self: This object is passed to all callbacks and you can set arbitrary values.
     """
-    # Example: Setup an array that will note transition tuples
+    # Setup ransitions
     self.transitions = deque(maxlen=TRANSITION_HISTORY_SIZE)
-    self.error = []
 
     # Load or create weights.
     if not os.path.isfile("my-saved-weights.pt"):
@@ -67,14 +67,7 @@ def setup_training(self):
 
 def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_state: dict, events: List[str]):
     """
-    Called once per step to allow intermediate rewards based on game events.
-
-    When this method is called, self.events will contain a list of all game
-    events relevant to your agent that occurred during the previous step. Consult
-    settings.py to see what events are tracked. You can hand out rewards to your
-    agent based on these events and your knowledge of the (new) game state.
-
-    This is *one* of the places where you could update your agent.
+    Called once per step to allow intermediate rewards based on game events and to perform the update on weights.
 
     :param self: This object is passed to all callbacks and you can set arbitrary values.
     :param old_game_state: The state that was passed to the last call of `act`.
@@ -93,46 +86,47 @@ def game_events_occurred(self, old_game_state: dict, self_action: str, new_game_
     self.transitions.append(Transition(old_features, self_action, new_features, reward_from_events(self, events), self.weights))
                                        
 
-    # Debug messages for features
-    #self.logger.debug("Closest coin is in " + self.transitions[-1].next_state[0] + " " + self.transitions[-1].next_state[1])
-    self.logger.debug("Coin right? " + self.transitions[-1].next_state[0])  
-    self.logger.debug("Coin left? " + self.transitions[-1].next_state[1])
-    self.logger.debug("Coin up? " + self.transitions[-1].next_state[2])
-    self.logger.debug("Coin down? " + self.transitions[-1].next_state[3])
-    self.logger.debug("vision is 1 for non walkable and 0 otherwise - down " + self.transitions[-1].next_state[4])
-    self.logger.debug("vision is 1 for non walkable and 0 otherwise - up " + self.transitions[-1].next_state[5])
-    self.logger.debug("vision is 1 for non walkable and 0 otherwise - left " + self.transitions[-1].next_state[6])
-    self.logger.debug("vision is 1 for non walkable and 0 otherwise - right " + self.transitions[-1].next_state[7])
-    #self.logger.debug("Closest crate is in " + self.transitions[-1].next_state[6] + " " + self.transitions[-1].next_state[7])
-    self.logger.debug("Crate right? " + self.transitions[-1].next_state[8])  
-    self.logger.debug("Crate left? " + self.transitions[-1].next_state[9])
-    self.logger.debug("Crate up? " + self.transitions[-1].next_state[10])
-    self.logger.debug("Crate down? " + self.transitions[-1].next_state[11])
-    self.logger.debug("Can he drop a bomb? " + self.transitions[-1].next_state[12])
-    self.logger.debug("Can he destroy a crate from here? " + self.transitions[-1].next_state[13])
-    self.logger.debug("Is he in danger? " + self.transitions[-1].next_state[14])
-    self.logger.debug("Can he escape up? " + self.transitions[-1].next_state[15])
-    self.logger.debug("Can he escape down? " + self.transitions[-1].next_state[16])
-    self.logger.debug("Can he escape left? " + self.transitions[-1].next_state[17])
-    self.logger.debug("Can he escape right? " + self.transitions[-1].next_state[18])
-    # Debug message for events:
-    self.logger.debug(f'Encountered game event(s) {", ".join(map(repr, events))} in step {new_game_state["step"]}')
+    # Printing feature messages
+    self.logger.info("Coin right? " + self.transitions[-1].next_state[0])  
+    self.logger.info("Coin left? " + self.transitions[-1].next_state[1])
+    self.logger.info("Coin up? " + self.transitions[-1].next_state[2])
+    self.logger.info("Coin down? " + self.transitions[-1].next_state[3])
+    self.logger.info("Vision is 1 for non walkable and 0 otherwise - down " + self.transitions[-1].next_state[4])
+    self.logger.info("Vision is 1 for non walkable and 0 otherwise - up " + self.transitions[-1].next_state[5])
+    self.logger.info("Vision is 1 for non walkable and 0 otherwise - left " + self.transitions[-1].next_state[6])
+    self.logger.info("Vision is 1 for non walkable and 0 otherwise - right " + self.transitions[-1].next_state[7])
+    self.logger.info("Crate right? " + self.transitions[-1].next_state[8])  
+    self.logger.info("Crate left? " + self.transitions[-1].next_state[9])
+    self.logger.info("Crate up? " + self.transitions[-1].next_state[10])
+    self.logger.info("Crate down? " + self.transitions[-1].next_state[11])
+    self.logger.info("Can he drop a bomb? " + self.transitions[-1].next_state[12])
+    self.logger.info("Can he destroy a crate from here? " + self.transitions[-1].next_state[13])
+    self.logger.info("Is he in danger? " + self.transitions[-1].next_state[14])
+    self.logger.info("Can he escape up? " + self.transitions[-1].next_state[15])
+    self.logger.info("Can he escape down? " + self.transitions[-1].next_state[16])
+    self.logger.info("Can he escape left? " + self.transitions[-1].next_state[17])
+    self.logger.info("Can he escape right? " + self.transitions[-1].next_state[18])
 
+    # Info message for encountered events:
+    self.logger.info(f'Encountered game event(s) {", ".join(map(repr, events))} in step {new_game_state["step"]}')
+
+    # Computing the update:
     sum = 0
-    n_a = 0
+    count = 0
     n = min(TRANSITION_HISTORY_SIZE, len(self.transitions))
-    for t in np.arange(-1, -n, -1):
-        index = ACTIONS.index(self.transitions[t].action)
-        if self.transitions[t].action == ACTIONS[index]:
-            n_a += 1
+    index = ACTIONS.index(self_action)
+    # Cycling through last n transitions
+    for t in np.arange(-1, -n - 1, -1):
+        # Keeping only those with the same action as the last
+        if self.transitions[t].action == self_action:
+            count += 1
             Y = self.transitions[t].reward + DISCOUNT_RATE * np.max(self.transitions[t].weights[index] @ convert(self,self.transitions[t].next_state))
             sum = sum + convert(self, self.transitions[t].state) * (Y - self.transitions[t].weights[index] @ convert(self,self.transitions[t].state))
-        self.error.append((Y - self.weights[index] @ convert(self,self.transitions[t].state))**2)
-        self.logger.debug("Error: " + str(self.error[-1]))
+            
     index = ACTIONS.index(self_action)
-    if n_a == 0:
-        n_a = 1
-    self.weights[index] = self.weights[index] + (LEARNING_RATE / n_a) * sum 
+    if count == 0:
+        count = 1
+    self.weights[index] = self.weights[index] + (LEARNING_RATE / count) * sum 
 
 
 def end_of_round(self, last_game_state: dict, last_action: str, events: List[str]):
@@ -142,9 +136,6 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
 
     This is similar to game_events_occurred. self.events will contain all events that
     occurred during your agent's final step.
-
-    This is *one* of the places where you could update your agent.
-    This is also a good place to store an agent that you updated.
 
     :param self: The same object that is passed to all of your callbacks.
     """
@@ -156,25 +147,27 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
     # Appending transition:
     self.transitions.append(Transition(features, last_action, None, reward_from_events(self, events), self.weights))
 
-    # Debug message for events:
-    self.logger.debug(f'Encountered event(s) {", ".join(map(repr, events))} in final step')
+    # Info message for events:
+    self.logger.info(f'Encountered event(s) {", ".join(map(repr, events))} in final step')
 
     sum = 0
     n = min(TRANSITION_HISTORY_SIZE, len(self.transitions))
-    n_a = 0
-    for t in np.arange(-2, -n, -1):
-        index = ACTIONS.index(self.transitions[t].action)
-        if self.transitions[t].action == ACTIONS[index]:
-            n_a += 1
+    count = 0
+    index = ACTIONS.index(last_action)
+    for t in np.arange(-2, -n - 1, -1):
+        if self.transitions[t].action == last_action:
+            count += 1
             Y = self.transitions[t].reward + DISCOUNT_RATE * np.max(self.transitions[t].weights[index] @ convert(self, self.transitions[t].next_state))
             sum = sum + convert(self, self.transitions[t].state) * (Y - (self.transitions[t].weights[index] @ convert(self, self.transitions[t].state)))
-    index = ACTIONS.index(last_action)
+    # Last transition doesn't have prediction factor.
     sum = convert(self, self.transitions[-1].state) * (self.transitions[-1].reward - self.weights[index] @ convert(self, self.transitions[-1].state))
-    if n_a == 0:
-        n_a = 1
-    self.weights[index] = self.weights[index] + (LEARNING_RATE / n_a) * sum
+    if count == 0:
+        count = 1
+    self.weights[index] = self.weights[index] + (LEARNING_RATE / count) * sum
 
+    # Clearing experience buffer:
     self.transitions.clear()
+
     # Store the weights
     with open("my-saved-weights.pt", "wb") as file:
         pickle.dump(self.weights, file)
@@ -183,89 +176,93 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
 
 def reward_from_events(self, events: List[str]) -> int:
     """
-    *This is not a required function, but an idea to structure your code.*
-
-    Here you can modify the rewards your agent get so as to en/discourage
-    certain behavior.
+    Modify the rewards your agent get so as to en/discourage certain behavior.
     """
     game_rewards = {
-        e.COIN_COLLECTED: 20,
+        e.COIN_COLLECTED: 50,
         #COIN_NOT_COLLECTED: -.1,
-        #GOING_AWAY_FROM_COIN: -.2,
-        GOING_TO_COIN: 10,
+        GOING_AWAY_FROM_COIN: -15,
+        GOING_TO_COIN: 15,
 
-        e.CRATE_DESTROYED: 10,
+        #e.CRATE_DESTROYED: 10,
         BOMB_AND_CRATE: 5,
-        GOING_TO_CRATE : 5,
-        #GOING_AWAY_FROM_CRATE: -1,
+        GOING_TO_CRATE : 2,
+        GOING_AWAY_FROM_CRATE: -5,
 
-        NO_ESCAPE: -100,
-        e.GOT_KILLED: -1,
-        e.KILLED_SELF: -50,
-        #NO_ESCAPING: -3,
-        ESCAPING: 50,
+        NO_ESCAPE: -25,
+        #e.GOT_KILLED: -10,
+        e.KILLED_SELF: -25,
+        NO_ESCAPING: -30,
+        ESCAPING: 30,
         #e.BOMB_DROPPED: -.1,
-        NO_BOMB: -5,
+        NO_BOMB: -15,
 
         # e.KILLED_OPPONENT: 5,
 
         NOT_MOVING: -30,
+        OK_WAIT: 1, 
 
-        e.INVALID_ACTION: -1,
+        #e.INVALID_ACTION: -1,
         TOO_WAITS: -10,
-        GOING_INTO_WALL: -20,
-        UNDECIDED: -5
+        GOING_INTO_WALL: -15,
+        UNDECIDED: -30,
+        USELESS: -30,
     }
+    # Compute reward sum:
     reward_sum = 0
     for event in events:
         if event in game_rewards:
             reward_sum += game_rewards[event]
-    self.logger.info(f"Awarded {reward_sum} for events {', '.join(events)}")
+    self.logger.info(f"Awarded {reward_sum}")
     return reward_sum
 
 
 
 def custom_events (self, self_action, old_features, new_features, events: List[str]) -> List[str]:
+    """
+    Appending custom events to the list of official events.
+    """
+
     # There's coin but it was not collected
-    if not (e.COIN_COLLECTED in events) and not (str(old_features[0]) == "FREE" and str(old_features)[2] == "FREE" or str(old_features[1]) == "FREE" and str(old_features)[3] == "FREE"):
+    if not (e.COIN_COLLECTED in events) and not (str(old_features[0]) == "FREE" and str(old_features[2]) == "FREE" and str(old_features[1]) == "FREE" and str(old_features[3]) == "FREE"):
         events.append(COIN_NOT_COLLECTED)
 
     # Moving towards coin and going away from it
-    if old_features[0] == self_action or old_features[1] == self_action or old_features[2] == self_action or old_features[3] == self_action:
+    if (str(old_features[0]) == self_action) or (str(old_features[1]) == self_action) or (str(old_features[2]) == self_action) or (str(old_features[3]) == self_action):
         events.append(GOING_TO_COIN)
-    elif not (old_features[0] == "FREE" and old_features[2] == "FREE" and old_features[1] == "FREE" and old_features[3] == "FREE"):
+    elif not ((str(old_features[0]) == "FREE") and (str(old_features[2]) == "FREE") and (str(old_features[1]) == "FREE") and (str(old_features[3]) == "FREE")):
         events.append(GOING_AWAY_FROM_COIN)
 
     # Moving towards crate and going away from it
-    if old_features[8] == self_action or old_features[9] == self_action or old_features[10] == self_action or old_features[11] == self_action:
+    if (str(old_features[8]) == self_action) or (str(old_features[9]) == self_action) or (str(old_features[10]) == self_action) or (str(old_features[11]) == self_action):
         events.append(GOING_TO_CRATE)
-    elif not (old_features[8] == "FREE" and old_features[10] == "FREE" and old_features[9] == "FREE" and old_features[11] == "FREE") and not self_action == "WAIT" and not self_action == "BOMB":
+    elif (not ((str(old_features[8]) == "FREE") and (str(old_features[10]) == "FREE") and (str(old_features[9]) == "FREE") and (str(old_features[11]) == "FREE"))) and (not self_action == "WAIT") and (not self_action == "BOMB"):
         events.append(GOING_AWAY_FROM_CRATE)
 
-    if not len(new_features) == 0:
-        if old_features[14] == -1:
-            if old_features[15] == self_action or old_features[16] == self_action or old_features[17] == self_action or old_features[18] == self_action:
-                events.append(ESCAPING)
-            elif not(old_features[15] == 'NO DANGER AND CAN ESCAPE' and old_features[16] == 'NO DANGER AND CAN ESCAPE' and old_features[17] == 'NO DANGER AND CAN ESCAPE' and old_features[18] == 'NO DANGER AND CAN ESCAPE'):
-                events.append(NO_ESCAPING)
-        else:
-            if self_action == "BOMB" and (old_features[15] == 'NO DANGER AND CAN ESCAPE' and old_features[16] == 'NO DANGER AND CAN ESCAPE' and old_features[17] == 'NO DANGER AND CAN ESCAPE' and old_features[18] == 'NO DANGER AND CAN ESCAPE'):
-                events.append(NO_ESCAPE)
+    # Escaping from danger, not escaping from danger and dropping a bomb by trapping himself.
+    if int(old_features[14]) == 1:
+        if str(old_features[15]) == self_action or str(old_features[16]) == self_action or str(old_features[17]) == self_action or str(old_features[18]) == self_action:
+            events.append(ESCAPING)
+        elif not(str(old_features[15]) == 'NO ESCAPE' and str(old_features[16]) == 'NO ESCAPE' and str(old_features[17]) == 'NO ESCAPE' and str(old_features[18]) == 'NO ESCAPE'):
+            events.append(NO_ESCAPING)
+    else:
+        if self_action == "BOMB" and (str(old_features[15]) == 'NO ESCAPE' and str(old_features[16]) == 'NO ESCAPE' and str(old_features[17]) == 'NO ESCAPE' and str(old_features[18]) == 'NO ESCAPE'):
+            events.append(NO_ESCAPE)
   
 
-    # When he wants to hug walls (punish behaviour) TODO remove because invalid action
+    # Punish when he wants to walk towards forbidden areas.
     features = tuple(old_features)
-    if int(features[4]) == -1 and self_action == "DOWN":
+    if int(old_features[4]) == 1 and self_action == "DOWN":
         events.append(GOING_INTO_WALL)
-    if int(features[5]) == -1 and self_action == "UP":
+    if int(old_features[5]) == 1 and self_action == "UP":
         events.append(GOING_INTO_WALL)
-    if int(features[6]) == -1 and self_action == "LEFT":
+    if int(old_features[6]) == 1 and self_action == "LEFT":
         events.append(GOING_INTO_WALL)
-    if int(features[7]) == -1 and self_action == "RIGHT":
+    if int(old_features[7]) == 1 and self_action == "RIGHT":
         events.append(GOING_INTO_WALL)
 
 
-    # Punish when he goes crazy
+    # Punish when he repeats the same move for too long
     if len(self.transitions) > 2:
         if self_action == self.transitions[-2].action and self.transitions[-1].action == self.transitions[-3].action:
             events.append(UNDECIDED)
@@ -279,15 +276,24 @@ def custom_events (self, self_action, old_features, new_features, events: List[s
             events.append(UNDECIDED)
 
 
-    # When he puts a bomb close to a crate
-    if int(features[13]) == 1 and self_action == "BOMB":
+    # When he puts a bomb cin a place where he'd destroy a crate
+    if (int(old_features[13]) == 1) and (self_action == "BOMB") and (int(old_features[12]) == 1) and not ((str(old_features[15]) == 'NO ESCAPE' and str(old_features[16]) == 'NO ESCAPE' and str(old_features[17]) == 'NO ESCAPE' and str(old_features[18]) == 'NO ESCAPE')):
         events.append(BOMB_AND_CRATE)
 
-    if (old_features[12] == -1) and (self_action == "BOMB"):
+    # When he wants to drop bombs while he can't.
+    if (int(old_features[12]) == 0) and (self_action == "BOMB"):
         events.append(NO_BOMB)
 
-    if self_action == "WAIT" and not(old_features[4] == -1 and old_features[5] == -1 and old_features[6] == -1 and old_features[7] == -1):
+    # When he waits while there's no point in doing so.
+    if (self_action == "WAIT") and not(int(old_features[4]) == 1 and int(old_features[5]) == 1 and int(old_features[6]) == 1 and int(old_features[7]) == 1):
         events.append(NOT_MOVING)
-
+    
+    # When he drops a bomb that wouldn't destroy a crate
+    if (self_action == "BOMB") and (int(old_features[13]) == 0):
+        events.append(USELESS)
+    
+    # When he waits for a good reason.
+    if self_action == "WAIT" and (int(old_features[4]) == 1 and int(old_features[5]) == 1 and int(old_features[6]) == 1 and int(old_features[7]) == 1):
+        events.append(OK_WAIT)
 
     return events
