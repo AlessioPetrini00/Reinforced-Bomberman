@@ -10,6 +10,8 @@ import os
 
 import numpy as np
 
+from .callbacks import EXPLORATION_RATE
+
 # Loading experience buffer
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
@@ -20,8 +22,8 @@ ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 # Hyper parameters -- DO modify
 TRANSITION_HISTORY_SIZE = 8  # keep only ... last transitions TODO remove once sure not needed
 RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ... TODO remove once sure not needed
-LEARNING_RATE = 0.5 # TODO fine tune this
-DISCOUNT_RATE = 0.9 # TODO fine tune this
+LEARNING_RATE = 0.9 # TODO fine tune this
+DISCOUNT_RATE = 0.1 # TODO fine tune this
 
 # Custom events
 COIN_NOT_COLLECTED = "COIN_NOT_COLLECTED"
@@ -124,6 +126,17 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
 
     :param self: The same object that is passed to all of your callbacks.
     """
+    global LEARNING_RATE
+    global EXPLORATION_RATE
+
+    LEARNING_RATE = LEARNING_RATE * 0.99
+    EXPLORATION_RATE = EXPLORATION_RATE - 1/3000
+
+    count = sum([1 for riga in self.q_table for elemento in riga if elemento != 0])
+    if self.q_table:
+        with open("q_table_log.txt", "a") as file_log:
+            file_log.write(f"{count * 100 / (36288 * 6)}\n")
+
     features = state_to_features(self, last_game_state)
 
     # Appending custom events to events:
@@ -153,14 +166,14 @@ def reward_from_events(self, events: List[str]) -> int:
     """
     game_rewards = {
         e.COIN_COLLECTED: 10,
-        COIN_NOT_COLLECTED: -3,
-        GOING_AWAY_FROM_COIN: -1,
-        GOING_TO_COIN: 3,
+        COIN_NOT_COLLECTED: -2,
+        GOING_AWAY_FROM_COIN: -3,
+        GOING_TO_COIN: 5,
 
-        e.CRATE_DESTROYED: 2,
-        BOMB_AND_CRATE: 3,
-        GOING_TO_CRATE : 3,
-        GOING_AWAY_FROM_CRATE: -4,
+        e.CRATE_DESTROYED: 1,
+        BOMB_AND_CRATE: 2,
+        GOING_TO_CRATE : 1,
+        GOING_AWAY_FROM_CRATE: -1,
 
         #GOING_AWAY_FROM_BOMB: 8,
         NO_ESCAPE: -80,
@@ -169,7 +182,7 @@ def reward_from_events(self, events: List[str]) -> int:
         e.KILLED_SELF: -30,
 
         # e.KILLED_OPPONENT: 5,
-        e.BOMB_DROPPED: -3,
+        e.BOMB_DROPPED: -1,
         e.INVALID_ACTION: -50,
         # e.WAITED:,
         #TOO_WAITS: -3,

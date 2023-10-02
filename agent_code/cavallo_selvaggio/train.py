@@ -139,6 +139,15 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
 
     :param self: The same object that is passed to all of your callbacks.
     """
+
+    global LEARNING_RATE
+    global EXPLORATION_RATE
+    LEARNING_RATE = LEARNING_RATE * 0.95
+
+    if self.error:
+        with open("error_log.txt", "a") as file_log:
+            file_log.write(f"{LEARNING_RATE}, {self.error[-1]}\n")
+
     features = state_to_features(self, last_game_state)
 
     # Appending custom events to events:
