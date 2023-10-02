@@ -8,7 +8,7 @@ from collections import defaultdict
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyperparameters.
-EXPLORATION_RATE = 0 # TODO fine tune this
+EXPLORATION_RATE = 0 
 
 def setup(self):
     """
@@ -360,8 +360,6 @@ def state_to_features(self, game_state: dict) -> np.array:
     channels.append([escape]) #10 - Cardinality: 7
 
     # Features combinations: 36.288
-    
-    #TODO Volendo abbiamo crate da 8 a 5
 
     # Concatenate them as a feature tensor (they must have the same shape), ...
     stacked_channels = np.stack(channels)

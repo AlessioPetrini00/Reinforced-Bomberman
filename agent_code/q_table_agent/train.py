@@ -20,8 +20,7 @@ Transition = namedtuple('Transition',
 ACTIONS = ['UP', 'RIGHT', 'DOWN', 'LEFT', 'WAIT', 'BOMB']
 
 # Hyper parameters -- DO modify
-TRANSITION_HISTORY_SIZE = 8  # keep only ... last transitions TODO remove once sure not needed
-RECORD_ENEMY_TRANSITIONS = 1.0  # record enemy transitions with probability ... TODO remove once sure not needed
+TRANSITION_HISTORY_SIZE = 8  # keep only ... last transitions 
 LEARNING_RATE = 0.9 # TODO fine tune this
 DISCOUNT_RATE = 0.1 # TODO fine tune this
 
@@ -126,16 +125,6 @@ def end_of_round(self, last_game_state: dict, last_action: str, events: List[str
 
     :param self: The same object that is passed to all of your callbacks.
     """
-    global LEARNING_RATE
-    global EXPLORATION_RATE
-
-    LEARNING_RATE = LEARNING_RATE * 0.99
-    EXPLORATION_RATE = EXPLORATION_RATE - 1/3000
-
-    count = sum([1 for riga in self.q_table for elemento in riga if elemento != 0])
-    if self.q_table:
-        with open("q_table_log.txt", "a") as file_log:
-            file_log.write(f"{count * 100 / (36288 * 6)}\n")
 
     features = state_to_features(self, last_game_state)
 
@@ -224,16 +213,6 @@ def custom_events (self, self_action, old_features, new_features, events: List[s
         events.append(GOING_TO_CRATE)
     elif not (old_features[6] == "FREE" and old_features[7] == "FREE") and not self_action == "WAIT" and not self_action == "BOMB":
         events.append(GOING_AWAY_FROM_CRATE)
-
-    # Going from dangerous to non-dangerous zone
-    # if not len(new_features) == 0:
-    #     if not (str(old_features[10]) == "NO DANGER AND CAN ESCAPE" or str(old_features[10]) == "NO DANGER NO ESCAPE") and (str(new_features[10]) == "NO DANGER AND CAN ESCAPE" or str(new_features[10]) == "NO DANGER NO ESCAPE"):
-    #         events.append(GOING_AWAY_FROM_BOMB)
-
-    # Going from non-dangerous to dangerous zone (unless you just dropped bomb)
-    # if int(self.transitions[-1].state[0]) == 0 and int(self.transitions[-1].next_state[0]) == 1:
-    #     if not self_action == "BOMB":
-    #         events.append(GOING_TO_BOMB)
     
     # Remaining or going to dangerous-zone
     if not len(new_features) == 0:
@@ -280,10 +259,5 @@ def custom_events (self, self_action, old_features, new_features, events: List[s
 
     if (old_features[8] == 0) and (self_action == "BOMB"):
         events.append(NO_BOMB)
-
-    # When he waits too much
-    # if len(self.transitions) > 1:
-    #     if self_action == self.transitions[-1].action == self.transitions[-2].action == "WAIT":
-    #         events.append(TOO_WAITS)
     
     return events
